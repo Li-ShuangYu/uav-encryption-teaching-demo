@@ -91,8 +91,8 @@ const groupConfigs = reactive([
   {
     id: 'group2',
     name: '第二组',
-    title: '轻量级流密码方案',
-    themeColor: '#f59e0b',
+    title: '侧信道防护方案',
+    themeColor: '#ef4444',
     statusText: '运行中',
     isAlert: false,
     metrics: [
@@ -105,8 +105,8 @@ const groupConfigs = reactive([
   {
     id: 'group3',
     name: '第三组',
-    title: '区块链分布式防护方案',
-    themeColor: '#8b5cf6',
+    title: '轻量级流密码方案',
+    themeColor: '#f59e0b',
     statusText: '运行中',
     isAlert: false,
     metrics: [
@@ -124,8 +124,8 @@ const groupConfigs = reactive([
   {
     id: 'group4',
     name: '第四组',
-    title: '纯 RSA 非对称加密方案',
-    themeColor: '#ef4444',
+    title: '区块链分布式防护方案',
+    themeColor: '#8b5cf6',
     statusText: '高负载警告',
     isAlert: true,
     metrics: [

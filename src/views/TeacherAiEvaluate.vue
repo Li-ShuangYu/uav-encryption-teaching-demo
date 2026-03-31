@@ -104,7 +104,7 @@ const groups = reactive([
   { 
     id: 2, name: '第二组', color: '#ef4444', score: 78, progress: 0, isLoading: true, delay: 1600,
     values: [85, 80, 40, 95, 60],
-    conclusion: '采用纯 RSA 非对称加密方案，安全性理论值高，但性能消耗过大。',
+    conclusion: '采用侧信道防护方案，安全性理论值高，但性能消耗过大。',
     suggestion: '必须改为混合加密体制（RSA+AES/SM4），避免性能瓶颈。'
   },
   { 
