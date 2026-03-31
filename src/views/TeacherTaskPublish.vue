@@ -171,6 +171,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const isPublishing = ref(false)
 const publishProgress = ref(0)
@@ -198,7 +201,7 @@ const closeModal = () => {
 }
 
 const confirmJump = () => {
-  window.location.href = 'RequirementAnalysis.html'
+  router.push('/teacher/demand-summary')
 }
 </script>
 

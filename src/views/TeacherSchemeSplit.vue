@@ -7,7 +7,7 @@
         <h1 class="text-xl font-bold text-white tracking-wide">无人机通信加密 - 4 组方案分屏</h1>
       </div>
       <div class="flex gap-4 items-center">
-        <button class="btn-agent bg-[#1c2126] border border-[#00e5ff] text-[#00e5ff] px-5 py-2 rounded transition-colors flex items-center gap-2 font-bold hover:bg-[#00e5ff] hover:text-black">
+        <button @click="goToAiEvaluate" class="btn-agent bg-[#1c2126] border border-[#00e5ff] text-[#00e5ff] px-5 py-2 rounded transition-colors flex items-center gap-2 font-bold hover:bg-[#00e5ff] hover:text-black">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
           架构评审 Agent
         </button>
@@ -74,6 +74,13 @@
 
 <script setup>
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const goToAiEvaluate = () => {
+  router.push('/teacher/ai-evaluate');
+};
 
 // 将页面数据提取为响应式对象，方便管理和渲染
 const groupData = reactive([
