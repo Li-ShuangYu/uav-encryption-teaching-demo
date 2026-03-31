@@ -14,18 +14,43 @@
 
     <header class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
       <div class="flex items-center gap-3">
-        <div class="w-1 h-6 bg-group1 rounded-full"></div>
+        <div class="w-1 h-6 rounded-full transition-colors duration-300" :class="[
+          currentGroupIndex === 0 && 'bg-blue-500',
+          currentGroupIndex === 1 && 'bg-red-500',
+          currentGroupIndex === 2 && 'bg-yellow-500',
+          currentGroupIndex === 3 && 'bg-purple-500'
+        ]"></div>
         <h1 class="text-xl font-bold text-white tracking-wide">任务接收-需求提交</h1>
       </div>
       <div class="flex items-center gap-4">
         
         <div class="relative" @click.stop="toggleDropdown">
-          <div class="flex items-center gap-2 bg-group1/10 border border-group1/30 px-4 py-1.5 rounded-full cursor-pointer hover:bg-group1/20 transition-colors">
-            <svg class="w-4 h-4 text-group1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center gap-2 px-4 py-1.5 rounded-full cursor-pointer transition-colors" :class="[
+            currentGroupIndex === 0 && 'bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20',
+            currentGroupIndex === 1 && 'bg-red-500/10 border border-red-500/30 hover:bg-red-500/20',
+            currentGroupIndex === 2 && 'bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20',
+            currentGroupIndex === 3 && 'bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20'
+          ]">
+            <svg class="w-4 h-4" :class="[
+              currentGroupIndex === 0 && 'text-blue-500',
+              currentGroupIndex === 1 && 'text-red-500',
+              currentGroupIndex === 2 && 'text-yellow-500',
+              currentGroupIndex === 3 && 'text-purple-500'
+            ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span class="text-group1 font-bold text-sm">{{ currentGroup.name }}</span>
-            <svg class="w-4 h-4 text-group1 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="font-bold text-sm" :class="[
+              currentGroupIndex === 0 && 'text-blue-500',
+              currentGroupIndex === 1 && 'text-red-500',
+              currentGroupIndex === 2 && 'text-yellow-500',
+              currentGroupIndex === 3 && 'text-purple-500'
+            ]">{{ currentGroup.name }}</span>
+            <svg class="w-4 h-4 ml-1" :class="[
+              currentGroupIndex === 0 && 'text-blue-500',
+              currentGroupIndex === 1 && 'text-red-500',
+              currentGroupIndex === 2 && 'text-yellow-500',
+              currentGroupIndex === 3 && 'text-purple-500'
+            ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -36,11 +61,22 @@
                 v-for="(group, index) in groupsData" 
                 :key="group.id"
                 @click="switchGroup(index)"
-                class="px-4 py-3 text-sm text-textMain hover:bg-group1/20 hover:text-white cursor-pointer transition-colors border-b border-borderColor/50 last:border-0 flex items-center justify-between"
-                :class="{'bg-group1/10 text-white font-bold': currentGroupIndex === index}"
+                class="px-4 py-3 text-sm text-textMain cursor-pointer transition-colors border-b border-borderColor/50 last:border-0 flex items-center justify-between"
+                :class="[
+                  currentGroupIndex === index ? 'text-white font-bold' : 'hover:text-white',
+                  index === 0 && (currentGroupIndex === index ? 'bg-blue-500/20' : 'hover:bg-blue-500/20'),
+                  index === 1 && (currentGroupIndex === index ? 'bg-red-500/20' : 'hover:bg-red-500/20'),
+                  index === 2 && (currentGroupIndex === index ? 'bg-yellow-500/20' : 'hover:bg-yellow-500/20'),
+                  index === 3 && (currentGroupIndex === index ? 'bg-purple-500/20' : 'hover:bg-purple-500/20')
+                ]"
               >
                 <span>{{ group.name }}</span>
-                <svg v-if="currentGroupIndex === index" class="w-4 h-4 text-group1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <svg v-if="currentGroupIndex === index" class="w-4 h-4" :class="[
+                  currentGroupIndex === 0 && 'text-blue-500',
+                  currentGroupIndex === 1 && 'text-red-500',
+                  currentGroupIndex === 2 && 'text-yellow-500',
+                  currentGroupIndex === 3 && 'text-purple-500'
+                ]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
               </div>
             </div>
           </transition>
@@ -76,12 +112,22 @@
             <span class="text-xs text-textMuted text-group1 bg-group1/10 px-2 py-1 rounded">来源：AI任务推送工具</span>
           </div>
           <div class="p-5 flex flex-col gap-4">
-            <div class="bg-darkBg border border-borderColor p-4 rounded-lg flex items-center justify-between border-l-4 border-l-group1">
+            <div class="bg-darkBg border border-borderColor p-4 rounded-lg flex items-center justify-between border-l-4 transition-colors duration-300" :class="[
+              currentGroupIndex === 0 && 'border-l-blue-500',
+              currentGroupIndex === 1 && 'border-l-red-500',
+              currentGroupIndex === 2 && 'border-l-yellow-500',
+              currentGroupIndex === 3 && 'border-l-purple-500'
+            ]">
               <div>
                 <div class="text-xs text-textMuted mb-1">演练主线任务（必做）</div>
                 <div class="text-lg font-bold text-white tracking-wide">{{ taskInfo.title }}</div>
               </div>
-              <div class="bg-group1/10 text-group1 px-3 py-1 rounded text-sm font-bold border border-group1/30">
+              <div class="px-3 py-1 rounded text-sm font-bold border transition-colors duration-300" :class="[
+                currentGroupIndex === 0 && 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+                currentGroupIndex === 1 && 'bg-red-500/10 text-red-500 border-red-500/30',
+                currentGroupIndex === 2 && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
+                currentGroupIndex === 3 && 'bg-purple-500/10 text-purple-500 border-purple-500/30'
+              ]">
                 目标对象：无人机通信链路
               </div>
             </div>
@@ -102,7 +148,12 @@
         <section class="col-span-2 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden relative">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
             <h2 class="font-bold text-white flex items-center gap-2">
-              <svg class="w-5 h-5 text-group1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+              <svg class="w-5 h-5 transition-colors duration-300" :class="[
+                currentGroupIndex === 0 && 'text-blue-500',
+                currentGroupIndex === 1 && 'text-red-500',
+                currentGroupIndex === 2 && 'text-yellow-500',
+                currentGroupIndex === 3 && 'text-purple-500'
+              ]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
               学生需求提交
             </h2>
             <span class="text-xs text-textMuted">建议与AI多模态交互辅助完成</span>
@@ -120,23 +171,34 @@
             <!-- 选定支线任务 -->
             <div class="flex-1 flex flex-col">
               <label class="block text-sm font-bold text-textMain mb-2">
-                选定支线任务：<span class="text-accentGreen">{{ currentGroup.branchTitle }}</span>
+                选定支线任务：<span class="transition-colors duration-300" :class="[
+                  currentGroupIndex === 0 && 'text-blue-500',
+                  currentGroupIndex === 1 && 'text-red-500',
+                  currentGroupIndex === 2 && 'text-yellow-500',
+                  currentGroupIndex === 3 && 'text-purple-500'
+                ]">{{ currentGroup.branchTitle }}</span>
                 <span class="text-xs text-textMuted font-normal ml-2">(请录入本组的具体需求与初步选型)</span>
               </label>
               <textarea 
                 v-model="currentGroup.branchContent"
-                class="fake-textarea w-full flex-1 rounded-md p-3 text-sm resize-none leading-relaxed focus:ring-2 focus:ring-group1/20"
+                class="fake-textarea w-full flex-1 rounded-md p-3 text-xs resize-none leading-relaxed"
+                :class="[
+                  currentGroupIndex === 0 && 'border-blue-500',
+                  currentGroupIndex === 1 && 'border-red-500',
+                  currentGroupIndex === 2 && 'border-yellow-500',
+                  currentGroupIndex === 3 && 'border-purple-500'
+                ]"
                 :readonly="currentGroup.isSubmitted"
                 placeholder="在此输入本组需求分析结果（理论型梳理要点，实践型补充细节）..."
               ></textarea>
             </div>
 
             <!-- 提交前检查事项 -->
-            <div class="bg-darkBg border border-borderColor rounded-lg p-4">
-              <h3 class="text-sm font-bold text-textMain mb-3 border-b border-borderColor/50 pb-2">提交前检查事项</h3>
-              <ul class="space-y-2 text-sm text-textMuted">
+            <div class="bg-darkBg border border-borderColor rounded-lg p-3">
+              <h3 class="text-xs font-bold text-textMain mb-2 border-b border-borderColor/50 pb-1.5">提交前检查事项</h3>
+              <ul class="space-y-1.5 text-xs text-textMuted">
                 <li v-for="check in checklist" :key="check.label" class="flex items-center gap-2" :class="check.valid ? 'text-accentGreen' : 'text-textMuted'">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path v-if="check.valid" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
@@ -150,7 +212,7 @@
               <div 
                 :class="[
                   'text-sm font-bold transition-all flex-1',
-                  currentGroup.isLoading ? 'text-group1 animate-pulse' : (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
+                  currentGroup.isLoading ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') : (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
                 ]"
               >
                 {{ statusText }}
@@ -159,7 +221,13 @@
               <button 
                 @click="handleSubmit" 
                 :disabled="currentGroup.isSubmitted || currentGroup.isLoading"
-                class="bg-group1 hover:bg-blue-600 disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                :class="[
+                  currentGroupIndex === 0 && 'bg-blue-500 hover:bg-blue-600 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)]',
+                  currentGroupIndex === 1 && 'bg-red-500 hover:bg-red-600 shadow-[0_4px_14px_0_rgba(239,68,68,0.39)]',
+                  currentGroupIndex === 2 && 'bg-yellow-500 hover:bg-yellow-600 shadow-[0_4px_14px_0_rgba(245,158,11,0.39)]',
+                  currentGroupIndex === 3 && 'bg-purple-500 hover:bg-purple-600 shadow-[0_4px_14px_0_rgba(139,92,246,0.39)]',
+                  'disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2'
+                ]"
               >
                 <template v-if="currentGroup.isLoading">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -313,15 +381,30 @@ const handleSubmit = () => {
 /* 伪输入框样式 */
 .fake-textarea {
   background-color: rgba(35, 41, 48, 0.5);
-  border: 1px solid #2d353e;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #2d353e;
   color: #d1d5db;
   transition: all 0.3s ease;
 }
 .fake-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
   background-color: rgba(35, 41, 48, 0.8);
+}
+
+/* 确保组特定边框颜色生效 */
+.fake-textarea.border-blue-500 {
+  border-color: #3b82f6 !important;
+}
+.fake-textarea.border-red-500 {
+  border-color: #ef4444 !important;
+}
+.fake-textarea.border-yellow-500 {
+  border-color: #f59e0b !important;
+}
+.fake-textarea.border-purple-500 {
+  border-color: #8b5cf6 !important;
 }
 
 /* Vue 动画 */
