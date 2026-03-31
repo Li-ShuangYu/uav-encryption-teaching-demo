@@ -27,15 +27,41 @@ const routes = [
         name: 'StudentTaskReceive',
         component: () => import('../views/StudentTaskReceive.vue'),
         meta: { title: '屏 4：学习工作台 - 任务接收 + 需求提交页（合并 1 个页）' }
-      }
+      },
       
-      // 剩下的 5 个页面，你可以直接复制上面的对象格式继续往下加
-      // {
-      //   path: '...',
-      //   name: '...',
-      //   component: () => import('../views/....vue'),
-      //   meta: { title: '...' }
-      // }
+      // ================= 教师端页面（续）=================
+      {
+        path: 'teacher/demand-split',
+        name: 'TeacherDemandSplit',
+        component: () => import('../views/TeacherDemandSplit.vue'),
+        meta: { title: '屏 3：教学控制台 - 4 组需求分屏页' }
+      },
+      {
+        path: 'teacher/scheme-split',
+        name: 'TeacherSchemeSplit',
+        component: () => import('../views/TeacherSchemeSplit.vue'),
+        meta: { title: '屏 5：教学控制台 - 4 组方案分屏页' }
+      },
+      {
+        path: 'teacher/ai-evaluate',
+        name: 'TeacherAiEvaluate',
+        component: () => import('../views/TeacherAiEvaluate.vue'),
+        meta: { title: '屏 6：教学控制台 - 方案 AI 评估页' }
+      },
+      {
+        path: 'teacher/simulation',
+        name: 'TeacherSimulation',
+        component: () => import('../views/TeacherSimulation.vue'),
+        meta: { title: '屏 8：教学控制台 - 4 组仿真性能分屏页' }
+      },
+      
+      // ================= 学生端页面（续）=================
+      {
+        path: 'student/scheme-upload',
+        name: 'StudentSchemeUpload',
+        component: () => import('../views/StudentSchemeUpload.vue'),
+        meta: { title: '屏 7：学习工作台 - 方案上传 + 评估结果页（合并 1 个页）' }
+      }
     ]
   }
 ]
