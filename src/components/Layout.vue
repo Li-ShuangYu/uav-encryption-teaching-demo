@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen p-4 flex justify-center items-start relative bg-[#121417] text-[#d1d5db]">
-    <div class="w-full max-w-full bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
+    <div class="w-full max-w-full bg-darkBg border border-accentGreen rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
       <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head">
         <div @click="navigateToHome" class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider cursor-pointer hover:text-accentGreenDark transition">
@@ -23,7 +23,7 @@
                 <span>发布任务</span>
             </button> -->
             
-            <div class="h-4 w-px bg-borderColor mx-2"></div>
+            <div class="h-4 w-px bg-accentGreen/30 mx-2"></div>
 
             <div class="flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"></path></svg>
@@ -40,7 +40,7 @@
     </div>
 
     <div v-show="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 backdrop-blur-sm transition-opacity">
-        <div class="bg-panelBg border border-borderColor rounded-xl w-[550px] shadow-2xl flex flex-col overflow-hidden">
+        <div class="bg-panelBg border border-accentGreen rounded-xl w-[550px] shadow-2xl flex flex-col overflow-hidden">
             <div class="px-6 py-4 border-b border-borderColor flex justify-between items-center bg-cardInnerBg">
                 <h3 class="text-lg font-bold text-white flex items-center">
                     <svg class="w-5 h-5 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>

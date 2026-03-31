@@ -67,12 +67,12 @@
                             <span>3分钟前</span>
                         </div>
                         <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组1&background=10b981&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
+                            <img src="https://ui-avatars.com/api/?name=组1&background=3b82f6&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
                             <div class="flex-col w-full pr-14">
                                 <div class="text-sm text-gray-200 leading-snug">补充：密钥更新低功耗需求，无人机机载设备电池容量有限，加密算法执行时额外功耗需控制在最低水平。</div>
                                 <div class="flex items-center mt-1.5 space-x-2">
                                     <span class="text-xs text-textMuted">第1组 - 张实（实践型）</span>
-                                    <span class="bg-green-900/40 text-green-400 text-[10px] px-1.5 py-0.5 rounded border border-green-800/50">支线低功耗</span>
+                                    <span class="bg-blue-900/40 text-blue-400 text-[10px] px-1.5 py-0.5 rounded border border-blue-800/50">支线低功耗</span>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                 <div class="text-sm text-gray-200 leading-snug">避免非法设备接入通信链路，必须实现双向身份认证，且认证握手时延需控制在毫秒级以内。</div>
                                 <div class="flex items-center mt-1.5 space-x-2">
                                     <span class="text-xs text-textMuted">第3组 - 赵组（组织型）</span>
-                                    <span class="bg-blue-900/40 text-blue-400 text-[10px] px-1.5 py-0.5 rounded border border-blue-800/50">主线需求</span>
+                                    <span class="bg-yellow-900/40 text-yellow-400 text-[10px] px-1.5 py-0.5 rounded border border-yellow-800/50">主线需求</span>
                                 </div>
                             </div>
                         </div>
@@ -148,33 +148,35 @@
         <div class="flex-1 flex flex-col bg-darkBg min-h-0">
             
             <div class="p-4 flex-1 flex flex-col border-b border-borderColor min-h-0">
-                <div class="text-sm font-bold text-accentGreen mb-2">
-                    # 需求词云分析 <span class="text-textMuted font-normal">（当前任务：无人机通信加密设计）</span>
+                <div class="text-sm font-bold text-accentGreen mb-2 flex items-center">
+                    <svg class="w-4 h-4 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    需求词云分析 <span class="text-textMuted font-normal">（当前任务：无人机通信加密设计）</span>
                 </div>
                 
                 <div class="bg-panelBg flex-1 rounded-lg border border-borderColor p-4 relative word-cloud-container min-h-0">
-                    <div class="wc-item text-[#20c997] text-4xl" style="top: 50%; left: 50%;">通信加密</div>
+                    <div class="wc-item text-[#3b82f6] text-4xl" style="top: 50%; left: 50%;">通信加密</div>
                     <div class="wc-item text-[#3b82f6] text-3xl" style="top: 25%; left: 30%;">低功耗优化</div>
                     <div class="wc-item text-[#ef4444] text-2xl" style="top: 75%; left: 70%;">侧信道防护</div>
                     <div class="wc-item text-[#8b5cf6] text-xl" style="top: 30%; left: 75%;">抗重放攻击</div>
                     <div class="wc-item text-[#f59e0b] text-xl" style="top: 70%; left: 25%;">后量子算法</div>
-                    <div class="wc-item text-[#10b981] text-lg" style="top: 50%; left: 20%;">机密性</div>
-                    <div class="wc-item text-[#ec4899] text-lg" style="top: 50%; left: 80%;">完整性</div>
-                    <div class="wc-item text-[#06b6d4] text-base" style="top: 15%; left: 50%;">可用性</div>
-                    <div class="wc-item text-[#d97706] text-base" style="top: 85%; left: 50%;">时延敏感</div>
-                    <div class="wc-item text-[#10b981] text-sm" style="top: 20%; left: 15%;">算力有限</div>
+                    <div class="wc-item text-[#3b82f6] text-lg" style="top: 50%; left: 20%;">机密性</div>
+                    <div class="wc-item text-[#ef4444] text-lg" style="top: 50%; left: 80%;">完整性</div>
+                    <div class="wc-item text-[#f59e0b] text-base" style="top: 15%; left: 50%;">可用性</div>
+                    <div class="wc-item text-[#8b5cf6] text-base" style="top: 85%; left: 50%;">时延敏感</div>
+                    <div class="wc-item text-[#3b82f6] text-sm" style="top: 20%; left: 15%;">算力有限</div>
                     <div class="wc-item text-[#ef4444] text-sm" style="top: 80%; left: 85%;">身份认证</div>
-                    <div class="wc-item text-[#3b82f6] text-sm" style="top: 80%; left: 15%;">密钥更新</div>
+                    <div class="wc-item text-[#f59e0b] text-sm" style="top: 80%; left: 15%;">密钥更新</div>
                     <div class="wc-item text-[#8b5cf6] text-sm" style="top: 20%; left: 85%;">兼容性</div>
-                    <div class="wc-item text-[#f59e0b] text-sm" style="top: 10%; left: 70%;">低时延</div>
-                    <div class="wc-item text-[#ec4899] text-sm" style="top: 90%; left: 30%;">低功耗</div>
+                    <div class="wc-item text-[#3b82f6] text-sm" style="top: 10%; left: 70%;">低时延</div>
+                    <div class="wc-item text-[#ef4444] text-sm" style="top: 90%; left: 30%;">低功耗</div>
                 </div>
             </div>
 
             <div class="p-4 flex-1 flex flex-col min-h-0">
                 <div class="text-sm font-bold text-accentGreen mb-2 flex items-center justify-between">
                     <div class="flex items-center">
-                        <span class="mr-1 text-base">?</span> 需求汇总梳理
+                        <svg class="w-4 h-4 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        需求汇总梳理
                     </div>
                     <button @click="viewGroupDemands" class="bg-accentGreen hover:bg-accentGreenDark text-white text-xs px-3 py-1 rounded transition">
                         查看各组需求
@@ -182,55 +184,55 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 flex-1 min-h-0">
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-accentGreenDark transition overflow-y-auto scrollbar-hide">
-                        <div class="flex items-start space-x-2">
-                            <div class="bg-accentGreen/20 text-accentGreen p-1 rounded mt-0.5 shrink-0">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-accentGreen font-bold text-sm mb-1">【需求点一】</div>
-                                <p class="text-sm text-gray-200 leading-snug">高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-accentGreen">安全加密</span>
-                            <span class="text-textMuted">优先级：高</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-accentGreenDark transition overflow-y-auto scrollbar-hide">
+                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-blue-500 transition overflow-y-auto scrollbar-hide">
                         <div class="flex items-start space-x-2">
                             <div class="bg-blue-500/20 text-blue-400 p-1 rounded mt-0.5 shrink-0">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <div>
-                                <div class="text-blue-400 font-bold text-sm mb-1">【需求点二】</div>
-                                <p class="text-sm text-gray-200 leading-snug">高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。</p>
+                                <div class="text-blue-400 font-bold text-sm mb-1">【需求点一】</div>
+                                <p class="text-sm text-gray-200 leading-snug">高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。</p>
                             </div>
                         </div>
                         <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-blue-400">数据校验</span>
+                            <span class="text-blue-400">安全加密</span>
                             <span class="text-textMuted">优先级：高</span>
                         </div>
                     </div>
 
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-accentGreenDark transition overflow-y-auto scrollbar-hide">
+                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-red-500 transition overflow-y-auto scrollbar-hide">
                         <div class="flex items-start space-x-2">
                             <div class="bg-red-500/20 text-red-400 p-1 rounded mt-0.5 shrink-0">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             </div>
                             <div>
-                                <div class="text-red-400 font-bold text-sm mb-1">【需求点三】</div>
+                                <div class="text-red-400 font-bold text-sm mb-1">【需求点二】</div>
+                                <p class="text-sm text-gray-200 leading-snug">高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。</p>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center space-x-3 text-xs">
+                            <span class="text-red-400">数据校验</span>
+                            <span class="text-textMuted">优先级：高</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-yellow-500 transition overflow-y-auto scrollbar-hide">
+                        <div class="flex items-start space-x-2">
+                            <div class="bg-yellow-500/20 text-yellow-400 p-1 rounded mt-0.5 shrink-0">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <div>
+                                <div class="text-yellow-400 font-bold text-sm mb-1">【需求点三】</div>
                                 <p class="text-sm text-gray-200 leading-snug">低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。</p>
                             </div>
                         </div>
                         <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-red-400">实时响应</span>
+                            <span class="text-yellow-400">实时响应</span>
                             <span class="text-textMuted">优先级：中</span>
                         </div>
                     </div>
 
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-accentGreenDark transition overflow-y-auto scrollbar-hide">
+                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-purple-500 transition overflow-y-auto scrollbar-hide">
                         <div class="flex items-start space-x-2">
                             <div class="bg-purple-500/20 text-purple-400 p-1 rounded mt-0.5 shrink-0">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
