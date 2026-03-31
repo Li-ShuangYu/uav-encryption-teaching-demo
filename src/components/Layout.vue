@@ -10,14 +10,14 @@
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
             <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
-                <option value="/teacher/task-publish">实验阶段：1. 需求分析</option>
-                <option value="/teacher/demand-summary">实验阶段：1. 需求汇总</option>
-                <option value="/teacher/demand-split">实验阶段：1. 4组需求分屏</option>
-                <option value="/student/task-receive">实验阶段：1. 学生工作台</option>
-                <option value="/teacher/scheme-split">实验阶段：2. 4组方案分屏</option>
-                <option value="/teacher/ai-evaluate">实验阶段：2. AI评估</option>
-                <option value="/student/scheme-upload">实验阶段：2. 学生方案上传</option>
-                <option value="/teacher/simulation">实验阶段：3. 仿真性能</option>
+                <option value="/teacher/task-publish">需求分析阶阶段：1. 教师任务发布</option>
+                <option value="/teacher/demand-summary">需求分析阶阶段：1. 需求汇总页</option>
+                <option value="/teacher/demand-split">需求分析阶阶段：1. 4组需求分屏</option>
+                <option value="/student/task-receive">需求分析阶段：1. 学生需求上传页</option>
+                <option value="/teacher/scheme-split">方案设计阶段：2. 4组方案分屏</option>
+                <option value="/teacher/ai-evaluate">方案设计阶段：2. AI评估</option>
+                <option value="/student/scheme-upload">方案设计阶段：2. 学生方案上传</option>
+                <option value="/teacher/simulation">仿真推演阶段：3. 仿真性能</option>
             </select>
 
             <!-- <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
