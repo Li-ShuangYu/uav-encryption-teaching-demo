@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen p-4 flex justify-center items-start relative bg-[#121417] text-[#d1d5db]">
-    <div class="w-full max-w-[1400px] bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
+    <div class="w-full max-w-full bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
       <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor">
         <div class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider">
@@ -20,10 +20,10 @@
                 <option value="/teacher/simulation">实验阶段：3. 仿真性能</option>
             </select>
 
-            <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
+            <!-- <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 <span>发布任务</span>
-            </button>
+            </button> -->
             
             <div class="h-4 w-px bg-borderColor mx-2"></div>
 
