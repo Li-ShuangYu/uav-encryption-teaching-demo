@@ -65,7 +65,7 @@
     </header>
 
     <main class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-darkBg" @click="showDropdown = false">
-      <div class="flex-1 grid grid-cols-3 gap-6">
+      <div class="flex-1 grid grid-cols-4 gap-6">
         <!-- 教师下发任务 -->
         <section class="col-span-1 bg-panelBg border border-borderColor rounded-lg shadow-lg overflow-hidden flex flex-col">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
@@ -98,17 +98,16 @@
           </div>
         </section>
 
-        <!-- 学生需求提交（合并：本组需求响应单填写 + 提交与 AI 分类处理） -->
-        <section class="col-span-2 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden relative">
+        <!-- 本组需求响应单填写 -->
+        <section class="col-span-2 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
             <h2 class="font-bold text-white flex items-center gap-2">
               <svg class="w-5 h-5 text-group1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-              学生需求提交
+              本组需求响应单填写
             </h2>
             <span class="text-xs text-textMuted">建议与AI多模态交互辅助完成</span>
           </div>
           <div class="p-5 flex flex-col gap-5 flex-1">
-            <!-- 主线方案设计方向 -->
             <div>
               <label class="block text-sm font-bold text-textMain mb-2">主线方案设计方向 </label>
               <div class="fake-textarea w-full rounded-md p-3 text-sm flex items-start gap-2 bg-darkBg opacity-80 cursor-not-allowed">
@@ -117,7 +116,6 @@
               </div>
             </div>
 
-            <!-- 选定支线任务 -->
             <div class="flex-1 flex flex-col">
               <label class="block text-sm font-bold text-textMain mb-2">
                 选定支线任务：<span class="text-accentGreen">{{ currentGroup.branchTitle }}</span>
@@ -130,11 +128,22 @@
                 placeholder="在此输入本组需求分析结果（理论型梳理要点，实践型补充细节）..."
               ></textarea>
             </div>
+          </div>
+        </section>
 
-            <!-- 提交前检查事项 -->
-            <div class="bg-darkBg border border-borderColor rounded-lg p-4">
+        <!-- 提交与 AI 分类处理 -->
+        <section class="col-span-1 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden relative">
+          <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg">
+            <h2 class="font-bold text-white flex items-center gap-2">
+              <svg class="w-5 h-5 text-textMuted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              提交与 AI 分类处理
+            </h2>
+          </div>
+          
+          <div class="p-5 flex flex-col justify-between flex-1">
+            <div class="bg-darkBg border border-borderColor rounded-lg p-4 mb-6">
               <h3 class="text-sm font-bold text-textMain mb-3 border-b border-borderColor/50 pb-2">提交前检查事项</h3>
-              <ul class="space-y-2 text-sm text-textMuted">
+              <ul class="space-y-3 text-sm text-textMuted">
                 <li v-for="check in checklist" :key="check.label" class="flex items-center gap-2" :class="check.valid ? 'text-accentGreen' : 'text-textMuted'">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path v-if="check.valid" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -145,11 +154,10 @@
               </ul>
             </div>
 
-            <!-- 状态文本和提交按钮 -->
-            <div class="flex items-center gap-4">
+            <div class="flex flex-col gap-4 mt-auto">
               <div 
                 :class="[
-                  'text-sm font-bold transition-all flex-1',
+                  'text-center text-sm font-bold transition-all',
                   currentGroup.isLoading ? 'text-group1 animate-pulse' : (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
                 ]"
               >
@@ -159,7 +167,7 @@
               <button 
                 @click="handleSubmit" 
                 :disabled="currentGroup.isSubmitted || currentGroup.isLoading"
-                class="bg-group1 hover:bg-blue-600 disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                class="w-full bg-group1 hover:bg-blue-600 disabled:bg-gray-600 text-white font-bold py-4 rounded-lg shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <template v-if="currentGroup.isLoading">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

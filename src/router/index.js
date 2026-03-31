@@ -10,6 +10,13 @@ const routes = [
     component: () => import('../views/InitialPage.vue'),
     meta: { title: '初始页面' }
   },
+  // ================= 分组推荐页面 =================
+  {
+    path: '/group-recommendation',
+    name: 'GroupRecommendation',
+    component: () => import('../views/GroupRecommendation.vue'),
+    meta: { title: '分组推荐' }
+  },
   // ================= 教师端页面 =================
   {
     path: '/teacher',
