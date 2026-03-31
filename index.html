@@ -1,10 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue</title>
+    <title>教师控制台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121417',      
+                        panelBg: '#1c2126',     
+                        cardInnerBg: '#232930', 
+                        borderColor: '#2d353e', 
+                        accentGreen: '#23b586', 
+                        accentGreenDark: '#1a8a66',
+                        textMain: '#d1d5db',    
+                        textMuted: '#6b7280',   
+                    },
+                    fontSize: {
+                        'xxs': '0.65rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #121417; color: #d1d5db; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
   </head>
   <body>
     <div id="app"></div>
