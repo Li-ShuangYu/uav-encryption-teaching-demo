@@ -2,7 +2,7 @@
   <div class="min-h-screen p-4 flex justify-center items-start relative bg-[#121417] text-[#d1d5db]">
     <div class="w-full max-w-full bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
-      <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor">
+      <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head">
         <div class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="2"></circle></svg>
             <span>教师控制台 <span class="text-textMuted text-sm font-normal ml-2">| 需求分析阶段</span></span>
@@ -108,3 +108,16 @@ const handleNavigate = (event) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.min-h-screen {
+    height: 100%;
+    overflow: hidden;
+    .w-full {
+        height: 100%;
+        .head {
+            flex-shrink: 0;
+        }
+    }
+}
+</style>

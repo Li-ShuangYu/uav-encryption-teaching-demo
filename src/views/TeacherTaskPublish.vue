@@ -5,17 +5,17 @@
 
     <div class="w-full h-[12vh] shrink-0 bg-cardInnerBg border border-borderColor rounded-xl p-4 md:p-6 flex flex-col justify-center shadow-2xl">
       <div class="grid grid-cols-3 gap-y-4 gap-x-10 text-[1.1rem]">
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">课程名称:</span><span class="text-white font-bold">无人机密码系统设计实战</span></div>
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">实现阶段:</span><span class="text-white font-bold">第一阶段：需求分析</span></div>
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">学生人数总计:</span><span class="text-white font-bold">28 人</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">课程名称：</span><span class="text-white font-bold">无人机密码系统设计实战</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">实现阶段：</span><span class="text-white font-bold">第一阶段：需求分析</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">学生人数总计：</span><span class="text-white font-bold">28 人</span></div>
         
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">当前里程:</span><span class="text-white font-bold">无人机通信加密设计</span></div>
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">分组设置:</span><span class="text-white font-bold">4 个实战小组</span></div>
-        <div class="flex items-center"><span class="text-textMuted w-28 shrink-0">课时时长:</span><span class="text-white font-bold">45 分钟</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">当前里程：</span><span class="text-white font-bold">无人机通信加密设计</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">分组设置：</span><span class="text-white font-bold">4 个实战小组</span></div>
+        <div class="flex items-center item-label"><span class="text-textMuted w-28 shrink-0">课时时长：</span><span class="text-white font-bold">45 分钟</span></div>
       </div>
     </div>
 
-    <div class="w-full h-[24vh] shrink-0 grid grid-cols-4 gap-4">
+    <div class="w-full  shrink-0 grid grid-cols-4 gap-4">
       <div class="bg-panelBg border-t-4 border-warningOrg rounded-lg p-5 shadow-lg flex flex-col">
         <div class="flex items-center text-warningOrg font-bold text-[1.15rem] mb-3 tracking-wide">
           【需求点一】
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="w-full h-[38vh] shrink-0 bg-cardInnerBg border border-borderColor rounded-xl p-5 shadow-2xl flex flex-col">
+    <div class="w-full shrink-0 bg-cardInnerBg border border-borderColor rounded-xl p-5 shadow-2xl flex flex-col">
       <div class="mb-4 bg-darkBg border border-borderColor p-4 rounded-lg flex-none">
         <div class="flex items-center mb-3">
           <div class="w-1.5 h-5 bg-accentGreen mr-3 rounded-full"></div>
@@ -106,7 +106,7 @@
       </div>
     </div>
     
-    <div class="w-full h-[12vh] shrink-0 flex justify-center items-center">
+    <div class="w-full h-[12vh] shrink-0 flex justify-center items-center confirm-button">
       <button 
         @click="handlePublish" 
         :disabled="isPublishing"
@@ -207,5 +207,19 @@ const confirmJump = () => {
 .scrollbar-hide { 
   -ms-overflow-style: none; 
   scrollbar-width: none; 
+}
+</style>
+
+<style lang="scss" scoped>
+.w-screen {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    justify-content: space-between;
+    overflow-y: auto;
+}
+.text-textMuted {
+  text-align: right;
+  width: 8rem;
 }
 </style>
