@@ -98,25 +98,25 @@ const groups = reactive([
   { 
     id: 1, name: '第一组', color: '#3b82f6', score: 92, progress: 0, isLoading: true, delay: 800,
     values: [95, 90, 85, 80, 90],
-    conclusion: '采用国密 SM4+SM3，保密性与完整性表现极佳，整体架构成熟稳健。',
+    conclusion: '采用 SM4+SM3 国密组合方案，保密性与完整性表现极佳，整体架构成熟稳健。',
     suggestion: '可引入硬件加速模块，进一步降低加密带来的性能损耗。'
   },
   { 
     id: 2, name: '第二组', color: '#ef4444', score: 78, progress: 0, isLoading: true, delay: 1600,
     values: [85, 80, 40, 95, 60],
-    conclusion: '纯非对称加密（RSA）方案，安全性理论值高，但性能消耗过大。',
+    conclusion: '采用纯 RSA 非对称加密方案，安全性理论值高，但性能消耗过大。',
     suggestion: '必须改为混合加密体制（RSA+AES/SM4），避免性能瓶颈。'
   },
   { 
     id: 3, name: '第三组', color: '#f59e0b', score: 85, progress: 0, isLoading: true, delay: 2400,
     values: [80, 85, 95, 75, 85],
-    conclusion: '采用轻量级流密码，系统吞吐量极高，时延低。',
+    conclusion: '采用轻量级流密码方案，系统吞吐量极高，时延低。',
     suggestion: '需增强密钥分发机制的安全防护等级，加入动态轮转。'
   },
   { 
     id: 4, name: '第四组', color: '#8b5cf6', score: 88, progress: 0, isLoading: true, delay: 3200,
     values: [88, 95, 80, 70, 95],
-    conclusion: '引入区块链技术保障数据防篡改，完整性极高。',
+    conclusion: '采用区块链分布式防护方案，利用区块链技术保障数据防篡改，完整性极高。',
     suggestion: '考虑优化共识算法，减少无人机节点的计算负荷。'
   }
 ]);

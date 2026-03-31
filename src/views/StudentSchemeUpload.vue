@@ -168,7 +168,7 @@
         <transition name="fade">
           <div v-if="currentGroup.state.evalStatus === 'finished'" class="flex-1 flex flex-col p-6 overflow-hidden">
             <div class="flex-1 flex items-center justify-center min-h-0 relative">
-              <div :id="`radar-chart-${currentGroupId.value}`" class="w-2/3 h-full min-h-[250px]"></div>
+              <div :id="`radar-chart-${currentGroupId}`" class="w-2/3 h-full min-h-[250px]"></div>
               <div class="w-1/3 flex flex-col items-center justify-center border-l border-borderColor pl-6 shrink-0">
                 <div class="text-textMuted text-sm mb-2">综合安全评分</div>
                 <div class="text-7xl font-black" :style="{ color: currentGroup.themeColor, textShadow: `0 0 20px ${currentGroup.themeColor}80` }">
@@ -206,6 +206,7 @@ import * as echarts from 'echarts';
 const showDropdown = ref(false);
 const currentGroupId = ref('g1');
 const fileInput = ref(null); // 文件选择框引用
+let chartInstance = null; // 图表实例
 
 const uiState = reactive({
   showToast: false
@@ -217,62 +218,62 @@ const groups = reactive([
     id: 'g1',
     name: '第一组',
     themeColor: '#3b82f6', // 蓝
-    tags: ['防窃听(高保密)', '防篡改(高完整)', '低功耗优化'],
-    fileName: '第一组_PRESENT低功耗架构方案.docx', // ✅ 修改为Word
+    tags: ['防窃听(高保密)', '防篡改(高完整)', '国密标准'],
+    fileName: '第一组_SM4+SM3国密组合方案.docx',
     fileSize: '2.4 MB',
     aiScore: 86,
     aiLevel: '良好 (B+)',
     radarData: [85, 80, 95, 95, 80], // 保密、完整、可用、成本、创新
-    aiConclusion: "本组主线稳固，支线采用 <span style='color:#3b82f6;font-weight:bold;'>PRESENT 轻量级加密算法</span>，重点解决了低功耗与加密的平衡问题。保密性达标，资源占用极低，非常适合算力受限的无人机终端。",
-    aiSuggestion: "建议进一步优化密钥更新流程，可在不增加功耗的前提下提升动态安全性。",
-    state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false } // ✅ 新增上传状态
+    aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>SM4+SM3 国密组合方案</span>，符合国家密码标准，安全性高，性能稳定。重点解决了国密算法在无人机环境中的应用问题。",
+    aiSuggestion: "建议进一步优化密钥管理流程，可在不增加系统复杂度的前提下提升动态安全性。",
+    state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
   {
     id: 'g2',
     name: '第二组',
     themeColor: '#ef4444', // 红
-    tags: ['防窃听(高保密)', '防篡改(高完整)', '侧信道防护'],
-    fileName: '第二组_SM4掩码防护架构方案.docx',
+    tags: ['防窃听(高保密)', '防篡改(高完整)', '非对称加密'],
+    fileName: '第二组_纯RSA非对称加密方案.docx',
     fileSize: '3.1 MB',
     aiScore: 90,
     aiLevel: '优秀 (A)',
     radarData: [95, 90, 80, 80, 90],
-    aiConclusion: "本组采用 <span style='color:#ef4444;font-weight:bold;'>SM4加密配合轻量级掩码防护技术</span>，在保障基础通信安全的同时，极大提升了抵御侧信道攻击的能力，工程可行性与安全性均表现优异。",
-    aiSuggestion: "掩码防护略微增加了系统开销，建议在代码实现层进行指令级优化以降低计算时延。",
+    aiConclusion: "本组采用 <span style='color:#ef4444;font-weight:bold;'>纯 RSA 非对称加密方案</span>，在保障基础通信安全的同时，提供了更高的密钥安全性，工程可行性与安全性均表现优异。",
+    aiSuggestion: "RSA 算法计算开销较大，建议在代码实现层进行优化以降低计算时延。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
   {
     id: 'g3',
     name: '第三组',
-    themeColor: '#f59e0b', // 橙
-    tags: ['防窃听(高保密)', '防篡改(高完整)', '抗重放攻击'],
-    fileName: '第三组_抗重放加密架构方案.docx',
+    themeColor: '#f59e0b', // 黄
+    tags: ['防窃听(高保密)', '防篡改(高完整)', '低功耗'],
+    fileName: '第三组_轻量级流密码方案.docx',
     fileSize: '2.8 MB',
     aiScore: 88,
     aiLevel: '良好 (A-)',
     radarData: [90, 95, 85, 85, 85],
-    aiConclusion: "本组采用 <span style='color:#f59e0b;font-weight:bold;'>SM4加密+随机数+序列号机制</span>，有效抵御了重放攻击。身份认证逻辑严密，完整性校验机制十分完善，逻辑自洽性强。",
-    aiSuggestion: "随机数生成器的熵源质量是关键，建议在仿真验证时引入更贴近真实的伪随机数分布模型。",
+    aiConclusion: "本组采用 <span style='color:#f59e0b;font-weight:bold;'>轻量级流密码方案</span>，有效降低了系统功耗，同时保证了加密性能。身份认证逻辑严密，完整性校验机制十分完善。",
+    aiSuggestion: "流密码的密钥管理是关键，建议在仿真验证时引入更安全的密钥更新机制。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
   {
     id: 'g4',
     name: '第四组',
     themeColor: '#8b5cf6', // 紫
-    tags: ['防窃听(高保密)', '防篡改(高完整)', '后量子适配'],
-    fileName: '第四组_后量子算法适配方案.docx',
+    tags: ['防窃听(高保密)', '防篡改(高完整)', '分布式防护'],
+    fileName: '第四组_区块链分布式防护方案.docx',
     fileSize: '4.2 MB',
     aiScore: 93,
     aiLevel: '极优 (A+)',
     radarData: [95, 95, 75, 70, 98],
-    aiConclusion: "本组突破性采用 <span style='color:#8b5cf6;font-weight:bold;'>后量子加密算法</span> 适配无人机架构，前瞻性极强。在抗量子计算破解方面具有显著优势，创新性尤为突出，方案体系十分完整。",
-    aiSuggestion: "算法适配带来了较高的算力消耗，建议探索在非核心链路中回退至经典算法以平衡整体性能。",
+    aiConclusion: "本组突破性采用 <span style='color:#8b5cf6;font-weight:bold;'>区块链分布式防护方案</span>，利用区块链技术实现分布式防护，提高系统的安全性和可靠性。创新性尤为突出，方案体系十分完整。",
+    aiSuggestion: "区块链技术带来了一定的系统复杂度，建议探索在关键节点中应用，以平衡安全性和性能。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   }
 ]);
 
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
-let chartInstance = null;
+
 
 // ==== 核心交互逻辑 ====
 

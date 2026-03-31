@@ -64,26 +64,26 @@
         </div>
       </div>
 
-      <div class="bg-[#181a20] rounded-xl border border-emerald-900/50 flex flex-col p-5 hover:border-emerald-700/60 transition-colors shadow-lg shadow-black/20">
+      <div class="bg-[#181a20] rounded-xl border border-red-900/50 flex flex-col p-5 hover:border-red-700/60 transition-colors shadow-lg shadow-black/20">
         <div class="flex justify-between items-center mb-4 shrink-0 border-b border-gray-800 pb-3">
           <div class="flex items-center space-x-3">
-            <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-emerald-900/50">组2</div>
-            <h2 class="text-[17px] font-bold text-gray-100">侧信道防护方向</h2>
+            <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-red-900/50">组2</div>
+            <h2 class="text-[17px] font-bold text-gray-100">纯 RSA 非对称加密方案</h2>
           </div>
           <span class="bg-green-900/30 text-green-400 text-xs px-2.5 py-1 rounded border border-green-800/50 font-medium">需求已提交</span>
         </div>
         
         <div class="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar pr-1">
           <div class="text-[13.5px] text-gray-300 leading-relaxed">
-            <p class="text-emerald-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-emerald-500 mr-2 rounded-sm"></span>【主线需求：无人机通信加密设计】</p>
+            <p class="text-red-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-red-500 mr-2 rounded-sm"></span>【主线需求：无人机通信加密设计】</p>
             <p class="mb-3 pl-3">通信加密的时延不能太长，否则影响无人机指令传输。</p>
-            <p class="text-emerald-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-emerald-500 mr-2 rounded-sm"></span>【支线需求：侧信道防护专项】</p>
+            <p class="text-red-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-red-500 mr-2 rounded-sm"></span>【支线需求：侧信道防护专项】</p>
             <p class="pl-3">无人机容易遭受侧信道攻击、重放攻击，侧信道防护、抗重放是重要需求。</p>
             
-            <div class="mt-4 p-3 bg-emerald-900/10 border border-emerald-900/30 rounded-lg flex items-start space-x-2">
-              <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
+            <div class="mt-4 p-3 bg-red-900/10 border border-red-900/30 rounded-lg flex items-start space-x-2">
+              <svg class="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
               <div>
-                <span class="text-emerald-300 font-bold text-xs block mb-0.5">AI 需求分析提炼</span>
+                <span class="text-red-300 font-bold text-xs block mb-0.5">AI 需求分析提炼</span>
                 <span class="text-gray-400 text-xs">已额外补充2条侧信道防护关键指标需求，并同步下发掩码防护技术参考资料。</span>
               </div>
             </div>
@@ -134,27 +134,27 @@
         </div>
       </div>
 
-      <div class="bg-[#181a20] rounded-xl border border-red-900/50 flex flex-col p-5 hover:border-red-700/60 transition-colors shadow-lg shadow-black/20">
+      <div class="bg-[#181a20] rounded-xl border border-purple-900/50 flex flex-col p-5 hover:border-purple-700/60 transition-colors shadow-lg shadow-black/20">
         <div class="flex justify-between items-center mb-4 shrink-0 border-b border-gray-800 pb-3">
           <div class="flex items-center space-x-3">
-            <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-red-900/50">组4</div>
-            <h2 class="text-[17px] font-bold text-gray-100">后量子算法适配方向</h2>
+            <div class="w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-purple-900/50">组4</div>
+            <h2 class="text-[17px] font-bold text-gray-100">区块链分布式防护方案</h2>
           </div>
           <span class="bg-green-900/30 text-green-400 text-xs px-2.5 py-1 rounded border border-green-800/50 font-medium">需求已提交</span>
         </div>
         
         <div class="flex-1 flex flex-col justify-between overflow-y-auto custom-scrollbar pr-1">
           <div class="text-[13.5px] text-gray-300 leading-relaxed">
-            <p class="text-red-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-red-500 mr-2 rounded-sm"></span>【主线需求：无人机通信加密设计】</p>
+            <p class="text-purple-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-purple-500 mr-2 rounded-sm"></span>【主线需求：无人机通信加密设计】</p>
             <p class="mb-3 pl-3">通信数据加密需要支持多种数据类型，确保指令、数据传输都安全。</p>
-            <p class="text-red-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-red-500 mr-2 rounded-sm"></span>【支线需求：后量子算法适配专项】</p>
-            <p class="pl-3">获取算法适配的算力需求、兼容性需求，补充到需求清单。</p>
+            <p class="text-purple-400 font-bold mb-1 flex items-center"><span class="w-1 h-3 bg-purple-500 mr-2 rounded-sm"></span>【支线需求：区块链分布式防护专项】</p>
+            <p class="pl-3">利用区块链技术实现分布式防护，提高系统的安全性和可靠性。</p>
             
-            <div class="mt-4 p-3 bg-red-900/10 border border-red-900/30 rounded-lg flex items-start space-x-2">
-              <svg class="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
+            <div class="mt-4 p-3 bg-purple-900/10 border border-purple-900/30 rounded-lg flex items-start space-x-2">
+              <svg class="w-4 h-4 text-purple-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
               <div>
-                <span class="text-red-300 font-bold text-xs block mb-0.5">AI 需求分析提炼</span>
-                <span class="text-gray-400 text-xs">清单分类完成。已成功同步主辅线技术参数及后量子算法所需具体算力与兼容性指标。</span>
+                <span class="text-purple-300 font-bold text-xs block mb-0.5">AI 需求分析提炼</span>
+                <span class="text-gray-400 text-xs">清单分类完成。已成功同步主辅线技术参数及区块链分布式防护所需具体指标。</span>
               </div>
             </div>
           </div>
