@@ -17,18 +17,12 @@
       <div 
         v-for="group in groupConfigs" 
         :key="group.id"
-        class="bg-panelBg border rounded-lg flex flex-col overflow-hidden relative"
-        :style="{
-          borderColor: group.themeColor,
-          boxShadow: `0 0 15px ${group.themeColor}33`
-        }"
+        class="bg-panelBg border rounded-lg flex flex-col shadow-lg overflow-hidden relative"
+        :class="group.isAlert ? 'border-alertRedBorder shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-borderColor'"
       >
         <div 
           class="px-4 py-3 border-b flex justify-between items-center"
-          :style="{
-            borderBottomColor: group.themeColor,
-            backgroundColor: `${group.themeColor}1A`
-          }"
+          :class="group.isAlert ? 'border-alertRedBorder bg-alertRedBg' : 'border-borderColor bg-cardInnerBg'"
         >
           <h2 class="font-bold flex items-center gap-2" :style="{ color: group.themeColor }">
             <span 
@@ -41,11 +35,11 @@
           </h2>
           <span 
             class="text-xs flex items-center gap-1 font-medium"
-            :style="{ color: group.themeColor }"
+            :class="group.isAlert ? 'text-alertRedText' : 'text-barGreen'"
           >
             <span 
               class="w-2 h-2 rounded-full animate-pulse"
-              :style="{ backgroundColor: group.themeColor }"
+              :class="group.isAlert ? 'bg-barRed' : 'bg-barGreen'"
             ></span>
             {{ group.statusText }}
           </span>
@@ -56,7 +50,7 @@
             v-for="metric in group.metrics" 
             :key="metric.label"
             class="bg-darkBg rounded p-2 text-center border"
-            :style="{ borderColor: `${group.themeColor}80` }"
+            :class="group.isAlert ? 'border-alertRedBorder/50' : 'border-borderColor'"
           >
             <div class="text-xs text-textMuted mb-1">{{ metric.label }}</div>
             <div class="text-lg font-bold" :class="metric.class || 'text-white'">
@@ -92,8 +86,7 @@ const groupConfigs = reactive([
       { label: '系统功耗', value: '12.5', unit: 'W' },
       { label: '加密成功率', value: '99.99%', unit: '', class: 'text-barGreen' }
     ],
-    // 增加随机振幅，模拟密文波形的急剧跳变
-    dataGenerator: () => 80 + (Math.random() * 40 - 20)
+    dataGenerator: () => 80 + Math.random() * 10
   },
   {
     id: 'group2',
@@ -107,7 +100,7 @@ const groupConfigs = reactive([
       { label: '系统功耗', value: '8.2', unit: 'W' },
       { label: '加密成功率', value: '98.50%', unit: '', class: 'text-barOrange' }
     ],
-    dataGenerator: () => 120 + (Math.random() * 60 - 30)
+    dataGenerator: () => 120 + Math.random() * 30
   },
   {
     id: 'group3',
@@ -121,11 +114,11 @@ const groupConfigs = reactive([
       { label: '系统功耗', value: '18.6', unit: 'W' },
       { label: '加密成功率', value: '99.90%', unit: '', class: 'text-barGreen' }
     ],
+    // 模拟区块链打包的周期性波动
     counter: 0,
     dataGenerator: function() {
       this.counter++;
-      // 加快正弦波周期并注入更多高频噪声
-      return 60 + Math.sin(this.counter / 2) * 20 + (Math.random() * 30 - 15);
+      return 60 + Math.sin(this.counter / 5) * 20 + Math.random() * 5;
     }
   },
   {
@@ -141,8 +134,8 @@ const groupConfigs = reactive([
       { label: '加密成功率', value: '92.50%', unit: '', class: 'text-barOrange' }
     ],
     dataGenerator: () => {
-      let val = 30 + Math.random() * 50;
-      if (Math.random() > 0.85) val = Math.random() * 10; // 模拟突发卡顿或深谷
+      let val = 30 + Math.random() * 15;
+      if (Math.random() > 0.95) val = 5; // 模拟突发卡顿
       return val;
     }
   }
@@ -159,8 +152,8 @@ const initCharts = () => {
 
     const myChart = echarts.init(chartDom);
     
-    // 初始化 200 个数据点（原本50），使波形图更密集
-    let data = Array.from({ length: 200 }, (_, i) => config.dataGenerator(i));
+    // 初始化 50 个数据点
+    let data = Array.from({ length: 50 }, (_, i) => config.dataGenerator(i));
 
     const option = {
       animation: false,
@@ -170,7 +163,7 @@ const initCharts = () => {
       series: [{
         type: 'line',
         data: data,
-        smooth: 0.1, // 降低平滑度，保留密码学波形的毛刺和锐利感
+        smooth: true,
         symbol: 'none',
         lineStyle: { color: config.themeColor, width: 2 },
         areaStyle: {
@@ -185,12 +178,12 @@ const initCharts = () => {
     myChart.setOption(option);
     chartInstances.push(myChart);
 
-    // 将定时器时间从 100ms 缩短到 30ms，拉高帧率
+    // 实时更新定时器
     const timer = setInterval(() => {
       data.shift();
       data.push(config.dataGenerator());
       myChart.setOption({ series: [{ data }] });
-    }, 30);
+    }, 100);
     
     timers.push(timer);
   });
@@ -198,6 +191,7 @@ const initCharts = () => {
 
 // 3. 生命周期管理
 onMounted(() => {
+  // 稍微延迟确保 DOM 完全渲染
   setTimeout(initCharts, 100);
   window.addEventListener('resize', handleResize);
 });
@@ -224,7 +218,7 @@ const handleResize = () => {
 .text-textMain { color: #d1d5db; }
 .text-textMuted { color: #9ca3af; }
 
-/* 警报配色 (不再强依赖，保留备用) */
+/* 警报配色 */
 .bg-alertRedBg { background-color: #2f181a; }
 .border-alertRedBorder { border-color: #ef4444; }
 .text-alertRedText { color: #ef4444; }
