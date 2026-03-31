@@ -9,6 +9,11 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
 }
 
+#app {
+    height: 100vh;
+    width: 100%;
+}
+
 /* 隐藏滚动条样式 */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
