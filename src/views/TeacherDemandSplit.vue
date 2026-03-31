@@ -13,9 +13,10 @@
         <div class="bg-gray-800/50 text-gray-300 px-4 py-1.5 rounded text-sm border border-gray-700 whitespace-nowrap">
           实现阶段: 1.需求分析 收尾
         </div>
-        <button class="bg-emerald-500 hover:bg-emerald-400 text-[#111318] px-4 py-1.5 rounded font-bold text-sm transition whitespace-nowrap">
-          【查看各组需求】
+        <button @click="backToSummary" class="bg-emerald-500 hover:bg-emerald-400 text-[#111318] px-4 py-1.5 rounded font-bold text-sm transition whitespace-nowrap">
+          【需求汇总】
         </button>
+       
         <div class="flex items-center text-gray-400 text-sm space-x-3 whitespace-nowrap">
           <span class="flex items-center">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -173,7 +174,7 @@
     </div>
 
     <div class="h-20 shrink-0 border-t border-gray-800 flex justify-center items-center bg-[#16181d]">
-      <button class="bg-blue-600 hover:bg-blue-500 text-white text-[15px] font-bold py-2.5 px-10 rounded-lg shadow-lg shadow-blue-900/50 transition tracking-wide flex items-center">
+      <button @click="enterSchemeDesign" class="bg-blue-600 hover:bg-blue-500 text-white text-[15px] font-bold py-2.5 px-10 rounded-lg shadow-lg shadow-blue-900/50 transition tracking-wide flex items-center">
         <span>进入方案设计阶段</span>
         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
       </button>
@@ -206,3 +207,17 @@
   display: none;
 }
 </style>
+
+<script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const backToSummary = () => {
+  router.push('/teacher/demand-summary')
+}
+
+const enterSchemeDesign = () => {
+  router.push('/teacher/scheme-split')
+}
+</script>

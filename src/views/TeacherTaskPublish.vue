@@ -158,6 +158,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 状态定义
 const isPublishing = ref(false)
@@ -195,8 +198,7 @@ const closeModal = () => {
 
 // 确认跳转逻辑
 const confirmJump = () => {
-  // 如果你在用 Vue Router，这里可以改为： router.push('/requirement-analysis')
-  window.location.href = 'RequirementAnalysis.html'
+  router.push('/teacher/demand-summary')
 }
 </script>
 

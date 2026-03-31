@@ -6,13 +6,13 @@
         <h1 class="text-xl font-bold text-white tracking-wide">无人机通信加密 - 方案 AI 评估</h1>
       </div>
       <button 
-        @click="$emit('back')"
+        @click="backToSchemeSplit"
         class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-textMain px-4 py-2 rounded shadow transition-colors flex items-center gap-2 text-sm"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        返回方案分屏
+        返回到方案设计
       </button>
     </header>
 
@@ -84,7 +84,14 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount, reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
+
+const router = useRouter();
+
+const backToSchemeSplit = () => {
+  router.push('/teacher/scheme-split');
+};
 
 // 1. 定义组别数据
 const groups = reactive([
