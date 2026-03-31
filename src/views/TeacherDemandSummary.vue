@@ -179,7 +179,7 @@
                         需求汇总梳理
                     </div>
                     <button @click="viewGroupDemands" class="bg-accentGreen hover:bg-accentGreenDark text-white text-xs px-3 py-1 rounded transition">
-                        查看各组需求
+                        AI评审各组需求
                     </button>
                 </div>
                 
