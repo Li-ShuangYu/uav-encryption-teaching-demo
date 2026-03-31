@@ -22,23 +22,12 @@
         :key="group.id"
         class="bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg"
       >
-        <div class="px-4 py-2 border-b border-borderColor bg-cardInnerBg flex justify-between items-center z-10">
-          <h2 class="font-bold flex items-center gap-2" :style="{ color: group.color }">
-            <span 
-              class="text-xs px-2 py-0.5 rounded"
-              :style="{ backgroundColor: `${group.color}33`, color: group.color }"
-            >
-              {{ group.name }}
-            </span> 
-            架构解析
-          </h2>
-        </div>
         
         <transition name="fade-overlay">
-          <div v-if="group.isLoading" class="absolute inset-0 top-[41px] bg-panelBg z-20 flex flex-col items-center justify-center">
+          <div v-if="group.isLoading" class="absolute inset-0 bg-panelBg z-30 flex flex-col items-center justify-center">
             <div class="scan-line" :style="{ background: `linear-gradient(to right, transparent, ${group.color}, transparent)` }"></div>
             <div class="mb-3 text-sm font-bold tracking-widest animate-pulse" :style="{ color: group.color }">
-              AI 深度推演中...
+              AI 专家系统推演中...
             </div>
             <div class="w-2/3 h-1.5 bg-darkBg rounded-full overflow-hidden border border-borderColor">
               <div 
@@ -47,7 +36,7 @@
                   width: group.progress + '%', 
                   backgroundColor: group.color,
                   boxShadow: `0 0 8px ${group.color}`,
-                  transitionDuration: '1.5s'
+                  transitionDuration: '1.2s'
                 }"
               ></div>
             </div>
@@ -55,26 +44,54 @@
         </transition>
 
         <transition name="fade-content">
-          <div v-show="!group.isLoading" class="flex-1 flex flex-col p-4">
-            <div class="flex-1 flex items-center min-h-0">
-              <div :id="`chart-${group.id}`" class="w-2/3 h-full"></div>
+          <div v-show="!group.isLoading" class="w-full h-full flex">
+            
+            <div class="w-1/2 h-full flex flex-col p-4 border-r border-borderColor/30 justify-between">
               
-              <div class="w-1/3 flex flex-col items-center justify-center border-l border-borderColor/50 pl-4">
-                <div class="text-textMuted text-xs mb-1">AI 综合评分</div>
-                <div 
-                  class="text-5xl font-black" 
-                  :style="{ color: group.color, textShadow: `0 0 15px ${group.color}66` }"
+              <div class="shrink-0 flex items-center gap-2 mb-2">
+                <span 
+                  class="text-xs px-2 py-1 rounded font-bold"
+                  :style="{ backgroundColor: group.color + '30', color: group.color }"
                 >
-                  {{ group.score }}
+                  {{ group.name }}
+                </span> 
+                <span class="text-sm font-bold text-white tracking-wide">深度评估报告</span>
+              </div>
+
+              <div class="shrink-0 mb-2 pl-1 flex items-baseline gap-3">
+                <span class="text-textMuted text-sm font-bold">AI 综合评分</span>
+                <div class="flex items-baseline gap-1">
+                  <span 
+                    class="text-4xl font-black tracking-tighter" 
+                    :style="{ color: group.color, textShadow: `0 0 15px ${group.color}44` }"
+                  >
+                    {{ group.score }}
+                  </span>
+                  <span class="text-textMuted text-sm font-medium">/ 100</span>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-2 mt-auto">
+                <div class="bg-cardInnerBg/40 border-l-2 p-2 rounded-r" :style="{ borderColor: group.color }">
+                  <div class="text-xs font-bold mb-0.5" :style="{ color: group.color }">评估结论</div>
+                  <p class="text-[13px] text-textMain leading-snug">
+                    {{ group.conclusion }}
+                  </p>
+                </div>
+                
+                <div class="bg-cardInnerBg/20 border-l-2 border-textMuted p-2 rounded-r">
+                  <div class="text-xs font-bold mb-0.5 text-textMuted">优化建议</div>
+                  <p class="text-[13px] text-textMain leading-snug">
+                    {{ group.suggestion }}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div class="mt-2 p-3 bg-darkBg border border-borderColor rounded text-sm text-textMain leading-relaxed shrink-0">
-              <span class="font-bold" :style="{ color: group.color }">评估结论：</span>
-              {{ group.conclusion }}
-              <span class="text-textMuted text-xs block mt-1">优化建议：{{ group.suggestion }}</span>
+            <div class="w-1/2 h-full relative p-2">
+              <div :id="`chart-${group.id}`" class="w-full h-full"></div>
             </div>
+
           </div>
         </transition>
       </div>
@@ -93,31 +110,30 @@ const backToSchemeSplit = () => {
   router.push('/teacher/scheme-split');
 };
 
-// 1. 定义组别数据
 const groups = reactive([
   { 
-    id: 1, name: '第一组', color: '#3b82f6', score: 92, progress: 0, isLoading: true, delay: 800,
+    id: 1, name: '第一组', color: '#3b82f6', score: 92, progress: 0, isLoading: true, delay: 300,
     values: [95, 90, 85, 80, 90],
     conclusion: '采用 SM4+SM3 国密组合方案，保密性与完整性表现极佳，整体架构成熟稳健。',
     suggestion: '可引入硬件加速模块，进一步降低加密带来的性能损耗。'
   },
   { 
-    id: 2, name: '第二组', color: '#ef4444', score: 78, progress: 0, isLoading: true, delay: 1600,
+    id: 2, name: '第二组', color: '#ef4444', score: 78, progress: 0, isLoading: true, delay: 600,
     values: [85, 80, 40, 95, 60],
-    conclusion: '采用侧信道防护方案，安全性理论值高，但性能消耗过大。',
-    suggestion: '必须改为混合加密体制（RSA+AES/SM4），避免性能瓶颈。'
+    conclusion: '采用侧信道防护方案，安全性理论值高，但非对称算法在终端性能消耗过大。',
+    suggestion: '必须改为混合加密体制（RSA+AES/SM4），避免高频通信性能瓶颈。'
   },
   { 
-    id: 3, name: '第三组', color: '#f59e0b', score: 85, progress: 0, isLoading: true, delay: 2400,
+    id: 3, name: '第三组', color: '#f59e0b', score: 85, progress: 0, isLoading: true, delay: 900,
     values: [80, 85, 95, 75, 85],
-    conclusion: '采用轻量级流密码方案，系统吞吐量极高，时延低。',
-    suggestion: '需增强密钥分发机制的安全防护等级，加入动态轮转。'
+    conclusion: '采用轻量级流密码方案，系统吞吐量极高，时延表现优异，适合实时图传。',
+    suggestion: '需增强密钥分发机制的安全防护等级，建议加入动态轮转机制。'
   },
   { 
-    id: 4, name: '第四组', color: '#8b5cf6', score: 88, progress: 0, isLoading: true, delay: 3200,
+    id: 4, name: '第四组', color: '#8b5cf6', score: 88, progress: 0, isLoading: true, delay: 1200,
     values: [88, 95, 80, 70, 95],
-    conclusion: '采用区块链分布式防护方案，利用区块链技术保障数据防篡改，完整性极高。',
-    suggestion: '考虑优化共识算法，减少无人机节点的计算负荷。'
+    conclusion: '采用区块链分布式防护，保障数据防篡改及溯源，系统完整性等级极高。',
+    suggestion: '建议优化共识算法逻辑，以减少轻量化无人机节点的计算负荷。'
   }
 ]);
 
@@ -130,19 +146,30 @@ const indicators = [
   { name: '创新性', max: 100 }
 ];
 
-// 2. 初始化图表函数
 const initChart = (group) => {
   const chartDom = document.getElementById(`chart-${group.id}`);
   if (!chartDom) return;
   
   const myChart = echarts.init(chartDom);
+  
+  const customIndicators = indicators.map((ind, idx) => ({
+    name: `${ind.name}\n${group.values[idx]}%`,
+    max: ind.max
+  }));
+  
   const option = {
     radar: {
-      indicator: indicators,
-      radius: '65%',
+      indicator: customIndicators,
+      radius: '50%', 
+      center: ['50%', '50%'],
       splitNumber: 4,
-      axisName: { color: '#9ca3af', fontSize: 10 },
-      splitLine: { lineStyle: { color: ['#2d353e'] } },
+      axisName: { 
+        color: '#d1d5db', 
+        fontSize: 13, 
+        fontWeight: 'bold',
+        lineHeight: 16
+      },
+      splitLine: { lineStyle: { color: ['#2d353e'], width: 1 } },
       splitArea: { show: false },
       axisLine: { lineStyle: { color: '#2d353e' } }
     },
@@ -154,11 +181,12 @@ const initChart = (group) => {
         areaStyle: { 
           color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
             { color: group.color, offset: 0, opacity: 0.1 },
-            { color: group.color, offset: 1, opacity: 0.4 }
+            { color: group.color, offset: 1, opacity: 0.5 }
           ])
         },
         lineStyle: { width: 2, color: group.color },
-        symbolSize: 4
+        symbol: 'circle',
+        symbolSize: 8
       }]
     }]
   };
@@ -166,19 +194,16 @@ const initChart = (group) => {
   chartInstances.push(myChart);
 };
 
-// 3. 模拟加载逻辑
 const startLoadingSimulation = () => {
-  groups.forEach((group, index) => {
+  groups.forEach((group) => {
     setTimeout(() => {
-      group.progress = 100; // 触发进度条动画
-      
+      group.progress = 100;
       setTimeout(() => {
-        group.isLoading = false; // 切换显示内容
-        // 在 DOM 更新后初始化或 resize 图表
+        group.isLoading = false;
         setTimeout(() => {
           initChart(group);
         }, 50);
-      }, 1500); // 对应进度条涨满的时间
+      }, 1200);
     }, group.delay);
   });
 };
@@ -203,8 +228,8 @@ const handleResize = () => {
   width: 100%;
   height: 2px;
   position: absolute;
-  animation: scan 2s linear infinite;
-  opacity: 0.5;
+  animation: scan 2.5s linear infinite;
+  opacity: 0.4;
 }
 
 @keyframes scan {
@@ -212,23 +237,21 @@ const handleResize = () => {
   100% { top: 100%; }
 }
 
-/* Loading 遮罩层淡出 */
 .fade-overlay-leave-active {
-  transition: opacity 0.8s ease-in-out;
+  transition: opacity 0.6s ease-out;
 }
 .fade-overlay-leave-to {
   opacity: 0;
 }
 
-/* 内容层淡入 */
 .fade-content-enter-active {
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.8s ease-in;
 }
 .fade-content-enter-from {
   opacity: 0;
 }
 
-/* 隐藏滚动条 */
+/* 全局隐藏外层主容器滚动条（确保无任何滚动条出现） */
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
