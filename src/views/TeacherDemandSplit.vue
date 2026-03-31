@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-screen bg-[#111318] flex flex-col font-sans text-gray-200 overflow-hidden box-border">
     
-    <div class="h-14 shrink-0 border-b border-gray-800 px-6 flex items-center justify-between bg-[#16181d]">
+    <!-- <div class="h-14 shrink-0 border-b border-gray-800 px-6 flex items-center justify-between bg-[#16181d]">
       <div class="flex items-center text-sm">
         <span class="text-emerald-400 mr-2">〇</span>
         <span class="text-emerald-400 font-bold mr-2">教师控制台</span>
@@ -13,9 +13,7 @@
         <div class="bg-gray-800/50 text-gray-300 px-4 py-1.5 rounded text-sm border border-gray-700 whitespace-nowrap">
           实现阶段: 1.需求分析 收尾
         </div>
-        <button @click="backToSummary" class="bg-emerald-500 hover:bg-emerald-400 text-[#111318] px-4 py-1.5 rounded font-bold text-sm transition whitespace-nowrap">
-          【需求汇总】
-        </button>
+       
        
         <div class="flex items-center text-gray-400 text-sm space-x-3 whitespace-nowrap">
           <span class="flex items-center">
@@ -27,7 +25,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="flex-1 min-h-0 p-5 grid grid-cols-2 grid-rows-2 gap-5 bg-[#111318]">
       
@@ -174,6 +172,9 @@
     </div>
 
     <div class="h-20 shrink-0 border-t border-gray-800 flex justify-center items-center bg-[#16181d]">
+       <!-- <button @click="backToSummary" class="bg-emerald-500 hover:bg-emerald-400 text-[#111318] px-4 py-1.5 rounded font-bold text-sm transition whitespace-nowrap">
+          回到需求汇总
+        </button> -->
       <button @click="enterSchemeDesign" class="bg-blue-600 hover:bg-blue-500 text-white text-[15px] font-bold py-2.5 px-10 rounded-lg shadow-lg shadow-blue-900/50 transition tracking-wide flex items-center">
         <span>进入方案设计阶段</span>
         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
