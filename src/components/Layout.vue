@@ -3,7 +3,7 @@
     <div class="w-full max-w-full bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
       <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head">
-        <div class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider">
+        <div @click="navigateToHome" class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider cursor-pointer hover:text-accentGreenDark transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="2"></circle></svg>
             <span>教师控制台 <span class="text-textMuted text-sm font-normal ml-2">| 需求分析阶段</span></span>
         </div>
@@ -13,10 +13,8 @@
                 <option value="/teacher/task-publish">需求分析阶阶段：1. 教师任务发布</option>
                 <option value="/teacher/demand-summary">需求分析阶阶段：1. 需求汇总页</option>
                 <option value="/teacher/demand-split">需求分析阶阶段：1. 4组需求分屏</option>
-                <option value="/student/task-receive">需求分析阶段：1. 学生需求上传页</option>
                 <option value="/teacher/scheme-split">方案设计阶段：2. 4组方案分屏</option>
                 <option value="/teacher/ai-evaluate">方案设计阶段：2. AI评估</option>
-                <option value="/student/scheme-upload">方案设计阶段：2. 学生方案上传</option>
                 <option value="/teacher/simulation">仿真推演阶段：3. 仿真性能</option>
             </select>
 
@@ -106,6 +104,11 @@ const handleNavigate = (event) => {
   if (targetRoute) {
     router.push(targetRoute)
   }
+}
+
+// 跳转到首页
+const navigateToHome = () => {
+  router.push('/')
 }
 </script>
 
