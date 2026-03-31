@@ -1,7 +1,7 @@
 <template>
-  <div class="w-screen h-screen overflow-hidden flex flex-col p-4 gap-4 bg-darkBg text-textMain font-sans box-border">
+  <div class="w-full h-screen overflow-hidden flex flex-col p-4 gap-4 bg-darkBg text-textMain font-sans box-border">
     
-    <div class="flex-none bg-cardInnerBg border border-borderColor rounded-xl p-3 shadow-md">
+    <div class="flex-none bg-cardInnerBg border-2 border-green-400 rounded-xl p-3 shadow-md">
       <div class="grid grid-cols-3 lg:grid-cols-6 gap-y-2 gap-x-4 text-[13px] xl:text-[14px]">
         <div class="flex items-center"><span class="text-textMuted whitespace-nowrap mr-2 text-right">课程名称：</span><span class="text-white font-bold truncate">无人机密码系统设计实战</span></div>
         <div class="flex items-center"><span class="text-textMuted whitespace-nowrap mr-2 text-right">实现阶段：</span><span class="text-white font-bold truncate">第一阶段：需求分析</span></div>
@@ -15,7 +15,7 @@
 
     <div class="flex-1 flex gap-4 min-h-0">
       
-      <div class="w-[32%] lg:w-[28%] bg-cardInnerBg border border-borderColor rounded-xl p-3 xl:p-4 flex flex-col gap-3 min-h-0 shadow-md">
+      <div class="w-[32%] lg:w-[28%] border-2 border-green-400 rounded-xl p-3 xl:p-4 flex flex-col gap-3 min-h-0 shadow-md bg-cardInnerBg">
         <div class="flex items-center mb-1 flex-none">
           <div class="w-1.5 h-4 bg-warningOrg mr-2 rounded-full"></div>
           <h2 class="text-[15px] xl:text-[16px] font-bold text-white tracking-wide">【系统需求点梳理】</h2>
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div class="flex-1 bg-cardInnerBg border border-borderColor rounded-xl p-3 xl:p-4 flex flex-col gap-4 min-h-0 shadow-md">
+      <div class="flex-1 border-2 border-green-400 rounded-xl p-3 xl:p-4 flex flex-col gap-4 min-h-0 shadow-md bg-cardInnerBg">
         
         <div class="flex-none flex flex-col gap-2">
           <div class="flex items-center flex-none">
@@ -113,30 +113,30 @@
           </div>
         </div>
 
+        <div class="flex-none flex justify-center items-center mt-2">
+          <button 
+            @click="handlePublish" 
+            :disabled="isPublishing"
+            :class="[
+              'relative overflow-hidden bg-accentCyan text-black font-bold text-[15px] xl:text-[16px] px-8 py-2.5 rounded-lg shadow-[0_0_15px_rgba(0,240,255,0.3)] tracking-widest transition transform border border-[#00f0ff] group',
+              !isPublishing ? 'hover:scale-105 hover:bg-[#00d0dd]' : 'opacity-80 cursor-not-allowed'
+            ]"
+          >
+            <div 
+              class="absolute left-0 top-0 bottom-0 bg-white/40 transition-all ease-linear" 
+              style="transition-duration: 2000ms;"
+              :style="{ width: publishProgress + '%' }"
+            ></div>
+            <span class="relative z-10 flex items-center justify-center">
+              <svg v-if="!isPublishing" class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+              {{ isPublishing ? '任务发布中...' : '确认发布任务' }}
+            </span>
+          </button>
+        </div>
+
       </div>
     </div>
     
-    <div class="flex-none flex justify-end items-center pt-1 px-2">
-      <button 
-        @click="handlePublish" 
-        :disabled="isPublishing"
-        :class="[
-          'relative overflow-hidden bg-accentCyan text-black font-bold text-[15px] xl:text-[16px] px-8 py-2.5 rounded-lg shadow-[0_0_15px_rgba(0,240,255,0.3)] tracking-widest transition transform border border-[#00f0ff] group',
-          !isPublishing ? 'hover:scale-105 hover:bg-[#00d0dd]' : 'opacity-80 cursor-not-allowed'
-        ]"
-      >
-        <div 
-          class="absolute left-0 top-0 bottom-0 bg-white/40 transition-all ease-linear" 
-          style="transition-duration: 2000ms;"
-          :style="{ width: publishProgress + '%' }"
-        ></div>
-        <span class="relative z-10 flex items-center justify-center">
-          <svg v-if="!isPublishing" class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-          {{ isPublishing ? '任务发布中...' : '确认发布任务' }}
-        </span>
-      </button>
-    </div>
-
     <div v-if="showSuccessModal" class="fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center">
       <div class="bg-cardInnerBg border border-accentCyan rounded-xl p-8 w-full max-w-[500px] shadow-[0_0_30px_rgba(0,240,255,0.15)] relative transform scale-100 transition-transform">
         
@@ -206,7 +206,6 @@ const confirmJump = () => {
 </script>
 
 <style scoped>
-/* 隐藏滚动条，保留滑动功能 */
 .scrollbar-hide::-webkit-scrollbar { 
   display: none; 
 }
