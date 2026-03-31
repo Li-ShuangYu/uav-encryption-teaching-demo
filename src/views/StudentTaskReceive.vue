@@ -15,7 +15,7 @@
     <header class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 bg-group1 rounded-full"></div>
-        <h1 class="text-xl font-bold text-white tracking-wide">学习工作台 - 需求分析与提交</h1>
+        <h1 class="text-xl font-bold text-white tracking-wide">学生工作台 - 需求提交</h1>
       </div>
       <div class="flex items-center gap-4">
         
@@ -69,7 +69,7 @@
         <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
           <h2 class="font-bold text-white flex items-center gap-2">
             <svg class="w-5 h-5 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-            教师下发任务及 AI 需求解析
+            教师下发任务
           </h2>
           <span class="text-xs text-textMuted text-group1 bg-group1/10 px-2 py-1 rounded">来源：AI任务推送工具</span>
         </div>
@@ -107,7 +107,7 @@
           </div>
           <div class="p-5 flex flex-col gap-5 flex-1">
             <div>
-              <label class="block text-sm font-bold text-textMain mb-2">主线方案设计方向 <span class="text-xs text-textMuted font-normal ml-2">(系统下发锁定)</span></label>
+              <label class="block text-sm font-bold text-textMain mb-2">主线方案设计方向 </label>
               <div class="fake-textarea w-full rounded-md p-3 text-sm flex items-start gap-2 bg-darkBg opacity-80 cursor-not-allowed">
                 <svg class="w-4 h-4 text-gray-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
                 主线任务：基于无人机通信场景，完成密码系统的一般流程设计（需求分析→方案设计→工程实现→综合评价→优化完善）。

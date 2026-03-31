@@ -67,7 +67,7 @@
       <div class="flex-1 flex flex-col min-h-0">
         <div class="flex items-center mb-3 flex-none">
           <div class="w-1.5 h-5 bg-infoBlue mr-3 rounded-full"></div>
-          <h2 class="text-xl font-bold text-white tracking-wide">【支线任务方向（预填写，不可编辑）】</h2>
+          <h2 class="text-xl font-bold text-white tracking-wide">【支线任务方向】</h2>
         </div>
         
         <div class="grid grid-cols-2 gap-4 pl-4 flex-1 min-h-0">
