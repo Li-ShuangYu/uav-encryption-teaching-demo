@@ -33,7 +33,7 @@
         <div class="flex justify-between items-center mb-4 shrink-0 border-b border-gray-800 pb-3">
           <div class="flex items-center space-x-3">
             <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-blue-900/50">组1</div>
-            <h2 class="text-[17px] font-bold text-gray-100">低功耗优化方向</h2>
+            <h2 class="text-[17px] font-bold text-gray-100">SM4+SM3 国密组合方案</h2>
           </div>
           <span class="bg-green-900/30 text-green-400 text-xs px-2.5 py-1 rounded border border-green-800/50 font-medium">需求已提交</span>
         </div>
@@ -68,7 +68,7 @@
         <div class="flex justify-between items-center mb-4 shrink-0 border-b border-gray-800 pb-3">
           <div class="flex items-center space-x-3">
             <div class="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-red-900/50">组2</div>
-            <h2 class="text-[17px] font-bold text-gray-100">纯 RSA 非对称加密方案</h2>
+            <h2 class="text-[17px] font-bold text-gray-100">侧信道防护方案</h2>
           </div>
           <span class="bg-green-900/30 text-green-400 text-xs px-2.5 py-1 rounded border border-green-800/50 font-medium">需求已提交</span>
         </div>
@@ -103,7 +103,7 @@
         <div class="flex justify-between items-center mb-4 shrink-0 border-b border-gray-800 pb-3">
           <div class="flex items-center space-x-3">
             <div class="w-7 h-7 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-amber-900/50">组3</div>
-            <h2 class="text-[17px] font-bold text-gray-100">抗重放攻击方向</h2>
+            <h2 class="text-[17px] font-bold text-gray-100">轻量级流密码方案</h2>
           </div>
           <span class="bg-green-900/30 text-green-400 text-xs px-2.5 py-1 rounded border border-green-800/50 font-medium">需求已提交</span>
         </div>

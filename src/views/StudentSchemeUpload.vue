@@ -233,12 +233,12 @@ const groups = reactive([
     name: '第二组',
     themeColor: '#ef4444', // 红
     tags: ['防窃听(高保密)', '防篡改(高完整)', '非对称加密'],
-    fileName: '第二组_纯RSA非对称加密方案.docx',
+    fileName: '第二组_侧信道防护方案.docx',
     fileSize: '3.1 MB',
     aiScore: 90,
     aiLevel: '优秀 (A)',
     radarData: [95, 90, 80, 80, 90],
-    aiConclusion: "本组采用 <span style='color:#ef4444;font-weight:bold;'>纯 RSA 非对称加密方案</span>，在保障基础通信安全的同时，提供了更高的密钥安全性，工程可行性与安全性均表现优异。",
+    aiConclusion: "本组采用 <span style='color:#ef4444;font-weight:bold;'>侧信道防护方案</span>，在保障基础通信安全的同时，提供了更高的密钥安全性，工程可行性与安全性均表现优异。",
     aiSuggestion: "RSA 算法计算开销较大，建议在代码实现层进行优化以降低计算时延。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },

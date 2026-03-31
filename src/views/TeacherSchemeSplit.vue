@@ -89,11 +89,11 @@ const groupData = reactive([
     name: '第一组',
     title: 'SM4+SM3 国密组合方案',
     color: '#3b82f6', // 蓝
-    fileName: '第一组_轻量级加密通信设计.docx',
+    fileName: '第一组_SM4+SM3国密组合方案.docx',
     schemes: [
       { 
-        name: '轻量级加密通信方案', 
-        content: '基于 AES-128 算法，结合硬件加速模块，实现低功耗、高安全性的通信加密。', 
+        name: 'SM4+SM3 国密组合方案', 
+        content: '采用 SM4 对称加密算法保障数据机密性，SM3 哈希算法保障数据完整性，符合国密标准，安全性高且性能稳定。', 
       },
       { 
         name: '密钥管理优化方案', 
@@ -104,13 +104,13 @@ const groupData = reactive([
   {
     id: 2,
     name: '第二组',
-    title: '纯 RSA 非对称加密方案',
+    title: '侧信道防护方案',
     color: '#ef4444', // 红
-    fileName: '第二组_高负荷解密中心架构.docx',
+    fileName: '第二组_侧信道防护方案.docx',
     schemes: [
       { 
         name: '侧信道防护方案', 
-        content: '采用掩码技术和随机化执行路径，有效防护功耗分析和时序攻击。', 
+        content: '采用掩码技术和随机化执行路径，有效防护功耗分析和时序攻击，保障密码运算的物理安全性。', 
       },
       { 
         name: '防重放攻击机制', 
@@ -123,11 +123,15 @@ const groupData = reactive([
     name: '第三组',
     title: '轻量级流密码方案',
     color: '#f59e0b', // 黄/橙
-    fileName: '第三组_多发流式拓扑分析.docx',
+    fileName: '第三组_轻量级流密码方案.docx',
     schemes: [
       { 
-        name: '双向身份认证方案', 
-        content: '基于 ECC 算法的轻量级双向身份认证，认证时延控制在 5ms 以内。', 
+        name: '轻量级流密码方案', 
+        content: '采用轻量级流密码算法，有效降低系统功耗和计算开销，同时保证加密性能，适合无人机等嵌入式设备。', 
+      },
+      { 
+        name: '动态密钥更新机制', 
+        content: '引入动态密钥更新机制，增强流密码系统的长期安全性，防止密钥泄露风险。', 
       }
     ]
   },
@@ -136,11 +140,15 @@ const groupData = reactive([
     name: '第四组',
     title: '区块链分布式防护方案',
     color: '#8b5cf6', // 紫
-    fileName: '第四组_网状节点拓扑与共识.docx',
+    fileName: '第四组_区块链分布式防护方案.docx',
     schemes: [
       { 
-        name: '后量子加密适配方案', 
-        content: '基于 LWE 问题的后量子加密算法，针对嵌入式芯片进行优化，确保兼容性。', 
+        name: '区块链分布式防护方案', 
+        content: '利用区块链技术实现分布式防护，通过共识机制保障数据防篡改，提高系统的安全性和可靠性。', 
+      },
+      { 
+        name: '智能合约访问控制', 
+        content: '基于智能合约实现细粒度访问控制，确保只有授权节点才能访问敏感数据和执行关键操作。', 
       }
     ]
   }
