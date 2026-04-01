@@ -45,7 +45,7 @@ const navigateToStudent = () => {
 }
 
 const navigateToTeacher = () => {
-  router.push('/teacher/task-publish')
+  router.push('/teacher/demand-summary')
 }
 </script>
 
