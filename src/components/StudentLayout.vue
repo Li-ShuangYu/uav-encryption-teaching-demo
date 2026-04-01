@@ -5,7 +5,7 @@
       <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head">
         <div @click="navigateToHome" class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider cursor-pointer hover:text-accentGreenDark transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="2"></circle></svg>
-            <span>学习工作台 <span class="text-textMuted text-sm font-normal ml-2">| {{ currentStage }}</span></span>
+            <span>学生工作台 <span class="text-textMuted text-sm font-normal ml-2">| {{ currentStage }}</span></span>
         </div>
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
