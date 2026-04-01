@@ -226,10 +226,9 @@
           <div class="w-20 h-20 bg-accentGreen/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-accentGreen/50">
             <svg class="w-10 h-10 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
           </div>
-          <h3 class="text-2xl font-bold text-white mb-3">任务确认完成</h3>
-          <p class="text-sm text-textMuted mb-6 leading-relaxed">各组任务已确认，AI辅助分析已完成。<br>请准备进入方案设计阶段。</p>
+          <h3 class="text-2xl font-bold text-white mb-3">任务已确认</h3>
           <button @click="goToNextStage" class="w-full py-3 bg-accentGreen hover:bg-accentGreenDark text-white rounded-lg font-bold transition-colors shadow-lg shadow-accentGreen/20">
-            进入方案设计阶段
+            进入详情页
           </button>
         </div>
       </div>
@@ -371,11 +370,7 @@ const getAccentClass = (groupId) => {
 
 const goToNextStage = () => {
   showSuccessModal.value = false;
-  showToast.value = true;
-  
-  setTimeout(() => {
-    router.push('/student/scheme-upload');
-  }, 2000);
+  router.push('/student/task-split');
 };
 
 const confirmTask = () => {

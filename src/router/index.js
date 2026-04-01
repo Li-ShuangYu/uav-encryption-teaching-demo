@@ -99,6 +99,12 @@ const routes = [
         meta: { title: '学生工作台' }
       },
       {
+        path: 'task-split',
+        name: 'StudentTaskSplit',
+        component: () => import('../views/StudentTaskSplit.vue'),
+        meta: { title: '学生工作台' }
+      },
+      {
         path: 'scheme-upload',
         name: 'StudentSchemeUpload',
         component: () => import('../views/StudentSchemeUpload.vue'),
