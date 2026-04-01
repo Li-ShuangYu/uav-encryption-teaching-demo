@@ -104,7 +104,8 @@ const routeStageMap = {
   '/teacher/demand-split': { stage: '需求分析阶段', order: 3 },
   '/teacher/scheme-split': { stage: '方案设计阶段', order: 4 },
   '/teacher/ai-evaluate': { stage: '方案设计阶段', order: 5 },
-  '/teacher/simulation': { stage: '仿真推演阶段', order: 6 }
+  '/teacher/scheme-detail': { stage: '方案设计阶段', order: 6 },
+  '/teacher/simulation': { stage: '仿真推演阶段', order: 7 }
 }
 
 // 所有菜单项
@@ -114,7 +115,8 @@ const allMenuItems = [
   { value: '/teacher/demand-split', label: '需求分析阶段：3. 4组需求分屏', order: 3 },
   { value: '/teacher/scheme-split', label: '方案设计阶段：1. 4组方案分屏', order: 4 },
   { value: '/teacher/ai-evaluate', label: '方案设计阶段：2. AI评估', order: 5 },
-  { value: '/teacher/simulation', label: '仿真推演阶段：1. 仿真性能', order: 6 }
+  { value: '/teacher/scheme-detail', label: '方案设计阶段：3. 方案详情', order: 6 },
+  { value: '/teacher/simulation', label: '仿真推演阶段：1. 仿真性能', order: 7 }
 ]
 
 // 当前阶段

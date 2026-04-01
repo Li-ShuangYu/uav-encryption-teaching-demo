@@ -58,6 +58,12 @@ const routes = [
         name: 'TeacherSimulation',
         component: () => import('../views/TeacherSimulation.vue'),
         meta: { title: '屏 8：教学控制台 - 4 组仿真性能分屏页' }
+      },
+      {
+        path: 'scheme-detail',
+        name: 'TeacherSchemeDetail',
+        component: () => import('../views/TeacherSchemeDetail.vue'),
+        meta: { title: '方案详情页' }
       }
     ]
   },

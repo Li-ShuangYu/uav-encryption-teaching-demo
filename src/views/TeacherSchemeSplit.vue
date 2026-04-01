@@ -45,7 +45,16 @@
         >
           <div class="waiting-animation">
             <div class="spinner"></div>
-            <div class="waiting-text">等待学生提交方案...</div>
+            <div class="waiting-text">
+              <span 
+                v-for="(char, index) in '等待学生提交方案。。。'" 
+                :key="index"
+                class="waiting-char"
+                :style="{ animationDelay: `${index * 0.1 + i * 0.2}s` }"
+              >
+                {{ char }}
+              </span>
+            </div>
             <div class="waiting-subtext">第 {{ i }} 组</div>
           </div>
         </div>
@@ -254,16 +263,37 @@ const refreshData = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 24px;
+  padding: 40px 20px;
+  position: relative;
+}
+
+/* 发光背景 */
+.waiting-animation::before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(35, 181, 134, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 0.6; }
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid #2d353e;
+  width: 60px;
+  height: 60px;
+  border: 4px solid #2d353e;
   border-top-color: #23b586;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1.2s linear infinite;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(35, 181, 134, 0.3);
 }
 
 @keyframes spin {
@@ -271,14 +301,63 @@ const refreshData = () => {
 }
 
 .waiting-text {
-  font-size: 16px;
+  font-size: 18px;
   color: #6b7280;
-  font-weight: 500;
+  font-weight: 600;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 10px rgba(35, 181, 134, 0.3);
+  animation: textGlow 3s ease-in-out infinite;
+}
+
+@keyframes textGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(35, 181, 134, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(35, 181, 134, 0.6), 0 0 30px rgba(35, 181, 134, 0.3); }
+}
+
+.waiting-char {
+  display: inline-block;
+  animation: charJump 2s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes charJump {
+  0%, 100% { 
+    transform: translateY(0); 
+    opacity: 0.6;
+  }
+  25% { 
+    transform: translateY(-8px); 
+    opacity: 1;
+    color: #23b586;
+    text-shadow: 0 0 15px rgba(35, 181, 134, 0.8);
+  }
+  50% { 
+    transform: translateY(0); 
+    opacity: 0.8;
+  }
+  75% { 
+    transform: translateY(-4px); 
+    opacity: 1;
+    color: #10b981;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  }
 }
 
 .waiting-subtext {
-  font-size: 12px;
+  font-size: 14px;
   color: #4b5563;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+  animation: subtextFade 3s ease-in-out infinite;
+}
+
+@keyframes subtextFade {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; color: #6b7280; }
 }
 
 /* 入场动画 - 卡片滑入 */
