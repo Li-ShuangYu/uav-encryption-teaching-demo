@@ -37,7 +37,7 @@
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        <span>{{ isSimulating ? '提交中...' : (hasFinished ? '已完成' : '刷新模拟') }}</span>
+                        <span>{{ isSimulating ? '提交中...' : (hasFinished ? '已完成' : '刷新') }}</span>
                     </button>
                 </div>
             </div>
@@ -109,18 +109,49 @@
                     暂无汇总数据，请先提取学生需求并进行AI评审
                 </div>
 
-                <div v-else-if="aiReviewState === 1" class="flex-1 border border-borderColor rounded-lg bg-cardInnerBg p-6 flex flex-col justify-center space-y-5">
-                    <div v-for="(bar, index) in progressBars" :key="index">
-                        <div class="flex justify-between text-xs mb-1.5">
-                            <span :class="bar.textColor" class="font-bold flex items-center space-x-1">
-                                <svg class="w-3 h-3 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
-                                <span>{{ bar.label }}</span>
-                            </span>
-                            <span class="text-textMuted">{{ Math.round(bar.progress) }}%</span>
-                        </div>
-                        <div class="w-full bg-darkBg rounded-full h-2 border border-borderColor overflow-hidden">
-                            <div class="h-2 rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_currentColor]" :class="[bar.bgColor, bar.textColor]" :style="{ width: bar.progress + '%' }"></div>
-                        </div>
+                <div v-else-if="aiReviewState === 1" class="grid grid-cols-2 gap-3 flex-1 min-h-0">
+                    <div 
+                        v-for="(group, index) in groups" 
+                        :key="group.id"
+                        class="bg-cardInnerBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden"
+                    >
+                        <transition name="fade-overlay">
+                            <div v-if="group.isLoading" class="absolute inset-0 bg-cardInnerBg z-30 flex flex-col items-center justify-center">
+                                <div class="scan-line" :style="{ background: `linear-gradient(to right, transparent, ${group.color}, transparent)` }"></div>
+                                <div class="mb-3 text-sm font-bold tracking-widest animate-pulse" :style="{ color: group.color }">
+                                    AI 需求深度推演中...
+                                </div>
+                                <div class="w-2/3 h-1.5 bg-darkBg rounded-full overflow-hidden border border-borderColor">
+                                    <div 
+                                        class="h-full transition-all ease-linear" 
+                                        :style="{ 
+                                            width: group.progress + '%', 
+                                            backgroundColor: group.color,
+                                            boxShadow: `0 0 8px ${group.color}`,
+                                            transitionDuration: '1.2s'
+                                        }"
+                                    ></div>
+                                </div>
+                            </div>
+                        </transition>
+                        
+                        <transition name="fade-content">
+                            <div v-show="!group.isLoading" class="p-3 flex flex-col justify-between">
+                                <div class="flex items-start space-x-2">
+                                    <div :style="{ backgroundColor: group.color + '20', color: group.color }" class="p-1 rounded mt-0.5 shrink-0">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <div :style="{ color: group.color }" class="font-bold text-sm mb-1">{{ group.title }}</div>
+                                        <p class="text-sm text-gray-200 leading-snug">{{ group.description }}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 flex items-center space-x-3 text-xs">
+                                    <span :style="{ color: group.color }">{{ group.tag }}</span>
+                                    <span class="text-textMuted">优先级：{{ group.priority }}</span>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
                 </div>
 
@@ -219,6 +250,38 @@ const progressBars = reactive([
     { label: '正在评估时延毫秒级响应标准...', progress: 0, textColor: 'text-yellow-400', bgColor: 'bg-yellow-500' },
     { label: '计算后量子算法硬件功耗适配率...', progress: 0, textColor: 'text-purple-400', bgColor: 'bg-purple-500' }
 ])
+
+// --- 组数据 --- 
+const groups = reactive([
+  { 
+    id: 1, name: '第一组', color: '#3b82f6', progress: 0, isLoading: true, delay: 300,
+    title: '【需求点一】',
+    description: '高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。',
+    tag: '安全加密',
+    priority: '高'
+  },
+  { 
+    id: 2, name: '第二组', color: '#ef4444', progress: 0, isLoading: true, delay: 600,
+    title: '【需求点二】',
+    description: '高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。',
+    tag: '数据校验',
+    priority: '高'
+  },
+  { 
+    id: 3, name: '第三组', color: '#f59e0b', progress: 0, isLoading: true, delay: 900,
+    title: '【需求点三】',
+    description: '低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。',
+    tag: '实时响应',
+    priority: '中'
+  },
+  { 
+    id: 4, name: '第四组', color: '#8b5cf6', progress: 0, isLoading: true, delay: 1200,
+    title: '【需求点四】',
+    description: '低功耗适配要求。受限于无人机机载电池容量，加密算法与安全机制需严格控制额外功耗，适配嵌入式设备算力约束。',
+    tag: '低耗适配',
+    priority: '中'
+  }
+]);
 
 // --- 预设的28条学生需求数据 (基于剧本和AI多模态交互要求扩展) ---
 const allDemands = [
@@ -341,33 +404,29 @@ const triggerAIReview = () => {
     
     aiReviewState.value = 1
     
-    // 重置进度条
-    progressBars.forEach(p => p.progress = 0)
+    // 重置组加载状态
+    groups.forEach(group => {
+        group.isLoading = true;
+        group.progress = 0;
+    });
     
-    // 模拟2.5秒的快速评估计算过程
-    const reviewDuration = 2500
-    const updateInterval = 50
-    let elapsed = 0
-    
-    const progressTimer = setInterval(() => {
-        elapsed += updateInterval
-        
-        // 随机增加进度
-        progressBars.forEach(p => {
-            const increment = (Math.random() * 5) + 2 // 随机步长
-            p.progress = Math.min(100, p.progress + increment)
-        })
-        
-        // 如果时间到了，结束动画并切出结果卡片
-        if (elapsed >= reviewDuration) {
-            clearInterval(progressTimer)
-            progressBars.forEach(p => p.progress = 100) // 补齐100%
-            
+    const startLoadingSimulation = () => {
+        groups.forEach((group) => {
             setTimeout(() => {
-                aiReviewState.value = 2 // 切换到展示卡片状态
-            }, 300)
-        }
-    }, updateInterval)
+                group.progress = 100;
+                setTimeout(() => {
+                    group.isLoading = false;
+                }, 1200);
+            }, group.delay);
+        });
+    };
+    
+    startLoadingSimulation();
+    
+    // 4秒后切换到完成状态
+    setTimeout(() => {
+        aiReviewState.value = 2;
+    }, 4000);
 }
 
 onUnmounted(() => {
@@ -425,5 +484,34 @@ onUnmounted(() => {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* 扫描线动画 */
+.scan-line {
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  animation: scan 2.5s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* 过渡动画 */
+.fade-overlay-leave-active {
+  transition: opacity 0.6s ease-out;
+}
+.fade-overlay-leave-to {
+  opacity: 0;
+}
+
+.fade-content-enter-active {
+  transition: opacity 0.8s ease-in;
+}
+.fade-content-enter-from {
+  opacity: 0;
 }
 </style>
