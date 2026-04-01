@@ -116,14 +116,14 @@ const routeStageMap = {
 
 // 所有菜单项
 const allMenuItems = [
-  { value: '/teacher/task-publish', label: '需求分析阶段：1. 教师任务发布', order: 1 },
-  { value: '/teacher/demand-summary', label: '需求分析阶段：2. 需求汇总页', order: 2 },
+  { value: '/teacher/task-publish', label: '需求分析阶段：教师任务发布页', order: 1 },
+  { value: '/teacher/demand-summary', label: '需求分析阶段：教师需求汇总页', order: 2 },
   // { value: '/teacher/demand-split', label: '需求分析阶段：3. 4组需求分屏', order: 3 },
-  { value: '/teacher/task-split', label: '需求分析阶段：4. 4组任务分屏', order: 4 },
-  { value: '/teacher/scheme-split', label: '方案设计阶段：1. 4组方案分屏', order: 5 },
-  { value: '/teacher/ai-evaluate', label: '方案设计阶段：2. AI评估', order: 6 },
-  { value: '/teacher/scheme-detail', label: '方案设计阶段：3. 方案详情', order: 7 },
-  { value: '/teacher/simulation', label: '仿真推演阶段：1. 仿真性能', order: 8 }
+  { value: '/teacher/task-split', label: '需求分析阶段：4组任务分屏', order: 4 },
+  { value: '/teacher/scheme-split', label: '方案设计阶段：4组方案分屏', order: 5 },
+  { value: '/teacher/ai-evaluate', label: '方案设计阶段：AI评估', order: 6 },
+  { value: '/teacher/scheme-detail', label: '方案设计阶段：方案详情', order: 7 },
+  { value: '/teacher/simulation', label: '仿真推演阶段：仿真性能', order: 8 }
 ]
 
 // 当前阶段
