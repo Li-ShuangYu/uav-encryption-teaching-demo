@@ -31,7 +31,7 @@
     <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
       
       <div class="col-span-3 flex flex-col gap-3">
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-500">
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
           <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
           <div class="flex justify-between items-center mb-2 relative z-10">
             <span class="text-xs px-2 py-0.5 rounded font-black transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor + '33', color: currentGroup.themeColor, border: '1px solid ' + currentGroup.themeColor + '66' }">
@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden transition-all duration-500 shadow-lg" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up shadow-lg" style="animation-delay: 0.2s;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
           <div class="text-xs font-black mb-3 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
             核心密码学选型
@@ -88,7 +88,7 @@
       </div>
 
       <div class="col-span-4 flex flex-col gap-3">
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-500" :style="{ borderTopColor: currentGroup.themeColor + '66', borderTopWidth: '4px' }">
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
           
           <div class="px-5 pt-5 shrink-0 relative z-20 flex justify-between items-start">
             <div>
@@ -111,7 +111,7 @@
             <div class="absolute top-1/4 w-[85%] pointer-events-none transition-transform duration-500 ease-in-out"
                  :style="{ transform: `translateY(calc(-${currentLyricIndex * 2.5 + 1.25}rem))` }">
               <div 
-                v-for="(lyric, index) in mockLyrics" 
+                v-for="(lyric, index) in currentLyrics" 
                 :key="index"
                 class="h-10 flex items-center justify-center text-center transition-all duration-500 ease-out truncate"
                 :class="[
@@ -171,7 +171,7 @@
 
           <!-- 音频元素 -->
           <audio ref="audioElement" class="hidden" preload="metadata">
-            <!-- 这里可以添加音频文件 --><source src="../assets/audio/枫-周杰伦-118987.mp3" type="audio/mpeg">
+            <!-- 这里可以添加音频文件 -->
           </audio>
 
           <!-- 唱片 -->
@@ -186,10 +186,8 @@
               <div class="w-4 h-4 rounded-full bg-darkBg border border-black/50 shadow-inner"></div>
             </div>
           </div>
-          
         </div>
       </div>
-
     </main>
   </div>
 </template>
@@ -201,7 +199,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const backToEvaluation = () => {
-  router.push('/teacher/scheme-evaluation');
+  router.push('/teacher/ai-evaluate');
 };
 
 const groups = [
@@ -214,7 +212,25 @@ const groups = [
     themeColor: '#3b82f6', // Blue
     desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
     hardware: 'STM32L432',
-    music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征' },
+    music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: '/src/assets/audio/轻量级.mp3', lyrics: [
+      { text: "前奏...", duration: 10000 },
+      { text: "我们不再框框之下", duration: 5000 },
+      { text: "微风轻抚着我的脸颊", duration: 6000 },
+      { text: "宁静在心中慢慢流淌", duration: 5000 },
+      { text: "时光仿佛停止了步伐", duration: 6000 },
+      { text: "这宁静让我心醉", duration: 6000 },
+      { text: "让我忘记所有疲惫", duration: 5000 },
+      { text: "这宁静让我沉醉", duration: 5000 },
+      { text: "让我在这夜色中尽美", duration: 6000 },
+      { text: "我沉醉在这夜色中", duration: 4000 },
+      { text: "微风轻抚着我的脸颊", duration: 6000 },
+      { text: "宁静在心中缓缓流淌", duration: 5000 },
+      { text: "时光仿佛凝固了年华", duration: 5000 },
+      { text: "这宁静让我心醉", duration: 6000 },
+      { text: "让我忘记所有", duration: 5000 },
+      { text: "这宁静让我沉醉", duration: 6000 },
+      { text: "让我在这夜色中尽美", duration: 5000 }
+    ] },
     archLayers: [
       { name: '应用层', desc: '飞行控制指令、航拍/定位数据输入输出', highlight: false },
       { name: '安全层', desc: '身份认证、数据加解密、密钥协商', highlight: true },
@@ -236,7 +252,17 @@ const groups = [
     themeColor: '#ef4444', // Red
     desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
     hardware: 'STM32L432',
-    music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征' },
+    music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: '/src/assets/audio/侧信道.mp3', lyrics: [
+      { text: "挣脱了羁绊", duration: 3000 },
+      { text: "我在网络中跳跃", duration: 3000 },
+      { text: "你听那轻微的高频正在掩埋", duration: 4000 },
+      { text: "动荡的节拍在流淌", duration: 3000 },
+      { text: "我在虚拟世界探索远方", duration: 4000 },
+      { text: "那瞬间光芒在闪掉", duration: 3000 },
+      { text: "你是我在网络中的心跳", duration: 4000 },
+      { text: "穿越比特间起伏的信号", duration: 3000 },
+      { text: "感受这轻微的拥抱", duration: 4000 }
+    ] },
     archLayers: [
       { name: '安全核心层', desc: '通信加密、身份认证、侧信道防护（掩码+恒定时间）', highlight: true },
       { name: '通信接口层', desc: 'WiFi / 蓝牙数据收发、帧封装', highlight: false },
@@ -257,7 +283,17 @@ const groups = [
     themeColor: '#f59e0b', // Amber
     desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效。',
     hardware: 'STM32L432',
-    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征' },
+    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: '/src/assets/audio/枫-周杰伦-118987.mp3', lyrics: [
+      { text: "时间在流逝", duration: 3000 },
+      { text: "数据在流淌", duration: 3000 },
+      { text: "每一个数据包都有它的归处", duration: 4000 },
+      { text: "重复的信号无处遁形", duration: 3000 },
+      { text: "我在时间的河流中穿梭", duration: 4000 },
+      { text: "每一个瞬间都独一无二", duration: 3000 },
+      { text: "抗重放的屏障坚不可摧", duration: 4000 },
+      { text: "安全的通信永恒不变", duration: 3000 },
+      { text: "在时间的长河中守护着你", duration: 4000 }
+    ] },
     archLayers: [
       { name: '安全层', desc: '数据加解密、身份校验、抗重放计数管理', highlight: true },
       { name: '通信层', desc: 'WiFi / 蓝牙数据收发、数据包封装', highlight: true },
@@ -278,7 +314,17 @@ const groups = [
     themeColor: '#8b5cf6', // Purple
     desc: '面向未来量子计算环境，采用抗量子破解的轻量级后量子密码机制，摒弃传统易被攻破的方案，抵御未来的量子暴力破解威胁。',
     hardware: 'STM32L432',
-    music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征' },
+    music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: '/src/assets/audio/轻量级.mp3', lyrics: [
+      { text: "在量子的世界里", duration: 3000 },
+      { text: "传统的密码已不再安全", duration: 4000 },
+      { text: "后量子的算法如星辰般闪耀", duration: 4000 },
+      { text: "格基的难题阻挡着攻击者", duration: 3000 },
+      { text: "Kyber的密钥如坚不可摧的盾牌", duration: 4000 },
+      { text: "在未来的算力面前", duration: 3000 },
+      { text: "我们的通信依然安全", duration: 4000 },
+      { text: "后量子的光芒照亮前行的路", duration: 4000 },
+      { text: "在量子的浪潮中守护着隐私", duration: 4000 }
+    ] },
     archLayers: [
       { name: '安全层', desc: '后量子密钥协商、数据加解密、通信安全封装', highlight: true },
       { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发、帧格式处理', highlight: true },
@@ -295,20 +341,14 @@ const groups = [
 const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
-const mockLyrics = [
-  { text: "Initializing acoustics...", duration: 2000 },
-  { text: "Parsing security architecture...", duration: 2500 },
-  { text: "Mapping cryptographic features...", duration: 3000 },
-  { text: "Generating auditory feedback...", duration: 2200 },
-  { text: "Applying quantum resistance...", duration: 2800 },
-  { text: "Syncing side-channel data...", duration: 2400 },
-  { text: "Playback sync established.", duration: 2600 },
-  { text: "Monitoring payload datastream...", duration: 3000 }
-];
+// 获取当前小组的歌词
+const currentLyrics = computed(() => {
+  return currentGroup.value?.music?.lyrics || [];
+});
 
 const currentLyricIndex = ref(0);
 let lyricTimer = null;
-const isPlaying = ref(true);
+const isPlaying = ref(false);
 const audioElement = ref(null);
 
 // 切换播放/暂停状态
@@ -343,9 +383,14 @@ const pauseAudio = () => {
 const loadAudio = (audioUrl) => {
   if (audioElement.value) {
     audioElement.value.src = audioUrl;
-    if (isPlaying.value) {
-      playAudio();
-    }
+    // 不自动播放，只有在用户点击后才播放
+  }
+};
+
+// 加载当前小组的音频
+const loadCurrentGroupAudio = () => {
+  if (currentGroup.value && currentGroup.value.music && currentGroup.value.music.audio) {
+    loadAudio(currentGroup.value.music.audio);
   }
 };
 
@@ -353,16 +398,16 @@ const loadAudio = (audioUrl) => {
 const startLyricTimer = () => {
   if (!lyricTimer) {
     const playNextLyric = () => {
-      if (currentLyricIndex.value < mockLyrics.length - 1) {
-        const currentDuration = mockLyrics[currentLyricIndex.value].duration;
+      if (currentLyricIndex.value < currentLyrics.value.length - 1) {
+        const currentDuration = currentLyrics.value[currentLyricIndex.value].duration;
         currentLyricIndex.value += 1;
         lyricTimer = setTimeout(playNextLyric, currentDuration);
       } else {
         currentLyricIndex.value = 0;
-        lyricTimer = setTimeout(playNextLyric, mockLyrics[0].duration);
+        lyricTimer = setTimeout(playNextLyric, currentLyrics.value[0]?.duration || 2000);
       }
     };
-    lyricTimer = setTimeout(playNextLyric, mockLyrics[currentLyricIndex.value].duration);
+    lyricTimer = setTimeout(playNextLyric, currentLyrics.value[currentLyricIndex.value]?.duration || 2000);
   }
 };
 
@@ -374,13 +419,15 @@ const stopLyricTimer = () => {
   }
 };
 
-// 组件加载完成后直接自动播放
+// 组件加载完成后加载音频但不自动播放
 onMounted(() => {
-  startLyricTimer();
+  loadCurrentGroupAudio(); // 加载默认小组的音频
+  // 不自动播放，只有在用户点击后才开始播放和歌词滚动
 });
 
 const handleGroupChange = () => {
   currentLyricIndex.value = 0; // 切换组时重置歌词进度
+  loadCurrentGroupAudio(); // 加载当前小组的音频
 };
 
 onUnmounted(() => {
@@ -413,5 +460,26 @@ select::-ms-expand {
 }
 .vinyl-playing {
   animation-play-state: running;
+}
+
+/* 入场动画 */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 为各个区块添加不同的延迟 */
+.animate-fade-in-up {
+  opacity: 0;
 }
 </style>
