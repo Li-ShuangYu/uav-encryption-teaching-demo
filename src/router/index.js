@@ -10,6 +10,13 @@ const routes = [
     component: () => import('../views/InitialPage.vue'),
     meta: { title: '初始页面' }
   },
+  // ================= 管理员页面 =================
+  {
+    path: '/admin',
+    name: 'AdminPage',
+    component: () => import('../views/AdminPage.vue'),
+    meta: { title: '管理员控制台' }
+  },
   // ================= 学生首页 =================
   {
     path: '/student-home',
