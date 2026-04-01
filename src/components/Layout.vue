@@ -5,17 +5,14 @@
       <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head">
         <div @click="navigateToHome" class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider cursor-pointer hover:text-accentGreenDark transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="2"></circle></svg>
-            <span>教师控制台 <span class="text-textMuted text-sm font-normal ml-2">| 需求分析阶段</span></span>
+            <span>教师控制台 <span class="text-textMuted text-sm font-normal ml-2">| {{ currentStage }}</span></span>
         </div>
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
             <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
-                <option value="/teacher/task-publish">需求分析阶段：1. 教师任务发布</option>
-                <option value="/teacher/demand-summary">需求分析阶段：2. 需求汇总页</option>
-                <option value="/teacher/demand-split">需求分析阶段：3. 4组需求分屏</option>
-                <option value="/teacher/scheme-split">方案设计阶段：1. 4组方案分屏</option>
-                <option value="/teacher/ai-evaluate">方案设计阶段：2. AI评估</option>
-                <option value="/teacher/simulation">仿真推演阶段：1. 仿真性能</option>
+                <option v-for="item in menuItems" :key="item.value" :value="item.value">
+                    {{ item.label }}
+                </option>
             </select>
 
             <!-- <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
@@ -67,7 +64,7 @@
                 <div class="flex space-x-4">
                     <div class="flex-1">
                         <label class="block text-sm text-gray-300 mb-1">当前阶段</label>
-                        <input type="text" value="阶段1：需求分析" class="w-full bg-darkBg border border-borderColor text-white rounded px-3 py-2 text-sm outline-none focus:border-accentGreen transition" readonly>
+                        <input type="text" :value="currentStage" class="w-full bg-darkBg border border-borderColor text-white rounded px-3 py-2 text-sm outline-none focus:border-accentGreen transition" readonly>
                     </div>
                     <div class="flex-1">
                         <label class="block text-sm text-gray-300 mb-1">阶段时长</label>
@@ -92,12 +89,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const isModalOpen = ref(false)
 const currentTime = ref('')
+
+// 路由与阶段映射
+const routeStageMap = {
+  '/teacher/task-publish': { stage: '需求分析阶段', order: 1 },
+  '/teacher/demand-summary': { stage: '需求分析阶段', order: 2 },
+  '/teacher/demand-split': { stage: '需求分析阶段', order: 3 },
+  '/teacher/scheme-split': { stage: '方案设计阶段', order: 4 },
+  '/teacher/ai-evaluate': { stage: '方案设计阶段', order: 5 },
+  '/teacher/simulation': { stage: '仿真推演阶段', order: 6 }
+}
+
+// 所有菜单项
+const allMenuItems = [
+  { value: '/teacher/task-publish', label: '需求分析阶段：1. 教师任务发布', order: 1 },
+  { value: '/teacher/demand-summary', label: '需求分析阶段：2. 需求汇总页', order: 2 },
+  { value: '/teacher/demand-split', label: '需求分析阶段：3. 4组需求分屏', order: 3 },
+  { value: '/teacher/scheme-split', label: '方案设计阶段：1. 4组方案分屏', order: 4 },
+  { value: '/teacher/ai-evaluate', label: '方案设计阶段：2. AI评估', order: 5 },
+  { value: '/teacher/simulation', label: '仿真推演阶段：1. 仿真性能', order: 6 }
+]
+
+// 当前阶段
+const currentStage = computed(() => {
+  const currentRoute = route.path
+  return routeStageMap[currentRoute]?.stage || '需求分析阶段'
+})
+
+// 动态菜单项（只显示当前阶段及后续阶段）
+const menuItems = computed(() => {
+  const currentRoute = route.path
+  const currentOrder = routeStageMap[currentRoute]?.order || 1
+  return allMenuItems.filter(item => item.order >= currentOrder)
+})
 
 // 格式化时间函数
 const formatDateTime = () => {
