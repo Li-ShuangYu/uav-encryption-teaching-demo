@@ -93,6 +93,12 @@ const routes = [
         meta: { title: '学生工作台' }
       },
       {
+        path: 'task-select',
+        name: 'StudentTaskSelect',
+        component: () => import('../views/StudentTaskSelect.vue'),
+        meta: { title: '学生工作台' }
+      },
+      {
         path: 'scheme-upload',
         name: 'StudentSchemeUpload',
         component: () => import('../views/StudentSchemeUpload.vue'),

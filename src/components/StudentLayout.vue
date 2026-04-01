@@ -44,13 +44,15 @@ const currentTime = ref('')
 // 路由与阶段映射
 const routeStageMap = {
   '/student/task-receive': { stage: '需求分析阶段', order: 1 },
-  '/student/scheme-upload': { stage: '方案设计阶段', order: 2 }
+  '/student/task-select': { stage: '任务分配阶段', order: 2 },
+  '/student/scheme-upload': { stage: '方案设计阶段', order: 3 }
 }
 
 // 所有菜单项
 const allMenuItems = [
   { value: '/student/task-receive', label: '需求分析阶段：1. 任务接收与需求提交', order: 1 },
-  { value: '/student/scheme-upload', label: '方案设计阶段：1. 方案上传与评估结果', order: 2 }
+  { value: '/student/task-select', label: '任务分配阶段：2. 任务分配与确认', order: 2 },
+  { value: '/student/scheme-upload', label: '方案设计阶段：3. 方案上传与评估结果', order: 3 }
 ]
 
 // 当前阶段
