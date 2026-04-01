@@ -4,11 +4,11 @@
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
         <div class="flex items-center">
-          <span class="text-xl font-black text-white tracking-wide mr-1">方案详情：</span>
+          <span class="text-2xl font-black text-white tracking-wide mr-1">方案详情：</span>
           <select 
             v-model="currentGroupId" 
             @change="handleGroupChange"
-            class="appearance-none bg-transparent outline-none border-b-2 border-transparent hover:border-borderColor text-xl font-black py-1 px-1 transition-all cursor-pointer"
+            class="appearance-none bg-transparent outline-none border-b-2 border-transparent hover:border-borderColor text-2xl font-black py-1 px-1 transition-all cursor-pointer"
             :style="{ color: currentGroup.themeColor }"
           >
             <option v-for="g in groups" :key="g.id" :value="g.id" class="bg-darkBg text-textMain">
@@ -39,7 +39,7 @@
             </span>
             <span class="text-textMuted text-xs font-bold font-mono">{{ currentGroup.codeId }}</span>
           </div>
-          <h2 class="text-xl font-black text-white relative z-10 mb-2">{{ currentGroup.subtitle }}</h2>
+          <h2 class="text-2xl font-black text-white relative z-10 mb-2">{{ currentGroup.subtitle }}</h2>
           <p class="text-sm font-medium text-textMuted leading-tight overflow-hidden relative z-10">{{ currentGroup.desc }}</p>
           <div class="mt-auto pt-2 border-t border-borderColor/50 flex justify-between items-end relative z-10">
             <div class="text-xs font-bold text-textMuted">AI 硬件适配评级</div>

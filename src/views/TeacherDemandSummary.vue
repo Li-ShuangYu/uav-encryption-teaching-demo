@@ -3,7 +3,7 @@
     <div class="flex flex-1 overflow-hidden min-h-0">
         <div class="w-[45%] border-r border-borderColor flex flex-col bg-darkBg min-h-0">
             <div class="px-4 py-3 flex justify-between items-center border-b border-borderColor">
-                <div class="flex items-center space-x-3 text-base">
+                <div class="flex items-center space-x-3 text-lg">
                     <svg class="w-5 h-5 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     <span class="font-bold text-gray-200">学生需求提交列表</span>
                     <span class="text-accentGreenDark text-sm ml-2">主线/支线任务归档</span>

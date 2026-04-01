@@ -3,7 +3,7 @@
     <header class="h-16 shrink-0 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
       <div class="flex items-center gap-3">
         <div class="w-1 h-6 bg-accentGreen rounded-full"></div>
-        <h1 class="text-xl font-bold text-white tracking-wide">无人机通信加密 - 方案 AI 评估</h1>
+        <h1 class="text-2xl font-bold text-white tracking-wide">无人机通信加密 - 方案 AI 评估</h1>
       </div>
       <button 
         @click="backToSchemeSplit"

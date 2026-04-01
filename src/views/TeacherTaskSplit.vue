@@ -4,7 +4,7 @@
     <!-- 标题行 -->
     <div class="flex justify-between items-center mb-5">
       <div>
-        <h1 class="text-xl font-bold text-white">各组任务方向</h1>
+        <h1 class="text-2xl font-bold text-white">各组任务方向</h1>
         <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mt-2 rounded-full"></div>
       </div>
       <div class="flex items-center space-x-3">
@@ -17,20 +17,24 @@
         <div class="flex space-x-3">
           <button 
             @click="generateTeamSongs" 
-            :disabled="isGeneratingSongs"
+            :disabled="isGeneratingSongs || allSongsGenerated"
             class="bg-accentGreen hover:bg-accentGreenDark text-white px-3 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-2"
           >
+           <span>{{ isGeneratingSongs ? '正在生成队歌' : allSongsGenerated ? '队歌生成完毕' : '生成各组队歌' }}</span>
             <!-- 加载图标 -->
             <div v-if="isGeneratingSongs" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <!-- 打勾图标 -->
+            <svg v-else-if="allSongsGenerated" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>
             <!-- 音乐图标 -->
             <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"></path></svg>
-            <span>{{ isGeneratingSongs ? '正在生成队歌' : '生成各组队歌' }}</span>
+            
           </button>
           <button 
             @click="goToNextStage" 
-            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(59,130,246,0.4)] transition"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(59,130,246,0.4)] transition flex items-center space-x-1"
           >
             进入下一阶段
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5v14l7-7z"></path></svg>
           </button>
         </div>
       </div>
@@ -39,10 +43,19 @@
     <div class="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-5">
       
       <div class="bg-[#181a20] rounded-xl border border-blue-900/50 flex flex-col p-4 hover:border-blue-700/60 transition-colors shadow-lg shadow-black/20 h-full min-h-0 relative overflow-hidden">
-        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2">
+        <!-- 音乐跳动效果 -->
+        <div v-if="isMusicPlaying && currentPlayingGroup === 0" class="absolute inset-0 left-0 right-0 bottom-0 flex items-end p-4 pointer-events-none z-0 animate-fade-up">
+          <div 
+            v-for="(bar, index) in bars" 
+            :key="index"
+            class="flex-1 mx-0.5 bg-gradient-to-t from-blue-700 to-blue-900 transition-all duration-100 ease-out"
+            :style="{ height: (bar * 80) + '%', opacity: 0.2 + (bar * 0.2) }"
+          ></div>
+        </div>
+        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2 relative z-10">
           <div class="flex items-center space-x-3">
             <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-blue-900/50">组1</div>
-            <h2 class="text-base font-bold text-gray-100">低功耗优化方向</h2>
+            <h2 class="text-lg font-bold text-gray-100">低功耗优化方向</h2>
           </div>
           <div class="flex items-center space-x-2">
             <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
@@ -79,7 +92,7 @@
         </transition>
         
         <transition name="fade-content">
-          <div v-show="!groups[0].isLoading" class="flex-1 flex flex-row gap-5 min-h-0">
+          <div v-show="!groups[0].isLoading" class="flex-1 flex flex-row gap-5 min-h-0 relative z-10">
             <div class="flex-1 flex flex-col justify-center space-y-3">
               <div>
                 <p class="text-blue-400 font-bold mb-1 flex items-center text-[13px]"><span class="w-1 h-2.5 bg-blue-500 mr-2 rounded-sm"></span>【主线任务：通信加密设计】</p>
@@ -112,10 +125,19 @@
       </div>
 
       <div class="bg-[#181a20] rounded-xl border border-red-900/50 flex flex-col p-4 hover:border-red-700/60 transition-colors shadow-lg shadow-black/20 h-full min-h-0 relative overflow-hidden">
-        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2">
+        <!-- 音乐跳动效果 -->
+        <div v-if="isMusicPlaying && currentPlayingGroup === 1" class="absolute inset-0 left-0 right-0 bottom-0 flex items-end p-4 pointer-events-none z-0 animate-fade-up">
+          <div 
+            v-for="(bar, index) in bars" 
+            :key="index"
+            class="flex-1 mx-0.5 bg-gradient-to-t from-red-700 to-red-900 transition-all duration-100 ease-out"
+            :style="{ height: (bar * 80) + '%', opacity: 0.2 + (bar * 0.2) }"
+          ></div>
+        </div>
+        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2 relative z-10">
           <div class="flex items-center space-x-3">
             <div class="w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-red-900/50">组2</div>
-            <h2 class="text-base font-bold text-gray-100">侧信道防护方向</h2>
+            <h2 class="text-lg font-bold text-gray-100">侧信道防护方向</h2>
           </div>
           <div class="flex items-center space-x-2">
             <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
@@ -152,7 +174,7 @@
         </transition>
         
         <transition name="fade-content">
-          <div v-show="!groups[1].isLoading" class="flex-1 flex flex-row gap-5 min-h-0">
+          <div v-show="!groups[1].isLoading" class="flex-1 flex flex-row gap-5 min-h-0 relative z-10">
             <div class="flex-1 flex flex-col justify-center space-y-3">
               <div>
                 <p class="text-red-400 font-bold mb-1 flex items-center text-[13px]"><span class="w-1 h-2.5 bg-red-500 mr-2 rounded-sm"></span>【主线任务：通信加密设计】</p>
@@ -185,10 +207,19 @@
       </div>
 
       <div class="bg-[#181a20] rounded-xl border border-amber-900/50 flex flex-col p-4 hover:border-amber-700/60 transition-colors shadow-lg shadow-black/20 h-full min-h-0 relative overflow-hidden">
-        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2">
+        <!-- 音乐跳动效果 -->
+        <div v-if="isMusicPlaying && currentPlayingGroup === 2" class="absolute inset-0 left-0 right-0 bottom-0 flex items-end p-4 pointer-events-none z-0 animate-fade-up">
+          <div 
+            v-for="(bar, index) in bars" 
+            :key="index"
+            class="flex-1 mx-0.5 bg-gradient-to-t from-amber-700 to-amber-900 transition-all duration-100 ease-out"
+            :style="{ height: (bar * 80) + '%', opacity: 0.2 + (bar * 0.2) }"
+          ></div>
+        </div>
+        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2 relative z-10">
           <div class="flex items-center space-x-3">
             <div class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-amber-900/50">组3</div>
-            <h2 class="text-base font-bold text-gray-100">抗重放攻击方向</h2>
+            <h2 class="text-lg font-bold text-gray-100">抗重放攻击方向</h2>
           </div>
           <div class="flex items-center space-x-2">
             <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
@@ -225,7 +256,7 @@
         </transition>
         
         <transition name="fade-content">
-          <div v-show="!groups[2].isLoading" class="flex-1 flex flex-row gap-5 min-h-0">
+          <div v-show="!groups[2].isLoading" class="flex-1 flex flex-row gap-5 min-h-0 relative z-10">
             <div class="flex-1 flex flex-col justify-center space-y-3">
               <div>
                 <p class="text-amber-400 font-bold mb-1 flex items-center text-[13px]"><span class="w-1 h-2.5 bg-amber-500 mr-2 rounded-sm"></span>【主线任务：通信加密设计】</p>
@@ -258,10 +289,19 @@
       </div>
 
       <div class="bg-[#181a20] rounded-xl border border-purple-900/50 flex flex-col p-4 hover:border-purple-700/60 transition-colors shadow-lg shadow-black/20 h-full min-h-0 relative overflow-hidden">
-        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2">
+        <!-- 音乐跳动效果 -->
+        <div v-if="isMusicPlaying && currentPlayingGroup === 3" class="absolute inset-0 left-0 right-0 bottom-0 flex items-end p-4 pointer-events-none z-0 animate-fade-up">
+          <div 
+            v-for="(bar, index) in bars" 
+            :key="index"
+            class="flex-1 mx-0.5 bg-gradient-to-t from-purple-700 to-purple-900 transition-all duration-100 ease-out"
+            :style="{ height: (bar * 80) + '%', opacity: 0.2 + (bar * 0.2) }"
+          ></div>
+        </div>
+        <div class="flex justify-between items-center mb-3 shrink-0 border-b border-gray-800 pb-2 relative z-10">
           <div class="flex items-center space-x-3">
             <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-purple-900/50">组4</div>
-            <h2 class="text-base font-bold text-gray-100">后量子算法适配方向</h2>
+            <h2 class="text-lg font-bold text-gray-100">后量子算法适配方向</h2>
           </div>
           <div class="flex items-center space-x-2">
             <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
@@ -298,7 +338,7 @@
         </transition>
         
         <transition name="fade-content">
-          <div v-show="!groups[3].isLoading" class="flex-1 flex flex-row gap-5 min-h-0">
+          <div v-show="!groups[3].isLoading" class="flex-1 flex flex-row gap-5 min-h-0 relative z-10">
             <div class="flex-1 flex flex-col justify-center space-y-3">
               <div>
                 <p class="text-purple-400 font-bold mb-1 flex items-center text-[13px]"><span class="w-1 h-2.5 bg-purple-500 mr-2 rounded-sm"></span>【主线任务：通信加密设计】</p>
@@ -335,7 +375,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -348,6 +388,11 @@ const goToNextStage = () => {
 const isGeneratingSongs = ref(false);
 const generationProgress = ref(0);
 const generationStep = ref('');
+
+// 计算是否所有队歌都已生成
+const allSongsGenerated = computed(() => {
+  return groups.every(group => group.isSongGenerated);
+});
 
 const generateTeamSongs = () => {
   // 开始生成队歌
@@ -394,9 +439,52 @@ const generateTeamSongs = () => {
 // 音频元素
 const audioElement = ref(null);
 
+// 音乐跳动状态
+const isMusicPlaying = ref(false);
+const currentPlayingGroup = ref(-1);
+const audioContext = ref(null);
+const analyser = ref(null);
+const dataArray = ref(null);
+const bars = ref([0, 0, 0, 0, 0, 0, 0, 0]);
+
+// 初始化音频分析
+const initAudioAnalysis = () => {
+  if (audioElement.value) {
+    try {
+      audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioContext.value.createMediaElementSource(audioElement.value);
+      analyser.value = audioContext.value.createAnalyser();
+      source.connect(analyser.value);
+      analyser.value.connect(audioContext.value.destination);
+      analyser.value.fftSize = 128;
+      const bufferLength = analyser.value.frequencyBinCount;
+      dataArray.value = new Uint8Array(bufferLength);
+      updateBars();
+    } catch (error) {
+      console.error('音频分析初始化失败:', error);
+    }
+  }
+};
+
+// 更新柱状图
+const updateBars = () => {
+  if (analyser.value && dataArray.value && isMusicPlaying.value) {
+    analyser.value.getByteFrequencyData(dataArray.value);
+    bars.value = Array.from(dataArray.value.slice(0, 8)).map(value => value / 255);
+    requestAnimationFrame(updateBars);
+  }
+};
+
 // 播放音乐的函数
 const playMusic = (index) => {
   const group = groups[index];
+  
+  // 暂停其他组的音乐
+  groups.forEach((g, i) => {
+    if (i !== index && g.isPlaying) {
+      g.isPlaying = false;
+    }
+  });
   
   // 构建音频文件路径
   let audioPath = '';
@@ -410,8 +498,8 @@ const playMusic = (index) => {
     case 2: // 抗重放攻击方向 - 抗重放
       audioPath = '/src/assets/audio/抗重放.mp3';
       break;
-    case 3: // 后量子算法适配方向 - 轻量级
-      audioPath = '/src/assets/audio/轻量级.mp3';
+    case 3: // 后量子算法适配方向 - 后量子算法
+      audioPath = '/src/assets/audio/后量子算法.mp3';
       break;
   }
   
@@ -421,6 +509,8 @@ const playMusic = (index) => {
       audioElement.value.pause();
     }
     group.isPlaying = false;
+    isMusicPlaying.value = false;
+    currentPlayingGroup.value = -1;
   } else {
     // 播放音乐
     if (audioElement.value) {
@@ -430,6 +520,15 @@ const playMusic = (index) => {
       });
     }
     group.isPlaying = true;
+    isMusicPlaying.value = true;
+    currentPlayingGroup.value = index;
+    
+    // 初始化音频分析
+    if (!audioContext.value) {
+      initAudioAnalysis();
+    } else {
+      updateBars();
+    }
   }
 };
 
@@ -463,6 +562,8 @@ onMounted(() => {
     groups.forEach(group => {
       group.isPlaying = false;
     });
+    isMusicPlaying.value = false;
+    currentPlayingGroup.value = -1;
   });
   
   startLoadingSimulation();
@@ -491,6 +592,21 @@ onUnmounted(() => {
 @keyframes scan {
   0% { top: 0; }
   100% { top: 100%; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out forwards;
+}
+
+@keyframes fade-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .fade-overlay-leave-active {
