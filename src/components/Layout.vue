@@ -123,11 +123,9 @@ const currentStage = computed(() => {
   return routeStageMap[currentRoute]?.stage || '需求分析阶段'
 })
 
-// 动态菜单项（只显示当前阶段及后续阶段）
+// 动态菜单项（显示所有页面，但当前页面标记为已选中）
 const menuItems = computed(() => {
-  const currentRoute = route.path
-  const currentOrder = routeStageMap[currentRoute]?.order || 1
-  return allMenuItems.filter(item => item.order >= currentOrder)
+  return allMenuItems
 })
 
 // 格式化时间函数
