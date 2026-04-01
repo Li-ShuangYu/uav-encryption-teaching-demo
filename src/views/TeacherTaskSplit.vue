@@ -372,11 +372,28 @@
 
     </div>
   </div>
+  
+  <!-- 音频元素 -->
+  <audio ref="audioElement" class="hidden"></audio>
 </template>
 
 <script setup>
 import { onMounted, onUnmounted, reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+
+// 导入音频文件
+import audioLight from '../assets/audio/轻量级.mp3';
+import audioSideChannel from '../assets/audio/侧信道.mp3';
+import audioAntiReplay from '../assets/audio/抗重放.mp3';
+import audioPostQuantum from '../assets/audio/后量子算法.mp3';
+
+// 音频文件路径
+const audioFiles = {
+  0: audioLight,
+  1: audioSideChannel,
+  2: audioAntiReplay,
+  3: audioPostQuantum
+};
 
 const router = useRouter();
 
@@ -487,21 +504,7 @@ const playMusic = (index) => {
   });
   
   // 构建音频文件路径
-  let audioPath = '';
-  switch (index) {
-    case 0: // 低功耗优化方向 - 轻量级
-      audioPath = '/src/assets/audio/轻量级.mp3';
-      break;
-    case 1: // 侧信道防护方向 - 侧信道
-      audioPath = '/src/assets/audio/侧信道.mp3';
-      break;
-    case 2: // 抗重放攻击方向 - 抗重放
-      audioPath = '/src/assets/audio/抗重放.mp3';
-      break;
-    case 3: // 后量子算法适配方向 - 后量子算法
-      audioPath = '/src/assets/audio/后量子算法.mp3';
-      break;
-  }
+  const audioPath = audioFiles[index];
   
   if (group.isPlaying) {
     // 暂停音乐
@@ -515,9 +518,13 @@ const playMusic = (index) => {
     // 播放音乐
     if (audioElement.value) {
       audioElement.value.src = audioPath;
-      audioElement.value.play().catch(error => {
-        console.error('音频播放失败:', error);
-      });
+      
+      // 等待音频加载完成后再播放
+      audioElement.value.addEventListener('canplaythrough', () => {
+        audioElement.value.play().catch(error => {
+          console.error('音频播放失败:', error);
+        });
+      }, { once: true });
     }
     group.isPlaying = true;
     isMusicPlaying.value = true;
@@ -552,19 +559,18 @@ const startLoadingSimulation = () => {
   });
 };
 
-// 组件挂载时创建音频元素
+// 组件挂载时设置音频元素
 onMounted(() => {
-  // 创建音频元素
-  audioElement.value = new Audio();
-  
   // 音频结束时重置所有播放状态
-  audioElement.value.addEventListener('ended', () => {
-    groups.forEach(group => {
-      group.isPlaying = false;
+  if (audioElement.value) {
+    audioElement.value.addEventListener('ended', () => {
+      groups.forEach(group => {
+        group.isPlaying = false;
+      });
+      isMusicPlaying.value = false;
+      currentPlayingGroup.value = -1;
     });
-    isMusicPlaying.value = false;
-    currentPlayingGroup.value = -1;
-  });
+  }
   
   startLoadingSimulation();
 });
@@ -573,7 +579,6 @@ onMounted(() => {
 onUnmounted(() => {
   if (audioElement.value) {
     audioElement.value.pause();
-    audioElement.value = null;
   }
 });
 

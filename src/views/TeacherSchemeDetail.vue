@@ -96,7 +96,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
                 AI 跨模态感知
               </div>
-              <div class="text-lg text-white font-black tracking-widest">{{ currentGroup.music.audio.split('/').pop().replace(/\.mp3$/, '') }}</div>
+              <div class="text-lg text-white font-black tracking-widest">{{ getAudioFileName(currentGroup.music.audio) }}</div>
             </div>
             
             <div class="text-right max-w-[55%]">
@@ -196,6 +196,34 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+// 导入音频文件
+import audioLight from '../assets/audio/轻量级.mp3';
+import audioSideChannel from '../assets/audio/侧信道.mp3';
+import audioAntiReplay from '../assets/audio/抗重放.mp3';
+import audioPostQuantum from '../assets/audio/后量子算法.mp3';
+
+// 获取音频文件名
+const getAudioFileName = (audio) => {
+  if (typeof audio === 'string') {
+    // 处理字符串路径
+    const fileName = audio.split('/').pop().replace(/\.mp3$/, '');
+    return decodeURIComponent(fileName);
+  } else if (audio && typeof audio === 'object') {
+    // 对于导入的模块对象，从模块的默认导出中提取文件名
+    const url = audio.default || audio;
+    if (typeof url === 'string') {
+      const fileName = url.split('/').pop().replace(/\.mp3$/, '');
+      return decodeURIComponent(fileName);
+    }
+  }
+  // 手动映射音频文件到对应的中文名称
+  if (audio === audioLight) return '轻量级';
+  if (audio === audioSideChannel) return '侧信道';
+  if (audio === audioAntiReplay) return '抗重放';
+  if (audio === audioPostQuantum) return '后量子算法';
+  return '';
+};
+
 const router = useRouter();
 const route = useRoute();
 
@@ -213,7 +241,7 @@ const groups = [
     themeColor: '#3b82f6', // Blue
     desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
     hardware: 'STM32L432',
-    music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: '/src/assets/audio/轻量级.mp3', lyrics: [
+    music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: audioLight, lyrics: [
     { text: " ", duration: 0 },  
     { text: "轻量级", duration: 9500 },
       { text: "我漫步在月光之下", duration: 5000 },
@@ -255,7 +283,7 @@ const groups = [
     themeColor: '#ef4444', // Red
     desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
     hardware: 'STM32L432',
-    music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: '/src/assets/audio/侧信道.mp3', lyrics: [
+    music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: audioSideChannel, lyrics: [
       { text: " ", duration: 0 },  
       { text: "侧信道", duration: 1200 },
       { text: "挣脱了羁绊", duration: 3000 },
@@ -288,7 +316,7 @@ const groups = [
     themeColor: '#f59e0b', // Amber
     desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效。',
     hardware: 'STM32L432',
-    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: '/src/assets/audio/抗重放.mp3', lyrics: [
+    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
       { text: "", duration: 0 },
     { text: "抗重放", duration: 8200 },
       { text: "单行道上 时针在倒转", duration: 3950 },
@@ -329,16 +357,9 @@ const groups = [
     themeColor: '#8b5cf6', // Purple
     desc: '面向未来量子计算环境，采用抗量子破解的轻量级后量子密码机制，摒弃传统易被攻破的方案，抵御未来的量子暴力破解威胁。',
     hardware: 'STM32L432',
-    music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: '/src/assets/audio/轻量级.mp3', lyrics: [
-      { text: "在量子的世界里", duration: 3000 },
-      { text: "传统的密码已不再安全", duration: 4000 },
-      { text: "后量子的算法如星辰般闪耀", duration: 4000 },
-      { text: "格基的难题阻挡着攻击者", duration: 3000 },
-      { text: "Kyber的密钥如坚不可摧的盾牌", duration: 4000 },
-      { text: "在未来的算力面前", duration: 3000 },
-      { text: "我们的通信依然安全", duration: 4000 },
-      { text: "后量子的光芒照亮前行的路", duration: 4000 },
-      { text: "在量子的浪潮中守护着隐私", duration: 4000 }
+    music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: audioPostQuantum, lyrics: [
+      { text: "纯音乐。。。", duration: 30000 },
+ 
     ] },
     archLayers: [
       { name: '安全层', desc: '后量子密钥协商、数据加解密、通信安全封装', highlight: true },

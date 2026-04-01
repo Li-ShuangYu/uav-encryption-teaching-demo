@@ -41,10 +41,7 @@
                 </div>
                 <transition-group name="list" tag="div" class="flex flex-col h-full relative">
                     <div v-for="(demand, index) in visibleDemands" :key="demand.id" class="list-item absolute w-full px-4 py-3 border-b border-borderColor bg-darkBg hover:bg-panelBg transition group" :style="{ top: `${index * 96}px`, height: '96px' }">
-                        <div class="absolute top-3 right-4 text-sm text-textMuted flex items-center space-x-2">
-                            <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
+                        <div class="absolute top-3 right-4 text-sm text-textMuted">
                             <span>{{ demand.timeText }}</span>
                         </div>
                         <div class="flex items-start space-x-3">
@@ -309,21 +306,21 @@ const allDemands = [
 
 // --- 预设的15个词云词汇库 (自带样式参数) ---
 const wordCloudPool = [
-    { text: '通信加密', top: '45%', left: '45%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-4xl font-bold' },
-    { text: '低功耗优化', top: '25%', left: '30%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-3xl' },
-    { text: '侧信道防护', top: '70%', left: '65%', colorClass: 'text-[#ef4444]', sizeClass: 'text-2xl' },
-    { text: '抗重放攻击', top: '30%', left: '75%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-xl' },
-    { text: '后量子算法', top: '65%', left: '25%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-xl' },
-    { text: '机密性', top: '50%', left: '20%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-lg' },
-    { text: '完整性', top: '50%', left: '80%', colorClass: 'text-[#ef4444]', sizeClass: 'text-lg' },
-    { text: '可用性', top: '15%', left: '50%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-base' },
-    { text: '时延敏感', top: '80%', left: '50%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-base' },
-    { text: '算力有限', top: '20%', left: '15%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
-    { text: '身份认证', top: '80%', left: '85%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' },
-    { text: '密钥更新', top: '80%', left: '15%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-sm' },
-    { text: '兼容性', top: '20%', left: '85%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-sm' },
-    { text: '低时延', top: '10%', left: '70%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
-    { text: '低功耗', top: '85%', left: '30%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' }
+    { text: '通信加密', top: '45%', left: '45%', colorClass: 'text-green-500', sizeClass: 'text-4xl font-bold' },
+    { text: '低功耗优化', top: '25%', left: '32%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-3xl' },
+    { text: '侧信道防护', top: '70%', left: '60%', colorClass: 'text-[#ef4444]', sizeClass: 'text-2xl' },
+    { text: '抗重放攻击', top: '30%', left: '65%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-xl' },
+    { text: '后量子算法', top: '65%', left: '28%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-xl' },
+    { text: '机密性', top: '45%', left: '22%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-lg' },
+    { text: '完整性', top: '45%', left: '75%', colorClass: 'text-[#ef4444]', sizeClass: 'text-lg' },
+    { text: '可用性', top: '18%', left: '50%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-base' },
+    { text: '时延敏感', top: '78%', left: '50%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-base' },
+    { text: '算力有限', top: '22%', left: '18%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
+    { text: '身份认证', top: '78%', left: '78%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' },
+    { text: '密钥更新', top: '78%', left: '22%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-sm' },
+    { text: '兼容性', top: '22%', left: '78%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-sm' },
+    { text: '低时延', top: '12%', left: '68%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
+    { text: '低功耗', top: '82%', left: '32%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' }
 ]
 
 let simulationInterval = null
@@ -348,7 +345,7 @@ const startSimulation = () => {
     const totalTimeMs = 13000 // 模拟总时长约13秒
     const intervalMs = totalTimeMs / totalTicks
 
-    // 内部时间计时器，让“x秒前”动起来
+    // 内部时间计时器，让"x秒前"动起来
     if(timeUpdateInterval) clearInterval(timeUpdateInterval);
     timeUpdateInterval = setInterval(() => {
         visibleDemands.value.forEach(d => {
