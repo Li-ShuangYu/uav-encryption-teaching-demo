@@ -28,8 +28,7 @@
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             <span class="font-bold text-sm">{{ currentGroup.name }} (操作终端)</span>
-            <!-- ✅ 修改2：隐藏下拉箭头（直接删除这段svg） -->
-          </div>
+            </div>
           
           <transition name="fade">
             <div v-if="showDropdown" class="absolute right-0 top-full mt-2 w-48 bg-panelBg border border-borderColor rounded-lg shadow-xl overflow-hidden">
@@ -77,7 +76,6 @@
         </div>
         
         <div class="flex-1 p-6 flex flex-col justify-center gap-6">
-          <!-- ✅ 修改1：文件上传框 + 隐藏的文件选择input -->
           <input 
             ref="fileInput"
             type="file"
@@ -89,7 +87,6 @@
             class="upload-box flex-1 border-2 border-dashed border-borderColor rounded-xl flex flex-col items-center justify-center cursor-pointer bg-darkBg/50 relative overflow-hidden group"
             @click="triggerFileUpload"
           >
-            <!-- 未上传：显示上传提示 -->
             <div v-if="!currentGroup.state.hasFile" class="flex flex-col items-center z-10">
               <svg class="w-16 h-16 mb-3 group-hover:scale-110 transition-transform" :style="{ color: currentGroup.themeColor }" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
@@ -98,7 +95,6 @@
               <span class="text-textMuted text-sm mt-1">支持 Word 格式 (.doc/.docx)</span>
             </div>
 
-            <!-- 已上传：显示Word文件信息 -->
             <div v-else class="flex flex-col items-center z-10">
               <svg class="w-16 h-16 mb-3 group-hover:scale-110 transition-transform" :style="{ color: currentGroup.themeColor }" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
@@ -307,11 +303,28 @@ const handleFileSelect = () => {
   currentGroup.value.state.hasFile = true;
 };
 
-// 上传方案文件
-const handleUpload = () => {
+// 提交方案文件并触发后端状态更新
+const handleUpload = async () => {
   const group = currentGroup.value;
   group.state.isUploading = true;
   
+  try {
+    // 核心修改：提取组号 (如从 'g1' 提取出 '1')，构建后端对应的字段名
+    const groupId = currentGroupId.value.replace('g', ''); 
+    const stateKey = `scheme_uploaded_g${groupId}`;
+    
+    // 发送真实的网络请求更新全局状态机
+    await fetch('http://localhost:3000/api/state/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [stateKey]: 1 })
+    });
+  } catch (error) {
+    console.error('推送状态至教师端失败:', error);
+    // 失败依然走下面的UI流程，保证演示不出大错
+  }
+  
+  // 保持原有UI动画展示延迟逻辑
   setTimeout(() => {
     group.state.isUploading = false;
     group.state.isSubmitted = true;

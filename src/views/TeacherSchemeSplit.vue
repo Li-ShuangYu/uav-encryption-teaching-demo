@@ -186,6 +186,19 @@ const goToAiEvaluate = () => {
   router.push('/teacher/ai-evaluate');
 };
 
+// 重置后端状态
+const resetBackendState = async () => {
+  try {
+    await fetch('http://localhost:3000/api/state/reset', {
+      method: 'POST'
+    });
+    console.log('后端状态已重置为默认值');
+  } catch (error) {
+    console.error('重置后端状态失败:', error);
+    // 即使重置失败，也继续执行后续逻辑
+  }
+};
+
 // 轮询后端获取 4 组方案的上传状态
 const fetchState = async () => {
   try {
@@ -204,6 +217,9 @@ const fetchState = async () => {
 };
 
 onMounted(() => {
+  // 先重置后端状态
+  resetBackendState();
+  
   fetchState(); // 先立刻查一次
   pollingTimer = setInterval(fetchState, 1000); // 每秒轮询一次
 });
