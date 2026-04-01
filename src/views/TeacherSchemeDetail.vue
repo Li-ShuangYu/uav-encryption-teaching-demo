@@ -125,7 +125,7 @@
                 ]"
                 :style="{ color: index === currentLyricIndex ? currentGroup.themeColor : '' }"
               >
-                {{ lyric }}
+                {{ lyric.text }}
               </div>
             </div>
             
@@ -212,19 +212,19 @@ const groups = [
     subtitle: '轻量级无人机加密体制',
     codeId: 'SEC-LOWPOWER-01',
     themeColor: '#3b82f6', // Blue
-    desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合 [cite: 33, 34]，实现数据加密传输与双向认证 [cite: 6]，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求 [cite: 7, 11]。',
-    hardware: 'STM32L432', // [cite: 8]
+    desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
+    hardware: 'STM32L432',
     music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征' },
     archLayers: [
-      { name: '应用层', desc: '飞行控制指令、航拍/定位数据输入输出 [cite: 28]', highlight: false },
-      { name: '安全层', desc: '身份认证、数据加解密、密钥协商 [cite: 29]', highlight: true },
-      { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发 [cite: 30]', highlight: false },
-      { name: '硬件层', desc: 'STM32L432 低功耗单片机、电源模块 [cite: 31]', highlight: true }
+      { name: '应用层', desc: '飞行控制指令、航拍/定位数据输入输出', highlight: false },
+      { name: '安全层', desc: '身份认证、数据加解密、密钥协商', highlight: true },
+      { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发', highlight: false },
+      { name: '硬件层', desc: 'STM32L432 低功耗单片机、电源模块', highlight: true }
     ],
-    flow: ['双向身份认证', '协商一次性会话密钥', '数据加解密与校验', '销毁密钥与系统休眠'], // [cite: 54, 55, 56, 57]
+    flow: ['双向身份认证', '协商一次性会话密钥', '数据加解密与校验', '销毁密钥与系统休眠'],
     algorithms: [
-      { label: '轻量级数据加密', name: 'PRESENT 算法', desc: '64bit分组/80bit密钥，SPN结构31轮迭代 [cite: 33, 43]。控制指令采用 ECB，影像数据采用 CBC 模式 [cite: 44, 45]。' },
-      { label: '双向身份认证', name: 'ECC (secp256r1)', desc: '无人机与终端基于 ECC 验证双方合法性，认证通过后动态协商生成一次一密的会话密钥 [cite: 40, 41]。' }
+      { label: '轻量级数据加密', name: 'PRESENT 算法', desc: '64bit分组/80bit密钥，SPN结构31轮迭代。控制指令采用 ECB，影像数据采用 CBC 模式。' },
+      { label: '双向身份认证', name: 'ECC (secp256r1)', desc: '无人机与终端基于 ECC 验证双方合法性，认证通过后动态协商生成一次一密的会话密钥。' }
     ]
   },
   {
@@ -234,18 +234,18 @@ const groups = [
     subtitle: '高安全抗物理攻击体制',
     codeId: 'SEC-SIDECHNL-02',
     themeColor: '#ef4444', // Red
-    desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现 [cite: 81, 110]，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击 [cite: 84]。',
-    hardware: 'STM32L432', // [cite: 91]
+    desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
+    hardware: 'STM32L432',
     music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征' },
     archLayers: [
-      { name: '安全核心层', desc: '通信加密、身份认证、侧信道防护（掩码+恒定时间） [cite: 89]', highlight: true },
-      { name: '通信接口层', desc: 'WiFi / 蓝牙数据收发、帧封装 [cite: 90]', highlight: false },
-      { name: '硬件支撑层', desc: 'STM32L432 低功耗单片机、电源、无线模组 [cite: 91]', highlight: true }
+      { name: '安全核心层', desc: '通信加密、身份认证、侧信道防护（掩码+恒定时间）', highlight: true },
+      { name: '通信接口层', desc: 'WiFi / 蓝牙数据收发、帧封装', highlight: false },
+      { name: '硬件支撑层', desc: 'STM32L432 低功耗单片机、电源、无线模组', highlight: true }
     ],
-    flow: ['初始化防护单元', '双向认证与密钥协商', '掩码异或与恒定时间加密', '结束销毁与休眠'], // [cite: 94, 96, 101, 103]
+    flow: ['初始化防护单元', '双向认证与密钥协商', '掩码异或与恒定时间加密', '结束销毁与休眠'],
     algorithms: [
-      { label: '侧信道防护加密', name: 'PRESENT + 掩码机制', desc: '将敏感数据与随机掩码异或以切断密钥关联，算法无分支跳转并随机插入空操作打乱功耗特征 [cite: 112, 113, 114]。' },
-      { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性 [cite: 107]。' }
+      { label: '侧信道防护加密', name: 'PRESENT + 掩码机制', desc: '将敏感数据与随机掩码异或以切断密钥关联，算法无分支跳转并随机插入空操作打乱功耗特征。' },
+      { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
     ]
   },
   {
@@ -255,18 +255,18 @@ const groups = [
     subtitle: '强时效性指令防劫持体制',
     codeId: 'SEC-NOREPLAY-03',
     themeColor: '#f59e0b', // Amber
-    desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信 [cite: 131]。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效 [cite: 151, 156]。',
-    hardware: 'STM32L432', // [cite: 138]
+    desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效。',
+    hardware: 'STM32L432',
     music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征' },
     archLayers: [
-      { name: '安全层', desc: '数据加解密、身份校验、抗重放计数管理 [cite: 136]', highlight: true },
-      { name: '通信层', desc: 'WiFi / 蓝牙数据收发、数据包封装 [cite: 137]', highlight: true },
-      { name: '硬件层', desc: 'STM32L432 低功耗单片机、无线通信模块 [cite: 138]', highlight: false }
+      { name: '安全层', desc: '数据加解密、身份校验、抗重放计数管理', highlight: true },
+      { name: '通信层', desc: 'WiFi / 蓝牙数据收发、数据包封装', highlight: true },
+      { name: '硬件层', desc: 'STM32L432 低功耗单片机、无线通信模块', highlight: false }
     ],
-    flow: ['初始化同步计数器', '身份与同步校验', '附加计数器并加密传输', '接收解密校验过期丢弃'], // [cite: 140, 141, 142, 143]
+    flow: ['初始化同步计数器', '身份与同步校验', '附加计数器并加密传输', '接收解密校验过期丢弃'],
     algorithms: [
-      { label: '通信安全加密', name: 'PRESENT 算法', desc: '硬件实现简单、资源占用低，对控制指令、航拍与定位数据进行全程加密传输 [cite: 147, 148]。' },
-      { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包 [cite: 153, 154, 155]。' }
+      { label: '通信安全加密', name: 'PRESENT 算法', desc: '硬件实现简单、资源占用低，对控制指令、航拍与定位数据进行全程加密传输。' },
+      { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
     ]
   },
   {
@@ -276,18 +276,18 @@ const groups = [
     subtitle: '面向未来算力威胁前瞻体制',
     codeId: 'SEC-PQUANTUM-04',
     themeColor: '#8b5cf6', // Purple
-    desc: '面向未来量子计算环境，采用抗量子破解的轻量级后量子密码机制 [cite: 169]，摒弃传统易被攻破的方案，抵御未来的量子暴力破解威胁 [cite: 172]。',
-    hardware: 'STM32L432', // [cite: 179]
+    desc: '面向未来量子计算环境，采用抗量子破解的轻量级后量子密码机制，摒弃传统易被攻破的方案，抵御未来的量子暴力破解威胁。',
+    hardware: 'STM32L432',
     music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征' },
     archLayers: [
-      { name: '安全层', desc: '后量子密钥协商、数据加解密、通信安全封装 [cite: 177]', highlight: true },
-      { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发、帧格式处理 [cite: 178]', highlight: true },
-      { name: '硬件层', desc: 'STM32L432 低功耗嵌入式平台、无线模块 [cite: 179]', highlight: false }
+      { name: '安全层', desc: '后量子密钥协商、数据加解密、通信安全封装', highlight: true },
+      { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发、帧格式处理', highlight: true },
+      { name: '硬件层', desc: 'STM32L432 低功耗嵌入式平台、无线模块', highlight: false }
     ],
-    flow: ['加载后量子参数', 'Kyber 安全密钥协商', '共享密钥加密通信', '接收解密与密钥清除'], // [cite: 181, 182, 183, 184]
+    flow: ['加载后量子参数', 'Kyber 安全密钥协商', '共享密钥加密通信', '接收解密与密钥清除'],
     algorithms: [
-      { label: '密钥交换算法', name: 'CRYSTALS-Kyber', desc: '基于格基(Lattice)难题的轻量级后量子加密算法，不依赖传统ECC/RSA，抗量子攻击且运算速度快 [cite: 192, 193, 194]。' },
-      { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性 [cite: 189, 190]。' }
+      { label: '密钥交换算法', name: 'CRYSTALS-Kyber', desc: '基于格基(Lattice)难题的轻量级后量子加密算法，不依赖传统ECC/RSA，抗量子攻击且运算速度快。' },
+      { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ]
   }
 ];
@@ -296,14 +296,14 @@ const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
 const mockLyrics = [
-  "Initializing acoustics...",
-  "Parsing security architecture...",
-  "Mapping cryptographic features...",
-  "Generating auditory feedback...",
-  "Applying quantum resistance...",
-  "Syncing side-channel data...",
-  "Playback sync established.",
-  "Monitoring payload datastream..."
+  { text: "Initializing acoustics...", duration: 2000 },
+  { text: "Parsing security architecture...", duration: 2500 },
+  { text: "Mapping cryptographic features...", duration: 3000 },
+  { text: "Generating auditory feedback...", duration: 2200 },
+  { text: "Applying quantum resistance...", duration: 2800 },
+  { text: "Syncing side-channel data...", duration: 2400 },
+  { text: "Playback sync established.", duration: 2600 },
+  { text: "Monitoring payload datastream...", duration: 3000 }
 ];
 
 const currentLyricIndex = ref(0);
@@ -352,20 +352,24 @@ const loadAudio = (audioUrl) => {
 // 开始歌词计时器
 const startLyricTimer = () => {
   if (!lyricTimer) {
-    lyricTimer = setInterval(() => {
+    const playNextLyric = () => {
       if (currentLyricIndex.value < mockLyrics.length - 1) {
+        const currentDuration = mockLyrics[currentLyricIndex.value].duration;
         currentLyricIndex.value += 1;
+        lyricTimer = setTimeout(playNextLyric, currentDuration);
       } else {
-        currentLyricIndex.value = 0; 
+        currentLyricIndex.value = 0;
+        lyricTimer = setTimeout(playNextLyric, mockLyrics[0].duration);
       }
-    }, 2200); // 稍微放慢歌词滚动速度，增加沉浸感
+    };
+    lyricTimer = setTimeout(playNextLyric, mockLyrics[currentLyricIndex.value].duration);
   }
 };
 
 // 停止歌词计时器
 const stopLyricTimer = () => {
   if (lyricTimer) {
-    clearInterval(lyricTimer);
+    clearTimeout(lyricTimer);
     lyricTimer = null;
   }
 };
@@ -380,7 +384,7 @@ const handleGroupChange = () => {
 };
 
 onUnmounted(() => {
-  if (lyricTimer) clearInterval(lyricTimer);
+  if (lyricTimer) clearTimeout(lyricTimer);
 });
 </script>
 
