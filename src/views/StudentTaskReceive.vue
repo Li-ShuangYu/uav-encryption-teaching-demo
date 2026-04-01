@@ -25,54 +25,26 @@
         </div>
       <div class="flex items-center gap-4">
         
-        <div class="relative" @click.stop="toggleDropdown">
-          <div class="flex items-center gap-2 px-4 py-1.5 rounded-full cursor-pointer transition-colors" :class="[
-            currentGroupIndex === 0 && 'bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20',
-            currentGroupIndex === 1 && 'bg-red-500/10 border border-red-500/30 hover:bg-red-500/20',
-            currentGroupIndex === 2 && 'bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20',
-            currentGroupIndex === 3 && 'bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20'
-          ]">
-            <svg class="w-4 h-4" :class="[
-              currentGroupIndex === 0 && 'text-blue-500',
-              currentGroupIndex === 1 && 'text-red-500',
-              currentGroupIndex === 2 && 'text-yellow-500',
-              currentGroupIndex === 3 && 'text-purple-500'
-            ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span class="font-bold text-sm" :class="[
-              currentGroupIndex === 0 && 'text-blue-500',
-              currentGroupIndex === 1 && 'text-red-500',
-              currentGroupIndex === 2 && 'text-yellow-500',
-              currentGroupIndex === 3 && 'text-purple-500'
-            ]">{{ currentGroup.name }}</span>
-          </div>
-          
-          <transition name="fade">
-            <div v-if="showDropdown" class="absolute top-full right-0 mt-2 w-56 bg-cardInnerBg border border-borderColor rounded-md shadow-xl z-50 overflow-hidden">
-              <div 
-                v-for="(group, index) in groupsData" 
-                :key="group.id"
-                @click="switchGroup(index)"
-                class="px-4 py-3 text-sm text-textMain cursor-pointer transition-colors border-b border-borderColor/50 last:border-0 flex items-center justify-between"
-                :class="[
-                  currentGroupIndex === index ? 'text-white font-bold' : 'hover:text-white',
-                  index === 0 && (currentGroupIndex === index ? 'bg-blue-500/20' : 'hover:bg-blue-500/20'),
-                  index === 1 && (currentGroupIndex === index ? 'bg-red-500/20' : 'hover:bg-red-500/20'),
-                  index === 2 && (currentGroupIndex === index ? 'bg-yellow-500/20' : 'hover:bg-yellow-500/20'),
-                  index === 3 && (currentGroupIndex === index ? 'bg-purple-500/20' : 'hover:bg-purple-500/20')
-                ]"
-              >
-                <span>{{ group.name }}</span>
-                <svg v-if="currentGroupIndex === index" class="w-4 h-4" :class="[
-                  currentGroupIndex === 0 && 'text-blue-500',
-                  currentGroupIndex === 1 && 'text-red-500',
-                  currentGroupIndex === 2 && 'text-yellow-500',
-                  currentGroupIndex === 3 && 'text-purple-500'
-                ]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-              </div>
-            </div>
-          </transition>
+        <div class="flex items-center gap-2 px-4 py-1.5 rounded-full transition-colors" :class="[
+          currentGroupIndex === 0 && 'bg-blue-500/10 border border-blue-500/30',
+          currentGroupIndex === 1 && 'bg-red-500/10 border border-red-500/30',
+          currentGroupIndex === 2 && 'bg-yellow-500/10 border border-yellow-500/30',
+          currentGroupIndex === 3 && 'bg-purple-500/10 border border-purple-500/30'
+        ]">
+          <svg class="w-4 h-4" :class="[
+            currentGroupIndex === 0 && 'text-blue-500',
+            currentGroupIndex === 1 && 'text-red-500',
+            currentGroupIndex === 2 && 'text-yellow-500',
+            currentGroupIndex === 3 && 'text-purple-500'
+          ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span class="font-bold text-sm" :class="[
+            currentGroupIndex === 0 && 'text-blue-500',
+            currentGroupIndex === 1 && 'text-red-500',
+            currentGroupIndex === 2 && 'text-yellow-500',
+            currentGroupIndex === 3 && 'text-purple-500'
+          ]">{{ currentGroup.name }}</span>
         </div>
         
         <span 
@@ -95,7 +67,7 @@
     </transition>
 
     <transition name="fade-up">
-      <main v-if="showContent" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-darkBg" @click="showDropdown = false">
+      <main v-if="showContent" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-darkBg">
         <div class="flex-1 grid grid-cols-3 gap-6">
    
         <section class="col-span-1 bg-panelBg border border-borderColor rounded-lg shadow-lg overflow-hidden flex flex-col">
@@ -269,7 +241,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 // 图标组件
@@ -278,25 +250,30 @@ const ShieldIcon = { template: '<svg fill="none" stroke="currentColor" viewBox="
 const BoltIcon = { template: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>' };
 const ChipIcon = { template: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m14-6h2m-2 6h2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>' };
 
-// 下拉菜单控制
-const showDropdown = ref(false);
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value;
-};
-const closeDropdown = () => { showDropdown.value = false; };
+// 状态管理
+const showToast = ref(false);
+// 控制入场动画
+const showContent = ref(false);
+
+// 从 localStorage 读取组信息
+const currentGroupIndex = ref(0);
+
 onMounted(() => { 
-  document.addEventListener('click', closeDropdown); 
+  // 从 localStorage 读取组信息
+  const storedInfo = localStorage.getItem('selectedGroupInfo');
+  if (storedInfo) {
+    const groupInfo = JSON.parse(storedInfo);
+    if (groupInfo.groupId) {
+      // groupId 是 1-4，转换为索引 0-3
+      currentGroupIndex.value = parseInt(groupInfo.groupId) - 1;
+    }
+  }
+  
   // 入场动画
   setTimeout(() => {
     showContent.value = true;
   }, 100);
 });
-onUnmounted(() => { document.removeEventListener('click', closeDropdown); });
-
-// 状态管理
-const showToast = ref(false);
-// 控制入场动画
-const showContent = ref(false);
 
 // 核心指标数据 (适配录课脚本中 AI资料推送的约束)
 const taskInfo = reactive({
@@ -360,14 +337,7 @@ const groupsData = reactive([
   }
 ]);
 
-const currentGroupIndex = ref(0);
 const currentGroup = computed(() => groupsData[currentGroupIndex.value]);
-
-// 切换小组
-const switchGroup = (index) => {
-  currentGroupIndex.value = index;
-  showDropdown.value = false;
-};
 
 // 动态校验清单
 const checklist = computed(() => [
