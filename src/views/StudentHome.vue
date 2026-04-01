@@ -139,6 +139,34 @@ const selectGroup = (index) => {
 const confirmSelection = () => {
   if (selectedGroupId.value !== null) {
     isLoading.value = true;
+    
+    // 获取选中的组信息
+    const selectedGroup = groups[selectedGroupId.value];
+    
+    // 存储组别信息到localStorage
+    const groupInfo = {
+      groupId: selectedGroupId.value + 1, // 组别编号（1-4）
+      groupName: selectedGroup.title, // 方向名称
+      algorithm: selectedGroup.algorithm, // 算法名称
+      persona: selectedGroup.persona, // 人物画像
+      traits: selectedGroup.traits, // 特质标签
+      style: selectedGroup.style, // 做事风格
+      colorTheme: {
+        borderClass: selectedGroup.borderClass,
+        activeBorderClass: selectedGroup.activeBorderClass,
+        bgHighlightClass: selectedGroup.bgHighlightClass,
+        badgeBgClass: selectedGroup.badgeBgClass,
+        textClass: selectedGroup.textClass,
+        tagClass: selectedGroup.tagClass,
+        shadowClass: selectedGroup.shadowClass
+      },
+      selectTime: new Date().toISOString() // 选择时间
+    };
+    
+    // 使用localStorage存储，相比cookie更适合存储较大量的结构化数据
+    localStorage.setItem('selectedGroupInfo', JSON.stringify(groupInfo));
+    console.log('组别信息已保存到localStorage:', groupInfo);
+    
     // 2秒后跳转到学生任务接收页面
     setTimeout(() => {
       router.push('/student/task-receive');
