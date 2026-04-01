@@ -42,6 +42,12 @@ const routes = [
         meta: { title: '屏 3：教学控制台 - 4 组需求分屏页' }
       },
       {
+        path: 'task-split',
+        name: 'TeacherTaskSplit',
+        component: () => import('../views/TeacherTaskSplit.vue'),
+        meta: { title: '屏 4：教学控制台 - 4 组任务分屏页' }
+      },
+      {
         path: 'scheme-split',
         name: 'TeacherSchemeSplit',
         component: () => import('../views/TeacherSchemeSplit.vue'),

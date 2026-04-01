@@ -34,7 +34,7 @@
       </button>
       
       <button 
-        @click="navigateTo('/teacher/demand-split')" 
+        @click="navigateTo('/teacher/task-split')" 
         class="w-full h-40 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
       >
         <div class="w-16 h-16 rounded-full bg-green-900/30 flex items-center justify-center mb-4 group-hover:bg-green-900/50 transition">
@@ -42,7 +42,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
           </svg>
         </div>
-        <h2 class="text-xl font-bold text-white group-hover:text-accentGreen transition">4组需求分屏</h2>
+        <h2 class="text-xl font-bold text-white group-hover:text-accentGreen transition">4组任务分屏</h2>
         <p class="text-gray-400 text-sm mt-2">需求分析阶段</p>
       </button>
       

@@ -256,10 +256,10 @@
           </div>
         </div>
         <div class="flex justify-center">
-          <button @click="confirmJump" class="bg-accentCyan text-black font-bold text-[14px] px-6 py-2 rounded-lg shadow-[0_0_10px_rgba(0,240,255,0.3)] tracking-wide transition transform hover:scale-105 hover:bg-[#00d0dd] border border-[#00f0ff]">
-            确认并跳转至需求汇总页
-          </button>
-        </div>
+              <button @click="confirmJump" class="bg-accentCyan text-black font-bold text-[14px] px-6 py-2 rounded-lg shadow-[0_0_10px_rgba(0,240,255,0.3)] tracking-wide transition transform hover:scale-105 hover:bg-[#00d0dd] border border-[#00f0ff]">
+                确认并跳转至AI任务梳理页
+              </button>
+            </div>
       </div>
     </div>
 
@@ -437,7 +437,7 @@ const closeModal = () => {
 }
 
 const confirmJump = () => {
-  router.push('/teacher/demand-summary')
+  router.push('/teacher/task-split')
 }
 </script>
 
