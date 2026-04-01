@@ -1,6 +1,41 @@
 <template>
   <div class="w-full h-full bg-[#111318] flex flex-col font-sans text-gray-200 box-border p-5 overflow-hidden">
     
+    <!-- 标题行 -->
+    <div class="flex justify-between items-center mb-5">
+      <div>
+        <h1 class="text-xl font-bold text-white">各组任务方向</h1>
+        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mt-2 rounded-full"></div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- 生成步骤 -->
+        <div v-show="isGeneratingSongs" class="text-sm text-gray-300">
+          {{ generationStep }}
+        </div>
+        
+        <!-- 按钮 -->
+        <div class="flex space-x-3">
+          <button 
+            @click="generateTeamSongs" 
+            :disabled="isGeneratingSongs"
+            class="bg-accentGreen hover:bg-accentGreenDark text-white px-3 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-2"
+          >
+            <!-- 加载图标 -->
+            <div v-if="isGeneratingSongs" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <!-- 音乐图标 -->
+            <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"></path></svg>
+            <span>{{ isGeneratingSongs ? '正在生成队歌' : '生成各组队歌' }}</span>
+          </button>
+          <button 
+            @click="goToNextStage" 
+            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(59,130,246,0.4)] transition"
+          >
+            进入下一阶段
+          </button>
+        </div>
+      </div>
+    </div>
+    
     <div class="flex-1 min-h-0 grid grid-cols-2 grid-rows-2 gap-5">
       
       <div class="bg-[#181a20] rounded-xl border border-blue-900/50 flex flex-col p-4 hover:border-blue-700/60 transition-colors shadow-lg shadow-black/20 h-full min-h-0 relative overflow-hidden">
@@ -9,7 +44,18 @@
             <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-blue-900/50">组1</div>
             <h2 class="text-base font-bold text-gray-100">低功耗优化方向</h2>
           </div>
-          <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          <div class="flex items-center space-x-2">
+            <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
+            <button 
+              v-show="groups[0].isSongGenerated" 
+              @click="playMusic(0)" 
+              class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-900/30 text-blue-400 hover:bg-blue-800/50 transition"
+            >
+              <svg v-if="!groups[0].isPlaying" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <svg v-else class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            </button>
+            <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          </div>
         </div>
         
         <transition name="fade-overlay">
@@ -71,7 +117,18 @@
             <div class="w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-red-900/50">组2</div>
             <h2 class="text-base font-bold text-gray-100">侧信道防护方向</h2>
           </div>
-          <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          <div class="flex items-center space-x-2">
+            <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
+            <button 
+              v-show="groups[1].isSongGenerated" 
+              @click="playMusic(1)" 
+              class="w-6 h-6 flex items-center justify-center rounded-full bg-red-900/30 text-red-400 hover:bg-red-800/50 transition"
+            >
+              <svg v-if="!groups[1].isPlaying" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <svg v-else class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            </button>
+            <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          </div>
         </div>
         
         <transition name="fade-overlay">
@@ -133,7 +190,18 @@
             <div class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-amber-900/50">组3</div>
             <h2 class="text-base font-bold text-gray-100">抗重放攻击方向</h2>
           </div>
-          <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          <div class="flex items-center space-x-2">
+            <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
+            <button 
+              v-show="groups[2].isSongGenerated" 
+              @click="playMusic(2)" 
+              class="w-6 h-6 flex items-center justify-center rounded-full bg-amber-900/30 text-amber-400 hover:bg-amber-800/50 transition"
+            >
+              <svg v-if="!groups[2].isPlaying" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <svg v-else class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            </button>
+            <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          </div>
         </div>
         
         <transition name="fade-overlay">
@@ -195,7 +263,18 @@
             <div class="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold shadow-md shadow-purple-900/50">组4</div>
             <h2 class="text-base font-bold text-gray-100">后量子算法适配方向</h2>
           </div>
-          <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          <div class="flex items-center space-x-2">
+            <!-- 播放按钮，默认隐藏，生成队歌后显示 -->
+            <button 
+              v-show="groups[3].isSongGenerated" 
+              @click="playMusic(3)" 
+              class="w-6 h-6 flex items-center justify-center rounded-full bg-purple-900/30 text-purple-400 hover:bg-purple-800/50 transition"
+            >
+              <svg v-if="!groups[3].isPlaying" class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+              <svg v-else class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+            </button>
+            <span class="bg-green-900/30 text-green-400 text-xs px-2 py-1 rounded border border-green-800/50 font-medium">任务已确认</span>
+          </div>
         </div>
         
         <transition name="fade-overlay">
@@ -256,13 +335,110 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+
+const goToNextStage = () => {
+  router.push('/teacher/scheme-design');
+};
+
+// 生成队歌的状态
+const isGeneratingSongs = ref(false);
+const generationProgress = ref(0);
+const generationStep = ref('');
+
+const generateTeamSongs = () => {
+  // 开始生成队歌
+  isGeneratingSongs.value = true;
+  generationProgress.value = 0;
+  
+  // 生成步骤
+  const steps = [
+    '正在分析各组任务方向...',
+    '正在生成歌词...',
+    '正在调整时长...',
+    '正在合成音乐...',
+    '正在优化音效...'
+  ];
+  
+  // 模拟生成过程，总共5秒
+  let stepIndex = 0;
+  const interval = setInterval(() => {
+    // 更新步骤和进度
+    generationStep.value = steps[stepIndex];
+    generationProgress.value = (stepIndex + 1) * 20;
+    
+    stepIndex++;
+    
+    // 完成所有步骤
+    if (stepIndex >= steps.length) {
+      clearInterval(interval);
+      
+      // 模拟生成队歌完成，显示播放按钮
+      setTimeout(() => {
+        groups.forEach(group => {
+          group.isSongGenerated = true;
+        });
+        
+        // 重置状态
+        isGeneratingSongs.value = false;
+        generationProgress.value = 0;
+        generationStep.value = '';
+      }, 500);
+    }
+  }, 1000);
+};
+
+// 音频元素
+const audioElement = ref(null);
+
+// 播放音乐的函数
+const playMusic = (index) => {
+  const group = groups[index];
+  
+  // 构建音频文件路径
+  let audioPath = '';
+  switch (index) {
+    case 0: // 低功耗优化方向 - 轻量级
+      audioPath = '/src/assets/audio/轻量级.mp3';
+      break;
+    case 1: // 侧信道防护方向 - 侧信道
+      audioPath = '/src/assets/audio/侧信道.mp3';
+      break;
+    case 2: // 抗重放攻击方向 - 抗重放
+      audioPath = '/src/assets/audio/抗重放.mp3';
+      break;
+    case 3: // 后量子算法适配方向 - 轻量级
+      audioPath = '/src/assets/audio/轻量级.mp3';
+      break;
+  }
+  
+  if (group.isPlaying) {
+    // 暂停音乐
+    if (audioElement.value) {
+      audioElement.value.pause();
+    }
+    group.isPlaying = false;
+  } else {
+    // 播放音乐
+    if (audioElement.value) {
+      audioElement.value.src = audioPath;
+      audioElement.value.play().catch(error => {
+        console.error('音频播放失败:', error);
+      });
+    }
+    group.isPlaying = true;
+  }
+};
+
+// 定义小组数据
 const groups = reactive([
-  { isLoading: true, progress: 0, delay: 800 },
-  { isLoading: true, progress: 0, delay: 1600 },
-  { isLoading: true, progress: 0, delay: 2400 },
-  { isLoading: true, progress: 0, delay: 3200 }
+  { isLoading: true, progress: 0, delay: 800, isSongGenerated: false, isPlaying: false }, // 低功耗优化方向 - 轻量级
+  { isLoading: true, progress: 0, delay: 1600, isSongGenerated: false, isPlaying: false }, // 侧信道防护方向 - 侧信道
+  { isLoading: true, progress: 0, delay: 2400, isSongGenerated: false, isPlaying: false }, // 抗重放攻击方向 - 抗重放
+  { isLoading: true, progress: 0, delay: 3200, isSongGenerated: false, isPlaying: false }  // 后量子算法适配方向 - 后量子
 ]);
 
 const startLoadingSimulation = () => {
@@ -277,9 +453,30 @@ const startLoadingSimulation = () => {
   });
 };
 
+// 组件挂载时创建音频元素
 onMounted(() => {
+  // 创建音频元素
+  audioElement.value = new Audio();
+  
+  // 音频结束时重置所有播放状态
+  audioElement.value.addEventListener('ended', () => {
+    groups.forEach(group => {
+      group.isPlaying = false;
+    });
+  });
+  
   startLoadingSimulation();
 });
+
+// 组件卸载时清理
+onUnmounted(() => {
+  if (audioElement.value) {
+    audioElement.value.pause();
+    audioElement.value = null;
+  }
+});
+
+
 </script>
 
 <style scoped>

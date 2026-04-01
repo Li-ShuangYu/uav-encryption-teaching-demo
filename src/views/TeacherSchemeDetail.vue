@@ -96,7 +96,7 @@
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
                 AI 跨模态感知
               </div>
-              <div class="text-lg text-white font-black tracking-widest">特征声学映射</div>
+              <div class="text-lg text-white font-black tracking-widest">{{ currentGroup.music.audio.split('/').pop().replace(/\.mp3$/, '') }}</div>
             </div>
             
             <div class="text-right max-w-[55%]">
@@ -109,24 +109,24 @@
           <div class="relative w-full flex-1 overflow-hidden z-10 flex items-center justify-center">
             
             <div class="absolute top-1/4 w-[85%] pointer-events-none transition-transform duration-500 ease-in-out"
-                 :style="{ transform: `translateY(calc(-${currentLyricIndex * 2.5 + 1.25}rem))` }">
+                 :style="{ transform: `translateY(calc(-${(currentLyricIndex - 1) * 2.5 + 1.25}rem))` }">
               <div 
-                v-for="(lyric, index) in currentLyrics" 
-                :key="index"
-                class="h-10 flex items-center justify-center text-center transition-all duration-500 ease-out truncate"
-                :class="[
-                  index < currentLyricIndex - 2 ? 'opacity-0 scale-90' : '', // 上方多余的隐藏
-                  index === currentLyricIndex - 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', // 已播：倒数第2句
-                  index === currentLyricIndex - 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', // 已播：上1句
-                  index === currentLyricIndex ? 'font-black text-lg scale-110 opacity-100' : '', // 播放中：精准居中、放大
-                  index === currentLyricIndex + 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', // 未播：下1句
-                  index === currentLyricIndex + 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', // 未播：下2句
-                  index > currentLyricIndex + 2 ? 'opacity-0 scale-90' : '' // 下方多余的隐藏
-                ]"
-                :style="{ color: index === currentLyricIndex ? currentGroup.themeColor : '' }"
-              >
-                {{ lyric.text }}
-              </div>
+                    v-for="(lyric, index) in currentLyrics" 
+                    :key="index"
+                    class="h-10 flex items-center justify-center text-center transition-all duration-500 ease-out truncate"
+                    :class="[
+                      index < (currentLyricIndex - 1) - 2 ? 'opacity-0 scale-90' : '', // 上方多余的隐藏
+                      index === (currentLyricIndex - 1) - 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', // 已播：倒数第2句
+                      index === (currentLyricIndex - 1) - 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', // 已播：上1句
+                      index === currentLyricIndex - 1 ? 'font-black text-lg scale-110 opacity-100' : '', // 播放中：精准居中、放大
+                      index === (currentLyricIndex - 1) + 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', // 未播：下1句
+                      index === (currentLyricIndex - 1) + 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', // 未播：下2句
+                      index > (currentLyricIndex - 1) + 2 ? 'opacity-0 scale-90' : '' // 下方多余的隐藏
+                    ]"
+                    :style="{ color: index === currentLyricIndex - 1 ? currentGroup.themeColor : '' }"
+                  >
+                    {{ lyric.text }}
+                  </div>
             </div>
             
           </div>
@@ -194,9 +194,10 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 
 const backToEvaluation = () => {
   router.push('/teacher/ai-evaluate');
@@ -213,23 +214,25 @@ const groups = [
     desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
     hardware: 'STM32L432',
     music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: '/src/assets/audio/轻量级.mp3', lyrics: [
-      { text: "前奏...", duration: 10000 },
-      { text: "我们不再框框之下", duration: 5000 },
-      { text: "微风轻抚着我的脸颊", duration: 6000 },
+    { text: " ", duration: 0 },  
+    { text: "轻量级", duration: 9500 },
+      { text: "我漫步在月光之下", duration: 5000 },
+      { text: "微风轻抚着我的脸颊", duration: 4500 },
       { text: "宁静在心中慢慢流淌", duration: 5000 },
-      { text: "时光仿佛停止了步伐", duration: 6000 },
-      { text: "这宁静让我心醉", duration: 6000 },
-      { text: "让我忘记所有疲惫", duration: 5000 },
-      { text: "这宁静让我沉醉", duration: 5000 },
-      { text: "让我在这夜色中尽美", duration: 6000 },
-      { text: "我沉醉在这夜色中", duration: 4000 },
-      { text: "微风轻抚着我的脸颊", duration: 6000 },
-      { text: "宁静在心中缓缓流淌", duration: 5000 },
-      { text: "时光仿佛凝固了年华", duration: 5000 },
-      { text: "这宁静让我心醉", duration: 6000 },
-      { text: "让我忘记所有", duration: 5000 },
-      { text: "这宁静让我沉醉", duration: 6000 },
-      { text: "让我在这夜色中尽美", duration: 5000 }
+      { text: "时光仿佛停止了步伐", duration: 4000 },
+      { text: "这宁静让我心醉", duration: 4600 },
+      { text: "让我忘记所有疲惫", duration: 7100 },
+      { text: "这宁静让我沉醉", duration: 5500 },
+      { text: "让我在这夜色中静美", duration: 12000 },
+      { text: "我沉醉在这夜色中心", duration: 9000 },
+      { text: "微风轻抚着我的脸颊", duration: 10000 },
+      { text: "宁静在心中缓缓流淌", duration: 9800 },
+      { text: "时光仿佛凝固了年华", duration: 6300 },
+      { text: "这宁静让我心醉", duration: 5000 },
+      { text: "让我忘记所有疲惫", duration: 5500 },
+      { text: "这宁静让我沉醉", duration: 4500 },
+      { text: "让我在这夜色中静美", duration: 5500 },
+           { text: "end~", duration: 15000 }
     ] },
     archLayers: [
       { name: '应用层', desc: '飞行控制指令、航拍/定位数据输入输出', highlight: false },
@@ -253,15 +256,17 @@ const groups = [
     desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
     hardware: 'STM32L432',
     music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: '/src/assets/audio/侧信道.mp3', lyrics: [
+      { text: " ", duration: 0 },  
+      { text: "侧信道", duration: 1200 },
       { text: "挣脱了羁绊", duration: 3000 },
-      { text: "我在网络中跳跃", duration: 3000 },
-      { text: "你听那轻微的高频正在掩埋", duration: 4000 },
-      { text: "动荡的节拍在流淌", duration: 3000 },
-      { text: "我在虚拟世界探索远方", duration: 4000 },
-      { text: "那瞬间光芒在闪掉", duration: 3000 },
-      { text: "你是我在网络中的心跳", duration: 4000 },
-      { text: "穿越比特间起伏的信号", duration: 3000 },
-      { text: "感受这轻微的拥抱", duration: 4000 }
+      { text: "我在网络中跳跃", duration: 3300 },
+      { text: "你听那轻微的高频正在掩埋", duration: 3700 },
+      { text: "动荡的节拍在流淌", duration: 3300 },
+      { text: "我在虚拟世界探索远方", duration: 3500 },
+      { text: "那瞬间光芒在闪掉", duration: 3500 },
+      { text: "你是我在网络中的心跳", duration: 3500 },
+      { text: "穿越比特间起伏的信号", duration: 3500 },
+      { text: "感受这轻微的拥抱", duration: 3500 }
     ] },
     archLayers: [
       { name: '安全核心层', desc: '通信加密、身份认证、侧信道防护（掩码+恒定时间）', highlight: true },
@@ -283,16 +288,26 @@ const groups = [
     themeColor: '#f59e0b', // Amber
     desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效。',
     hardware: 'STM32L432',
-    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: '/src/assets/audio/枫-周杰伦-118987.mp3', lyrics: [
-      { text: "时间在流逝", duration: 3000 },
-      { text: "数据在流淌", duration: 3000 },
-      { text: "每一个数据包都有它的归处", duration: 4000 },
-      { text: "重复的信号无处遁形", duration: 3000 },
-      { text: "我在时间的河流中穿梭", duration: 4000 },
-      { text: "每一个瞬间都独一无二", duration: 3000 },
-      { text: "抗重放的屏障坚不可摧", duration: 4000 },
-      { text: "安全的通信永恒不变", duration: 3000 },
-      { text: "在时间的长河中守护着你", duration: 4000 }
+    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: '/src/assets/audio/抗重放.mp3', lyrics: [
+      { text: "", duration: 0 },
+    { text: "抗重放", duration: 8200 },
+      { text: "单行道上 时针在倒转", duration: 3950 },
+      { text: "指针划破 沉默的河岸", duration: 3650 },
+      { text: "数字在闪烁 倒数着遗憾", duration: 3900 },
+      { text: "却停不下 前进的船", duration: 3200 },
+      { text: "重复的风景 在倒退", duration: 3400 },
+      { text: "心跳却加速 如潮水", duration: 3950 },
+      { text: "把昨天装进 漂流瓶", duration: 3800 },
+      { text: "让未来在 掌心沸腾", duration: 20000 },
+      { text: "单行道上 黎明在追赶", duration: 3800 },
+      { text: "路灯把影子 切成两半", duration: 3800 },
+      { text: "呼吸在发烫 脉搏在震颤", duration: 3900 },
+      { text: "脚步丈量着 地平线", duration: 3800 },
+      { text: "年轮在胸口 刻下疤", duration: 3800 },
+      { text: "时光却催促着 发芽", duration: 3900 },
+      { text: "把叹息折成 纸飞机", duration: 3900 },
+      { text: "让远方在 云端呼吸", duration: 8300 },
+      { text: "end", duration: 29700 }
     ] },
     archLayers: [
       { name: '安全层', desc: '数据加解密、身份校验、抗重放计数管理', highlight: true },
@@ -338,8 +353,28 @@ const groups = [
   }
 ];
 
-const currentGroupId = ref(1);
+// 从 URL 参数中获取 groupId，如果没有则默认为 1
+const currentGroupId = ref(parseInt(route.query.groupId) || 1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
+
+// 监听路由参数变化，更新当前小组
+onMounted(() => {
+  // 检查路由参数并更新当前小组
+  const groupIdFromParam = parseInt(route.query.groupId);
+  if (groupIdFromParam) {
+    currentGroupId.value = groupIdFromParam;
+  }
+  
+  currentLyricIndex.value = 1; // 初始化歌词索引，确保第一句歌词正确显示
+  loadCurrentGroupAudio(); // 加载默认小组的音频
+  
+  // 添加音频结束事件监听器
+  if (audioElement.value) {
+    audioElement.value.addEventListener('ended', handleAudioEnded);
+  }
+  
+  // 不自动播放，只有在用户点击后才开始播放和歌词滚动
+});
 
 // 获取当前小组的歌词
 const currentLyrics = computed(() => {
@@ -398,16 +433,19 @@ const loadCurrentGroupAudio = () => {
 const startLyricTimer = () => {
   if (!lyricTimer) {
     const playNextLyric = () => {
-      if (currentLyricIndex.value < currentLyrics.value.length - 1) {
-        const currentDuration = currentLyrics.value[currentLyricIndex.value].duration;
-        currentLyricIndex.value += 1;
-        lyricTimer = setTimeout(playNextLyric, currentDuration);
-      } else {
+      // 显示当前歌词，然后等待它的持续时间
+      const currentDuration = currentLyrics.value[currentLyricIndex.value].duration;
+      
+      // 准备显示下一句歌词
+      currentLyricIndex.value += 1;
+      if (currentLyricIndex.value >= currentLyrics.value.length) {
         currentLyricIndex.value = 0;
-        lyricTimer = setTimeout(playNextLyric, currentLyrics.value[0]?.duration || 2000);
       }
+      
+      // 设置定时器，等待当前歌词的持续时间后显示下一句
+      lyricTimer = setTimeout(playNextLyric, currentDuration);
     };
-    lyricTimer = setTimeout(playNextLyric, currentLyrics.value[currentLyricIndex.value]?.duration || 2000);
+    lyricTimer = setTimeout(playNextLyric, 0); // 立即开始
   }
 };
 
@@ -419,19 +457,28 @@ const stopLyricTimer = () => {
   }
 };
 
-// 组件加载完成后加载音频但不自动播放
-onMounted(() => {
-  loadCurrentGroupAudio(); // 加载默认小组的音频
-  // 不自动播放，只有在用户点击后才开始播放和歌词滚动
-});
+// 处理音频结束事件
+const handleAudioEnded = () => {
+  // 音频播放结束，重置状态
+  isPlaying.value = false;
+  currentLyricIndex.value = 1; // 重置歌词索引到开始位置
+  stopLyricTimer(); // 停止歌词计时器
+};
+
+
 
 const handleGroupChange = () => {
-  currentLyricIndex.value = 0; // 切换组时重置歌词进度
+  currentLyricIndex.value = 1; // 切换组时重置歌词进度，确保第一句歌词正确显示
   loadCurrentGroupAudio(); // 加载当前小组的音频
 };
 
 onUnmounted(() => {
   if (lyricTimer) clearTimeout(lyricTimer);
+  
+  // 移除音频结束事件监听器
+  if (audioElement.value) {
+    audioElement.value.removeEventListener('ended', handleAudioEnded);
+  }
 });
 </script>
 

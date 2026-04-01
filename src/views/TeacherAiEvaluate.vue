@@ -47,7 +47,7 @@
           <div 
             v-show="!group.isLoading" 
             class="w-full h-full flex cursor-pointer group-hover border-2"
-            @click="goToSchemeDetail()"
+            @click="goToSchemeDetail(group)"
             :style="{ 
               borderColor: hoveredGroup === group.id ? group.color : 'transparent',
               transition: 'all 0.3s ease',
@@ -134,8 +134,15 @@ const backToSchemeSplit = () => {
   router.push('/teacher/scheme-split');
 };
 
-const goToSchemeDetail = () => {
-  router.push('/teacher/scheme-detail');
+const goToSchemeDetail = (group) => {
+  router.push({
+    path: '/teacher/scheme-detail',
+    query: {
+      groupId: group.id,
+      groupName: group.name,
+      groupColor: group.color
+    }
+  });
 };
 
 const groups = reactive([

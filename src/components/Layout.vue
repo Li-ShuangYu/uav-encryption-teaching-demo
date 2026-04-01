@@ -14,7 +14,7 @@
                 <span>学生分组</span>
             </button>
             
-            <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
+            <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition" :value="route.path">
                 <option v-for="item in menuItems" :key="item.value" :value="item.value">
                     {{ item.label }}
                 </option>
@@ -132,7 +132,7 @@ const currentStage = computed(() => {
   return routeStageMap[currentRoute]?.stage || '需求分析阶段'
 })
 
-// 动态菜单项（显示所有页面，但当前页面标记为已选中）
+// 动态菜单项（显示所有页面）
 const menuItems = computed(() => {
   return allMenuItems
 })

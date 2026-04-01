@@ -1,37 +1,14 @@
 <template>
   <div class="flex flex-col flex-1 overflow-hidden h-full min-h-0">
-    <div class="grid grid-cols-4 gap-3 p-3 border-b border-borderColor">
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
-            <div class="text-sm text-textMuted">学生任务接收完成率</div>
-            <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <div class="text-3xl text-white mt-1">{{ stats.completionRate }}%</div>
-        </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
-            <div class="text-sm text-textMuted">学生提交需求总条数</div>
-            <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-            <div class="text-3xl text-white mt-1">{{ stats.totalDemands }}<span class="text-sm text-textMuted ml-1">条</span></div>
-        </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
-            <div class="text-sm text-textMuted">参与提交的学生数</div>
-            <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <div class="text-3xl text-white mt-1">{{ stats.studentCount }}<span class="text-sm text-textMuted ml-1">人</span></div>
-        </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
-            <div class="text-sm text-textMuted">有效需求占比</div>
-            <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-            <div class="text-3xl text-white mt-1">{{ stats.validRate }}%</div>
-        </div>
-    </div>
-
     <div class="flex flex-1 overflow-hidden min-h-0">
         <div class="w-[45%] border-r border-borderColor flex flex-col bg-darkBg min-h-0">
             <div class="px-4 py-3 flex justify-between items-center border-b border-borderColor">
-                <div class="flex items-center space-x-3 text-sm">
-                    <svg class="w-4 h-4 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                <div class="flex items-center space-x-3 text-base">
+                    <svg class="w-5 h-5 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     <span class="font-bold text-gray-200">学生需求提交列表</span>
-                    <span class="text-accentGreenDark text-xs ml-2">主线/支线任务归档</span>
+                    <span class="text-accentGreenDark text-sm ml-2">主线/支线任务归档</span>
                 </div>
-                <div class="flex space-x-1 text-xs">
+                <div class="flex space-x-1 text-sm">
                     <button @click="startSimulation" :disabled="isSimulating || hasFinished" class="bg-panelBg text-white px-3 py-1 rounded border border-borderColor shadow-inner hover:bg-cardInnerBg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1">
                         <svg v-if="isSimulating" class="animate-spin -ml-1 mr-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -41,26 +18,42 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- 统计数据 -->
+            <div class="grid grid-cols-3 gap-2 p-3 border-b border-borderColor">
+                <div class="bg-panelBg border border-borderColor rounded-lg p-2 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
+                    <div class="text-sm text-textMuted">学生任务接收完成率</div>
+                    <div class="text-3xl text-white mt-1">{{ stats.completionRate }}%</div>
+                </div>
+                <div class="bg-panelBg border border-borderColor rounded-lg p-2 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
+                    <div class="text-sm text-textMuted">学生提交需求总条数</div>
+                    <div class="text-3xl text-white mt-1">{{ stats.totalDemands }}<span class="text-sm text-textMuted ml-1">条</span></div>
+                </div>
+                <div class="bg-panelBg border border-borderColor rounded-lg p-2 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
+                    <div class="text-sm text-textMuted">参与提交的学生数</div>
+                    <div class="text-3xl text-white mt-1">{{ stats.studentCount }}<span class="text-sm text-textMuted ml-1">人</span></div>
+                </div>
+            </div>
 
             <div class="flex-1 overflow-y-hidden relative bg-darkBg">
-                <div v-if="visibleDemands.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-sm">
+                <div v-if="visibleDemands.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-base">
                     等待学生提交需求...
                 </div>
                 <transition-group name="list" tag="div" class="flex flex-col h-full relative">
-                    <div v-for="(demand, index) in visibleDemands" :key="demand.id" class="list-item absolute w-full px-4 py-3 border-b border-borderColor bg-darkBg hover:bg-panelBg transition group" :style="{ top: `${index * 88}px`, height: '88px' }">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
+                    <div v-for="(demand, index) in visibleDemands" :key="demand.id" class="list-item absolute w-full px-4 py-3 border-b border-borderColor bg-darkBg hover:bg-panelBg transition group" :style="{ top: `${index * 96}px`, height: '96px' }">
+                        <div class="absolute top-3 right-4 text-sm text-textMuted flex items-center space-x-2">
                             <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                             </button>
                             <span>{{ demand.timeText }}</span>
                         </div>
                         <div class="flex items-start space-x-3">
-                            <img :src="`https://ui-avatars.com/api/?name=${demand.name}&background=${demand.avatarBg}&color=fff`" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
+                            <img :src="`https://ui-avatars.com/api/?name=${demand.name}&background=${demand.avatarBg}&color=fff`" class="w-10 h-10 rounded-full flex-shrink-0" alt="avatar">
                             <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug truncate-2-lines" :title="demand.content">{{ demand.content }}</div>
+                                <div class="text-base text-gray-200 leading-snug truncate-2-lines" :title="demand.content">{{ demand.content }}</div>
                                 <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">{{ demand.name }}（{{ demand.role }}）</span>
-                                    <span :class="`bg-${demand.color}-900/40 text-${demand.color}-400 border-${demand.color}-800/50`" class="text-[10px] px-1.5 py-0.5 rounded border">{{ demand.tag }}</span>
+                                    <span class="text-sm text-textMuted">{{ demand.name }}（{{ demand.role }}）</span>
+                                    <span :class="`bg-${demand.color}-900/40 text-${demand.color}-400 border-${demand.color}-800/50`" class="text-xs px-1.5 py-0.5 rounded border">{{ demand.tag }}</span>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +61,7 @@
                 </transition-group>
             </div>
 
-            <div class="px-4 py-2.5 flex justify-center border-t border-borderColor text-xs space-x-3 bg-darkBg text-textMuted min-h-[36px]">
+            <div class="px-4 py-2.5 flex justify-center border-t border-borderColor text-sm space-x-3 bg-darkBg text-textMuted min-h-[40px]">
                 <span class="text-accentGreen font-bold" v-if="stats.totalDemands > 0">1</span>
                 <span class="hover:text-white cursor-pointer" v-if="stats.totalDemands > 5">2</span>
                 <span class="hover:text-white cursor-pointer" v-if="stats.totalDemands > 10">3</span>
@@ -77,13 +70,13 @@
 
         <div class="flex-1 flex flex-col bg-darkBg min-h-0">
             <div class="p-4 flex-1 flex flex-col border-b border-borderColor min-h-0">
-                <div class="text-sm font-bold text-accentGreen mb-2 flex items-center">
-                    <svg class="w-4 h-4 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                <div class="text-base font-bold text-accentGreen mb-2 flex items-center">
+                    <svg class="w-5 h-5 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     需求词云分析 <span class="text-textMuted font-normal">（当前任务：无人机通信加密设计）</span>
                 </div>
                 
                 <div class="bg-panelBg flex-1 rounded-lg border border-borderColor p-4 relative word-cloud-container min-h-0 overflow-hidden">
-                    <div v-if="visibleWords.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-sm">
+                    <div v-if="visibleWords.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-base">
                         等待数据源生成词云...
                     </div>
                     <transition-group name="fade">
@@ -236,8 +229,7 @@ const hasFinished = ref(false)
 const stats = reactive({
     completionRate: 0,
     totalDemands: 0,
-    studentCount: 0,
-    validRate: 0.0
+    studentCount: 0
 })
 const visibleDemands = ref([])
 const visibleWords = ref([])
@@ -387,8 +379,6 @@ const startSimulation = () => {
         stats.totalDemands = currentTick
         stats.completionRate = Math.min(100, Math.floor((currentTick / 28) * 100))
         stats.studentCount = Math.min(12, Math.ceil((currentTick / 28) * 12)) // 12个学生
-        // 模拟一个逐渐上升然后稳定在 92.5 的有效率
-        stats.validRate = (currentTick === 28) ? 92.5 : Number((Math.random() * 5 + 85).toFixed(1))
 
         // 3. 词云字词逐渐浮现
         if (currentTick % 2 === 0 && visibleWords.value.length < wordCloudPool.length) {

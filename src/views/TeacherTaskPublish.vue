@@ -62,7 +62,7 @@
         </div>
         <div class="flex items-center space-x-2">
           <span class="text-gray-300 whitespace-nowrap text-right text-[15px] xl:text-[16px]">学生人数：</span>
-          <span class="text-white font-bold">28 人</span>
+          <span class="text-white font-bold">12 人</span>
         </div>
         <div class="flex items-center space-x-2">
           <span class="text-gray-300 whitespace-nowrap text-right text-[15px] xl:text-[16px]">当前里程：</span>
