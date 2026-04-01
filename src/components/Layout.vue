@@ -10,12 +10,12 @@
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
             <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
-                <option value="/teacher/task-publish">需求分析阶阶段：1. 教师任务发布</option>
-                <option value="/teacher/demand-summary">需求分析阶阶段：1. 需求汇总页</option>
-                <option value="/teacher/demand-split">需求分析阶阶段：1. 4组需求分屏</option>
-                <option value="/teacher/scheme-split">方案设计阶段：2. 4组方案分屏</option>
+                <option value="/teacher/task-publish">需求分析阶段：1. 教师任务发布</option>
+                <option value="/teacher/demand-summary">需求分析阶段：2. 需求汇总页</option>
+                <option value="/teacher/demand-split">需求分析阶段：3. 4组需求分屏</option>
+                <option value="/teacher/scheme-split">方案设计阶段：1. 4组方案分屏</option>
                 <option value="/teacher/ai-evaluate">方案设计阶段：2. AI评估</option>
-                <option value="/teacher/simulation">仿真推演阶段：3. 仿真性能</option>
+                <option value="/teacher/simulation">仿真推演阶段：1. 仿真性能</option>
             </select>
 
             <!-- <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
@@ -27,7 +27,7 @@
 
             <div class="flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"></path></svg>
-                <span>2026-03-30 10:30</span>
+                <span>{{ currentTime }}</span>
             </div>
             <button class="bg-accentGreenDark/20 text-accentGreen border border-accentGreen px-3 py-1.5 rounded text-xs hover:bg-accentGreen/30 transition">
                 刷新数据
@@ -92,11 +92,39 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const isModalOpen = ref(false)
+const currentTime = ref('')
+
+// 格式化时间函数
+const formatDateTime = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
+// 初始化时间并设置定时器
+let timer = null
+onMounted(() => {
+  currentTime.value = formatDateTime()
+  timer = setInterval(() => {
+    currentTime.value = formatDateTime()
+  }, 1000)
+})
+
+onBeforeUnmount(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
+})
 
 // 处理下拉框的路由切换
 const handleNavigate = (event) => {

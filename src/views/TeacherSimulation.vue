@@ -83,13 +83,13 @@ const groupConfigs = reactive([
   {
     id: 'group1',
     name: '第一组',
-    title: 'SM4+SM3 国密组合方案',
-    themeColor: '#06b6d4',
+    title: '低功耗优化方案',
+    themeColor: '#3b82f6',
     statusText: '运行中',
     isAlert: false,
     metrics: [
       { label: '端到端时延', value: '45', unit: 'ms' },
-      { label: '系统功耗', value: '12.5', unit: 'W' },
+      { label: '系统功耗', value: '8.5', unit: 'W', class: 'text-barGreen' },
       { label: '加密成功率', value: '99.99%', unit: '', class: 'text-barGreen' }
     ],
     // 增加随机振幅，模拟密文波形的急剧跳变
@@ -112,13 +112,13 @@ const groupConfigs = reactive([
   {
     id: 'group3',
     name: '第三组',
-    title: '轻量级流密码方案',
+    title: '抗重放攻击方案',
     themeColor: '#f59e0b',
     statusText: '运行中',
     isAlert: false,
     metrics: [
       { label: '端到端时延', value: '85', unit: 'ms', class: 'text-barOrange' },
-      { label: '系统功耗', value: '18.6', unit: 'W' },
+      { label: '系统功耗', value: '15.6', unit: 'W' },
       { label: '加密成功率', value: '99.90%', unit: '', class: 'text-barGreen' }
     ],
     counter: 0,
@@ -131,14 +131,14 @@ const groupConfigs = reactive([
   {
     id: 'group4',
     name: '第四组',
-    title: '区块链分布式防护方案',
+    title: '后量子算法适配方案',
     themeColor: '#8b5cf6',
-    statusText: '高负载警告',
-    isAlert: true,
+    statusText: '运行中',
+    isAlert: false,
     metrics: [
-      { label: '端到端时延', value: '320', unit: 'ms', class: 'text-barRed' },
-      { label: '系统功耗', value: '28.4', unit: 'W', class: 'text-barRed' },
-      { label: '加密成功率', value: '92.50%', unit: '', class: 'text-barOrange' }
+      { label: '端到端时延', value: '150', unit: 'ms', class: 'text-barOrange' },
+      { label: '系统功耗', value: '20.4', unit: 'W' },
+      { label: '加密成功率', value: '95.50%', unit: '', class: 'text-barOrange' }
     ],
     dataGenerator: () => {
       let val = 30 + Math.random() * 50;

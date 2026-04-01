@@ -114,7 +114,7 @@ const groups = reactive([
   { 
     id: 1, name: '第一组', color: '#3b82f6', score: 92, progress: 0, isLoading: true, delay: 300,
     values: [95, 90, 85, 80, 90],
-    conclusion: '采用 SM4+SM3 国密组合方案，保密性与完整性表现极佳，整体架构成熟稳健。',
+    conclusion: '采用低功耗优化方案，结合 PRESENT 轻量级加密算法，功耗控制表现优异，适合无人机等嵌入式设备。',
     suggestion: '可引入硬件加速模块，进一步降低加密带来的性能损耗。'
   },
   { 
@@ -126,14 +126,14 @@ const groups = reactive([
   { 
     id: 3, name: '第三组', color: '#f59e0b', score: 85, progress: 0, isLoading: true, delay: 900,
     values: [80, 85, 95, 75, 85],
-    conclusion: '采用轻量级流密码方案，系统吞吐量极高，时延表现优异，适合实时图传。',
+    conclusion: '采用抗重放攻击方案，基于动态随机数和序列号机制，防护效果显著，系统稳定性高。',
     suggestion: '需增强密钥分发机制的安全防护等级，建议加入动态轮转机制。'
   },
   { 
     id: 4, name: '第四组', color: '#8b5cf6', score: 88, progress: 0, isLoading: true, delay: 1200,
     values: [88, 95, 80, 70, 95],
-    conclusion: '采用区块链分布式防护，保障数据防篡改及溯源，系统完整性等级极高。',
-    suggestion: '建议优化共识算法逻辑，以减少轻量化无人机节点的计算负荷。'
+    conclusion: '采用后量子算法适配方案，评估算法兼容性和算力消耗，为未来量子时代做好准备。',
+    suggestion: '建议对后量子算法进行轻量化优化，确保在有限算力条件下的有效运行。'
   }
 ]);
 
