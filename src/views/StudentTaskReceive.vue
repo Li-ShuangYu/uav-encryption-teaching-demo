@@ -12,16 +12,17 @@
       </div>
     </transition>
 
-    <header class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-1 h-6 rounded-full transition-colors duration-300" :class="[
-          currentGroupIndex === 0 && 'bg-blue-500',
-          currentGroupIndex === 1 && 'bg-red-500',
-          currentGroupIndex === 2 && 'bg-yellow-500',
-          currentGroupIndex === 3 && 'bg-purple-500'
-        ]"></div>
-        <h1 class="text-xl font-bold text-white tracking-wide">任务接收-需求提交</h1>
-      </div>
+    <transition name="fade-in">
+      <header v-if="showContent" class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-1 h-6 rounded-full transition-colors duration-300" :class="[
+            currentGroupIndex === 0 && 'bg-blue-500',
+            currentGroupIndex === 1 && 'bg-red-500',
+            currentGroupIndex === 2 && 'bg-yellow-500',
+            currentGroupIndex === 3 && 'bg-purple-500'
+          ]"></div>
+          <h1 class="text-xl font-bold text-white tracking-wide">思考分析-需求提交</h1>
+        </div>
       <div class="flex items-center gap-4">
         
         <div class="relative" @click.stop="toggleDropdown">
@@ -45,14 +46,6 @@
               currentGroupIndex === 2 && 'text-yellow-500',
               currentGroupIndex === 3 && 'text-purple-500'
             ]">{{ currentGroup.name }}</span>
-            <svg class="w-4 h-4 ml-1" :class="[
-              currentGroupIndex === 0 && 'text-blue-500',
-              currentGroupIndex === 1 && 'text-red-500',
-              currentGroupIndex === 2 && 'text-yellow-500',
-              currentGroupIndex === 3 && 'text-purple-500'
-            ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
           </div>
           
           <transition name="fade">
@@ -99,18 +92,19 @@
         </span>
       </div>
     </header>
+    </transition>
 
-    <main class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-darkBg" @click="showDropdown = false">
-      <div class="flex-1 grid grid-cols-3 gap-6">
-        <!-- 教师下发任务 -->
+    <transition name="fade-up">
+      <main v-if="showContent" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-darkBg" @click="showDropdown = false">
+        <div class="flex-1 grid grid-cols-3 gap-6">
+   
         <section class="col-span-1 bg-panelBg border border-borderColor rounded-lg shadow-lg overflow-hidden flex flex-col">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
             <h2 class="font-bold text-white flex items-center gap-2">
               <svg class="w-5 h-5 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-              教师下发任务
+              需求前置思考
             </h2>
-            <span class="text-xs text-textMuted text-group1 bg-group1/10 px-2 py-1 rounded">来源：AI任务推送工具</span>
-          </div>
+           </div>
           <div class="p-5 flex flex-col gap-4">
             <div class="bg-darkBg border border-borderColor p-4 rounded-lg flex items-center justify-between border-l-4 transition-colors duration-300" :class="[
               currentGroupIndex === 0 && 'border-l-blue-500',
@@ -119,7 +113,6 @@
               currentGroupIndex === 3 && 'border-l-purple-500'
             ]">
               <div>
-                <div class="text-xs text-textMuted mb-1">演练主线任务（必做）</div>
                 <div class="text-lg font-bold text-white tracking-wide">{{ taskInfo.title }}</div>
               </div>
               <div class="px-3 py-1 rounded text-sm font-bold border transition-colors duration-300" :class="[
@@ -167,30 +160,39 @@
                 主线任务：基于无人机通信场景，完成密码系统的一般流程设计（需求分析→方案设计→工程实现→综合评价→优化完善）。
               </div>
             </div>
-
-            <!-- 选定支线任务 -->
-            <div class="flex-1 flex flex-col">
+            <div class="flex-1 flex flex-col relative">
               <label class="block text-sm font-bold text-textMain mb-2">
-                选定支线任务：<span class="transition-colors duration-300" :class="[
-                  currentGroupIndex === 0 && 'text-blue-500',
-                  currentGroupIndex === 1 && 'text-red-500',
-                  currentGroupIndex === 2 && 'text-yellow-500',
-                  currentGroupIndex === 3 && 'text-purple-500'
-                ]">{{ currentGroup.branchTitle }}</span>
+                填写需求：
                 <span class="text-xs text-textMuted font-normal ml-2">(请录入本组的具体需求与初步选型)</span>
               </label>
-              <textarea 
-                v-model="currentGroup.branchContent"
-                class="fake-textarea w-full flex-1 rounded-md p-3 text-xs resize-none leading-relaxed"
-                :class="[
-                  currentGroupIndex === 0 && 'border-blue-500',
-                  currentGroupIndex === 1 && 'border-red-500',
-                  currentGroupIndex === 2 && 'border-yellow-500',
-                  currentGroupIndex === 3 && 'border-purple-500'
-                ]"
-                :readonly="currentGroup.isSubmitted"
-                placeholder="在此输入本组需求分析结果（理论型梳理要点，实践型补充细节）..."
-              ></textarea>
+              <div class="relative flex-1">
+                <textarea 
+                  v-model="currentGroup.branchContent"
+                  class="fake-textarea w-full h-full rounded-md p-3 text-xs resize-none leading-relaxed"
+                  :class="[
+                    currentGroupIndex === 0 && 'border-blue-500',
+                    currentGroupIndex === 1 && 'border-red-500',
+                    currentGroupIndex === 2 && 'border-yellow-500',
+                    currentGroupIndex === 3 && 'border-purple-500'
+                  ]"
+                  :readonly="currentGroup.isSubmitted || currentGroup.isOptimizing"
+                  placeholder="在此输入本组需求分析结果（理论型梳理要点，实践型补充细节）..."
+                ></textarea>
+                <div v-if="currentGroup.isOptimizing" class="absolute inset-0 bg-darkBg/50 flex items-center justify-center rounded-md">
+                  <div class="flex flex-col items-center">
+                    <svg class="animate-spin h-8 w-8 mb-2" :class="[
+                      currentGroupIndex === 0 && 'text-blue-500',
+                      currentGroupIndex === 1 && 'text-red-500',
+                      currentGroupIndex === 2 && 'text-yellow-500',
+                      currentGroupIndex === 3 && 'text-purple-500'
+                    ]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-sm text-white">AI整理优化中...</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- 提交前检查事项 -->
@@ -212,15 +214,17 @@
               <div 
                 :class="[
                   'text-sm font-bold transition-all flex-1',
-                  currentGroup.isLoading ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') : (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
+                  currentGroup.isOptimizing ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') :
+                  currentGroup.isLoading ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') :
+                  (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
                 ]"
               >
                 {{ statusText }}
               </div>
               
               <button 
-                @click="handleSubmit" 
-                :disabled="currentGroup.isSubmitted || currentGroup.isLoading"
+                @click="handleButtonClick" 
+                :disabled="currentGroup.isSubmitted || currentGroup.isLoading || currentGroup.isOptimizing"
                 :class="[
                   currentGroupIndex === 0 && 'bg-blue-500 hover:bg-blue-600 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)]',
                   currentGroupIndex === 1 && 'bg-red-500 hover:bg-red-600 shadow-[0_4px_14px_0_rgba(239,68,68,0.39)]',
@@ -229,14 +233,21 @@
                   'disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2'
                 ]"
               >
-                <template v-if="currentGroup.isLoading">
+                <template v-if="currentGroup.isOptimizing">
+                  <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  AI整理优化中...
+                </template>
+                <template v-else-if="currentGroup.isLoading">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   调用 AI 需求分类工具中...
                 </template>
-                <span v-else>{{ currentGroup.isSubmitted ? '需求分类已生成' : '呼叫 AI助教：提交并分类' }}</span>
+                <span v-else>{{ currentGroup.isSubmitted ? '需求分类已生成' : (currentGroup.isOptimized ? '呼叫 AI助教：提交并分类' : '呼叫 AI助手：整理并优化') }}</span>
               </button>
             </div>
           </div>
@@ -255,8 +266,9 @@
             </div>
           </transition>
         </section>
-      </div>
-    </main>
+        </div>
+      </main>
+    </transition>
   </div>
 </template>
 
@@ -275,11 +287,19 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 const closeDropdown = () => { showDropdown.value = false; };
-onMounted(() => { document.addEventListener('click', closeDropdown); });
+onMounted(() => { 
+  document.addEventListener('click', closeDropdown); 
+  // 入场动画
+  setTimeout(() => {
+    showContent.value = true;
+  }, 100);
+});
 onUnmounted(() => { document.removeEventListener('click', closeDropdown); });
 
 // 状态管理
 const showToast = ref(false);
+// 控制入场动画
+const showContent = ref(false);
 
 // 核心指标数据 (适配录课脚本中 AI资料推送的约束)
 const taskInfo = reactive({
@@ -293,37 +313,52 @@ const taskInfo = reactive({
 });
 
 // 四组预设数据 (完全按照逐字录课脚本的剧情设计)
+const defaultBranchContent = [
+  '通过AI资料推送工具查阅，结合本组分析，需求与设计如下：\n1. 核心约束：密码系统需满足机密性、完整性、可用性；考虑到无人机算力有限且时延敏感，机载设备功耗不能太高是首要约束。\n2. 方案初设：对比多种轻量级算法，主线通信拟采用 PRESENT 算法，因其功耗低、算力需求小。\n3. 支线策略：在工程验证阶段，进一步简化密钥更新流程，重点满足"密钥更新低功耗需求"。',
+  '结合 AI 工具推送资料与本组讨论，需求与设计如下：\n1. 核心约束：无人机极易遭受侧信道攻击与重放攻击，且通信加密时延不能太长，以免影响飞控指令。\n2. 方案初设：主线采用安全性更高的 SM4 加密算法进行数据链路加密。\n3. 支线策略：配合主线加密，设计并引入轻量级掩码防护技术，以实现侧信道防护。后续我们将绘制对应掩码模块原理图确保工程可行。',
+  '依据 AI 资料检索与补充，本组梳理的需求与初步方案如下：\n1. 核心约束：重点强化身份认证，坚决避免非法设备接入；加密算法不能过于复杂，必须适配无人机算力基线。\n2. 方案初设：主线拟采用 SM4 加密保障指令机密性，兼顾安全性与实现复杂度。\n3. 支线策略：结合随机数生成器与序列号(Sequence Number)机制，建立抗重放攻击机制，后续需优化随机数安全性设计。',
+  '参考 AI 工具推送的后量子技术参数，本组确立如下需求清单与方向：\n1. 核心约束：系统必须能够支持指令和数据传输等多种数据类型的加密；全面梳理算法适配的算力及兼容性指标。\n2. 方案初设：前瞻性地将后量子加密算法用于主线通信加密的尝试，适配未来的算力演进。\n3. 支线策略：突破点在于通过简化后量子算法的适配流程来大幅降低当前无人机的算力消耗，以达时延标准。'
+];
+
 const groupsData = reactive([
   {
     id: 'G1',
-    name: '组1 (主线 + 低功耗优化)',
+    name: '组1',
     branchTitle: '低功耗优化',
-    branchContent: '通过AI资料推送工具查阅，结合本组分析，需求与设计如下：\n1. 核心约束：密码系统需满足机密性、完整性、可用性；考虑到无人机算力有限且时延敏感，机载设备功耗不能太高是首要约束。\n2. 方案初设：对比多种轻量级算法，主线通信拟采用 PRESENT 算法，因其功耗低、算力需求小。\n3. 支线策略：在工程验证阶段，进一步简化密钥更新流程，重点满足“密钥更新低功耗需求”。',
+    branchContent: '',
     isLoading: false,
+    isOptimizing: false,
+    isOptimized: false,
     isSubmitted: false
   },
   {
     id: 'G2',
-    name: '组2 (主线 + 侧信道防护)',
+    name: '组2',
     branchTitle: '侧信道防护',
-    branchContent: '结合 AI 工具推送资料与本组讨论，需求与设计如下：\n1. 核心约束：无人机极易遭受侧信道攻击与重放攻击，且通信加密时延不能太长，以免影响飞控指令。\n2. 方案初设：主线采用安全性更高的 SM4 加密算法进行数据链路加密。\n3. 支线策略：配合主线加密，设计并引入轻量级掩码防护技术，以实现侧信道防护。后续我们将绘制对应掩码模块原理图确保工程可行。',
+    branchContent: '',
     isLoading: false,
+    isOptimizing: false,
+    isOptimized: false,
     isSubmitted: false
   },
   {
     id: 'G3',
-    name: '组3 (主线 + 抗重放攻击)',
+    name: '组3',
     branchTitle: '抗重放攻击',
-    branchContent: '依据 AI 资料检索与补充，本组梳理的需求与初步方案如下：\n1. 核心约束：重点强化身份认证，坚决避免非法设备接入；加密算法不能过于复杂，必须适配无人机算力基线。\n2. 方案初设：主线拟采用 SM4 加密保障指令机密性，兼顾安全性与实现复杂度。\n3. 支线策略：结合随机数生成器与序列号(Sequence Number)机制，建立抗重放攻击机制，后续需优化随机数安全性设计。',
+    branchContent: '',
     isLoading: false,
+    isOptimizing: false,
+    isOptimized: false,
     isSubmitted: false
   },
   {
     id: 'G4',
-    name: '组4 (主线 + 后量子算法适配)',
+    name: '组4',
     branchTitle: '后量子算法适配',
-    branchContent: '参考 AI 工具推送的后量子技术参数，本组确立如下需求清单与方向：\n1. 核心约束：系统必须能够支持指令和数据传输等多种数据类型的加密；全面梳理算法适配的算力及兼容性指标。\n2. 方案初设：前瞻性地将后量子加密算法用于主线通信加密的尝试，适配未来的算力演进。\n3. 支线策略：突破点在于通过简化后量子算法的适配流程来大幅降低当前无人机的算力消耗，以达时延标准。',
+    branchContent: '',
     isLoading: false,
+    isOptimizing: false,
+    isOptimized: false,
     isSubmitted: false
   }
 ]);
@@ -339,16 +374,49 @@ const switchGroup = (index) => {
 
 // 动态校验清单
 const checklist = computed(() => [
-  { label: `当前操作身份：组织型 (协助 ${currentGroup.value.name.split(' ')[0]} 整理)`, valid: true },
   { label: '主线任务：明确安全目标，防范劫持', valid: true },
-  { label: `支线需求描述：已补充细化 (${currentGroup.value.branchContent.length} 字)`, valid: currentGroup.value.branchContent.length > 50 },
+  { label: `支线需求：已补充细化 (${currentGroup.value.branchContent.length} 字)`, valid: currentGroup.value.branchContent.length > 50 },
 ]);
 
 const statusText = computed(() => {
+  if (currentGroup.value.isOptimizing) return 'AI助手正在整理优化您的需求...';
   if (currentGroup.value.isLoading) return '正在呼叫 AI助教...生成需求分类可视化图表';
   if (currentGroup.value.isSubmitted) return '需求清单已提交给 AI需求分类工具备案';
-  return '组织型同学请核对清单后向 AI助教 提交';
+  if (currentGroup.value.isOptimized) return '需求已优化完成，请提交';
+  return '请填写需求后呼叫 AI助手 整理优化';
 });
+
+// 逐步显示文本的函数
+const typeText = (targetText, groupIndex) => {
+  let currentIndex = 0;
+  currentGroup.value.branchContent = '';
+  
+  const typeInterval = setInterval(() => {
+    if (currentIndex < targetText.length) {
+      currentGroup.value.branchContent += targetText.charAt(currentIndex);
+      currentIndex++;
+    } else {
+      clearInterval(typeInterval);
+      currentGroup.value.isOptimizing = false;
+      currentGroup.value.isOptimized = true;
+    }
+  }, 30);
+};
+
+// 按钮点击处理
+const handleButtonClick = () => {
+  if (!currentGroup.value.isOptimized) {
+    // 整理优化流程
+    currentGroup.value.isOptimizing = true;
+    
+    setTimeout(() => {
+      typeText(defaultBranchContent[currentGroupIndex.value], currentGroupIndex.value);
+    }, 1000);
+  } else {
+    // 提交流程
+    handleSubmit();
+  }
+};
 
 // 模拟提交给 AI 助手
 const handleSubmit = () => {
@@ -429,6 +497,25 @@ const handleSubmit = () => {
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+/* 入场动画 - Vue transition 样式 */
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-in-enter-from, .fade-in-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-up-enter-active, .fade-up-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-up-enter-from, .fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 /* 滚动条 */
