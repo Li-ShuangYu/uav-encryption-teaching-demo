@@ -44,9 +44,26 @@
         </transition>
 
         <transition name="fade-content">
-          <div v-show="!group.isLoading" class="w-full h-full flex">
+          <div 
+            v-show="!group.isLoading" 
+            class="w-full h-full flex cursor-pointer group-hover border-2"
+            @click="goToSchemeDetail()"
+            :style="{ 
+              borderColor: hoveredGroup === group.id ? group.color : 'transparent',
+              transition: 'all 0.3s ease',
+              borderRadius: '8px'
+            }"
+            @mouseenter="hoveredGroup = group.id"
+            @mouseleave="hoveredGroup = null"
+          >
             
-            <div class="w-1/2 h-full flex flex-col p-4 border-r border-borderColor/30 justify-between">
+            <div 
+              class="w-1/2 h-full flex flex-col p-4 border-r border-borderColor/30 justify-between"
+              :style="{ 
+                borderRightColor: 'rgba(45, 53, 62, 0.3)',
+                transition: 'all 0.3s ease'
+              }"
+            >
               
               <div class="shrink-0 flex items-center gap-2 mb-2">
                 <span 
@@ -78,27 +95,23 @@
                     {{ group.conclusion }}
                   </p>
                 </div>
-                
+
                 <div class="bg-cardInnerBg/20 border-l-2 border-textMuted p-2 rounded-r">
                   <div class="text-xs font-bold mb-0.5 text-textMuted">优化建议</div>
                   <p class="text-[13px] text-textMain leading-snug">
                     {{ group.suggestion }}
                   </p>
                 </div>
-
-                <button 
-                  @click="goToSchemeDetail()"
-                  class="mt-3 bg-cardInnerBg hover:bg-borderColor border border-borderColor text-textMain px-3 py-1.5 rounded text-xs font-medium transition-colors flex items-center gap-1 self-start"
-                >
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                  查看方案详情
-                </button>
               </div>
             </div>
 
-            <div class="w-1/2 h-full relative p-2">
+            <div 
+              class="w-1/2 h-full relative p-2"
+              :style="{ 
+                borderLeftColor: 'rgba(45, 53, 62, 0.3)',
+                transition: 'all 0.3s ease'
+              }"
+            >
               <div :id="`chart-${group.id}`" class="w-full h-full"></div>
             </div>
 
@@ -110,11 +123,12 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, reactive } from 'vue';
+import { onMounted, onBeforeUnmount, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
 
 const router = useRouter();
+const hoveredGroup = ref(null);
 
 const backToSchemeSplit = () => {
   router.push('/teacher/scheme-split');
