@@ -182,7 +182,17 @@ const allGroupData = [
   }
 ];
 
-const goToAiEvaluate = () => {
+// 修改：点击评审按钮时更新后端状态并跳转
+const goToAiEvaluate = async () => {
+  try {
+    await fetch('http://localhost:3000/api/state/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ai_evaluated: 1 })
+    });
+  } catch (error) {
+    console.error('更新AI评估状态失败:', error);
+  }
   router.push('/teacher/ai-evaluate');
 };
 

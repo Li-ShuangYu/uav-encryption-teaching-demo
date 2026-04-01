@@ -224,7 +224,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -237,6 +237,22 @@ const hoveredGroup = ref(null);
 const selectedGroupId = ref(null);
 
 const savedColorTheme = ref(null);
+let pollingTimer = null;
+
+// 轮询获取后端教师任务发布状态
+const fetchState = async () => {
+  try {
+    const res = await fetch('http://localhost:3000/api/state');
+    const state = await res.json();
+    
+    // 如果收到教师端发布的信号，且目前还在等待态，则解除等待
+    if (state.task_published === 1 && isReceiving.value) {
+      isReceiving.value = false;
+    }
+  } catch (error) {
+    // 忽略网络错误，不影响页面崩溃
+  }
+};
 
 onMounted(() => {
   const storedInfo = localStorage.getItem('selectedGroupInfo');
@@ -249,9 +265,15 @@ onMounted(() => {
     showContent.value = true;
   }, 100);
 
-  setTimeout(() => {
-    isReceiving.value = false;
-  }, 3000);
+  // 开启轮询替代之前的死等 setTimeout
+  fetchState();
+  pollingTimer = setInterval(fetchState, 1000);
+});
+
+onUnmounted(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
 });
 
 const selectGroup = (groupId) => {
@@ -331,8 +353,21 @@ const goToNextStage = () => {
   router.push('/student/task-split');
 };
 
-const confirmTask = () => {
+const confirmTask = async () => {
   if (selectedGroupId.value && !isReceiving.value) {
+    // 提交选择状态到后端
+    try {
+      const stateKey = `task_selected_g${selectedGroupId.value}`;
+      await fetch('http://localhost:3000/api/state/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [stateKey]: 1 })
+      });
+    } catch (error) {
+      console.error('发送状态失败:', error);
+      // 报错也不影响前端自己的正常交互流
+    }
+    
     showSuccessModal.value = true;
   }
 };

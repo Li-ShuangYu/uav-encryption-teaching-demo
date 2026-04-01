@@ -267,7 +267,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -280,7 +280,7 @@ const originalT3 = '设计基于随机数 + 序列号的双向认证机制，杜
 const originalT4 = '评估后量子加密算法在无人机场景的适配性，筛选轻量化格密码方案，保障系统在量子计算场景下的长期安全。'
 
 // ===== 页面状态管理 =====
-const step = ref(0) // 0: 初始空白, 1: 文本打字态, 2: 分组选中态
+const step = ref(0) // 0: 初始, 1: 正在打字, 2: 打字完毕等待交互
 const isAnimating = ref(false)
 
 // 初始均为空，满足第0点需求
@@ -296,6 +296,45 @@ const showGroup1 = ref(false)
 const showGroup2 = ref(false)
 const showGroup3 = ref(false)
 const showGroup4 = ref(false)
+
+let pollingTimer = null
+
+// ===== 后端轮询监听逻辑 =====
+const fetchState = async () => {
+  try {
+    const res = await fetch('http://localhost:3000/api/state')
+    const state = await res.json()
+
+    if (state.task_selected_g1 === 1 && !showGroup1.value) {
+      showGroup1.value = true
+      addToast('组1 成功接取任务：支线方向1 (低功耗优化)', 'bg-accentGreen')
+    }
+    if (state.task_selected_g2 === 1 && !showGroup2.value) {
+      showGroup2.value = true
+      addToast('组2 成功接取任务：支线方向2 (侧信道防护)', 'bg-infoBlue')
+    }
+    if (state.task_selected_g3 === 1 && !showGroup3.value) {
+      showGroup3.value = true
+      addToast('组3 成功接取任务：支线方向3 (抗重放攻击)', 'bg-warningOrg')
+    }
+    if (state.task_selected_g4 === 1 && !showGroup4.value) {
+      showGroup4.value = true
+      addToast('组4 成功接取任务：支线方向4 (后量子算法适配)', 'bg-purpleIcon')
+    }
+  } catch (error) {
+    // 静默处理轮询错误
+  }
+}
+
+onMounted(() => {
+  fetchState()
+  pollingTimer = setInterval(fetchState, 1000)
+})
+
+onUnmounted(() => {
+  if (pollingTimer) clearInterval(pollingTimer)
+})
+
 
 // ===== 打字机效果逻辑 =====
 const typeText = (targetRef, fullText, isMain = false, onComplete = null) => {
@@ -343,48 +382,32 @@ const addToast = (msg, colorClass) => {
   }, 4500)
 }
 
-const triggerGroupSelection = (callback) => {
-  // 按顺序显示各个组
-  setTimeout(() => {
-    showGroup1.value = true
-    addToast('组1 成功接取任务：支线方向1 (低功耗优化)', 'bg-accentGreen')
-  }, 200)
-  
-  setTimeout(() => {
-    showGroup2.value = true
-    addToast('组2 成功接取任务：支线方向2 (侧信道防护)', 'bg-infoBlue')
-  }, 800)
-  
-  setTimeout(() => {
-    showGroup3.value = true
-    addToast('组3 成功接取任务：支线方向3 (抗重放攻击)', 'bg-warningOrg')
-  }, 1400)
-  
-  setTimeout(() => {
-    showGroup4.value = true
-    addToast('组4 成功接取任务：支线方向4 (后量子算法适配)', 'bg-purpleIcon')
-    if(callback) callback()
-  }, 2000)
-}
-
-// ===== 刷新按钮点击处理 =====
-const handleRefresh = () => {
+// ===== 刷新按钮点击处理 (修改：触发打字并更改后端状态) =====
+const handleRefresh = async () => {
   if (isAnimating.value) return
   
   if (step.value === 0) {
-    // 第一次点击：开始打字显示内容
     step.value = 1
     isAnimating.value = true
-    triggerTypingEffect(() => { isAnimating.value = false })
     
-  } else if (step.value === 1) {
-    // 第二次点击：显现分组标记与颜色
-    step.value = 2
-    isAnimating.value = true
-    triggerGroupSelection(() => { isAnimating.value = false })
+    // 通知状态机：教师已发布任务 (task_published: 1)
+    try {
+      await fetch('http://localhost:3000/api/state/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task_published: 1 })
+      })
+    } catch (e) {
+      console.error('状态同步失败', e)
+    }
+
+    triggerTypingEffect(() => { 
+      isAnimating.value = false
+      step.value = 2 // 打字完成，允许点击最下方的"确认发布任务" 
+    })
     
   } else if (step.value === 2) {
-    // 第n次点击：重置演示（如果你需要无限重播，如果不需要可删除此段）
+    // （可选）如果教师需要反复排演，再次点击则清空前端展示
     step.value = 0
     mainTaskContent.value = ''
     task1Content.value = ''
