@@ -398,7 +398,10 @@ const audioFiles = {
 const router = useRouter();
 
 const goToNextStage = () => {
-  router.push('/teacher/scheme-design');
+  console.log('点击进入下一阶段按钮，准备跳转至方案分屏页');
+  router.push('/teacher/scheme-split').catch(err => {
+    console.error('路由跳转失败:', err);
+  });
 };
 
 // 生成队歌的状态

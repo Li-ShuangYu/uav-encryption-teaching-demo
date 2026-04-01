@@ -133,12 +133,11 @@ const router = createRouter({
 })
 
 // 路由守卫，设置页面标题
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   // 设置页面标题
   if (to.meta.title) {
     document.title = to.meta.title
   }
-  next()
 })
 
 export default router

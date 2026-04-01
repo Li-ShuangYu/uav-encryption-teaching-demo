@@ -27,7 +27,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"></path></svg>
                 <span>{{ currentTime }}</span>
             </div>
-            <button class="bg-accentGreenDark/20 text-accentGreen border border-accentGreen px-3 py-1.5 rounded text-xs hover:bg-accentGreen/30 transition">
+            <button @click="handleRefreshData" class="bg-accentGreenDark/20 text-accentGreen border border-accentGreen px-3 py-1.5 rounded text-xs hover:bg-accentGreen/30 transition">
                 刷新数据
             </button>
         </div>
@@ -36,6 +36,23 @@
       <router-view />
 
     </div>
+
+    <transition name="toast">
+      <div v-if="showRefreshToast" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none">
+        <div :class="[
+          'px-6 py-3 rounded shadow-lg flex items-center gap-2',
+          refreshToastSuccess ? 'bg-accentGreen text-white' : 'bg-red-600 text-white'
+        ]">
+          <svg v-if="refreshToastSuccess" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          <span class="font-bold">{{ refreshToastSuccess ? '刷新成功！' : '刷新失败！' }}</span>
+        </div>
+      </div>
+    </transition>
 
     <div v-show="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 backdrop-blur-sm transition-opacity">
         <div class="bg-panelBg border border-accentGreen rounded-xl w-[550px] shadow-2xl flex flex-col overflow-hidden">
@@ -97,6 +114,8 @@ const router = useRouter()
 const route = useRoute()
 const isModalOpen = ref(false)
 const currentTime = ref('')
+const showRefreshToast = ref(false)
+const refreshToastSuccess = ref(true)
 
 // 路由与阶段映射
 const routeStageMap = {
@@ -177,6 +196,27 @@ const navigateToGroupRecommendation = () => {
 const navigateToHome = () => {
   router.push('/')
 }
+
+// 刷新数据
+const handleRefreshData = async () => {
+  try {
+    await fetch('http://localhost:3000/api/state/reset', {
+      method: 'POST'
+    });
+    refreshToastSuccess.value = true;
+    showRefreshToast.value = true;
+    setTimeout(() => {
+      showRefreshToast.value = false;
+    }, 2000);
+  } catch (error) {
+    console.error('刷新失败', error);
+    refreshToastSuccess.value = false;
+    showRefreshToast.value = true;
+    setTimeout(() => {
+      showRefreshToast.value = false;
+    }, 2000);
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -189,5 +229,21 @@ const navigateToHome = () => {
             flex-shrink: 0;
         }
     }
+}
+
+/* Toast 动画 */
+.toast-enter-active {
+    transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.toast-leave-active {
+    transition: all 0.3s ease-in;
+}
+.toast-enter-from {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+}
+.toast-leave-to {
+    transform: translate(-50%, -20px);
+    opacity: 0;
 }
 </style>
