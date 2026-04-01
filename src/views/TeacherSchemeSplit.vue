@@ -12,20 +12,11 @@
           架构评审 Agent
         </button>
         <button 
-          @click="refreshData" 
-          :disabled="isLoading"
-          class="bg-[#1c2126] hover:bg-[#232930] text-white text-sm px-4 py-2 rounded border border-[#2d353e] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          disabled
+          class="bg-[#1c2126] text-white text-sm px-4 py-2 rounded border border-[#2d353e] transition disabled:opacity-80 flex items-center gap-2"
         >
-          <svg 
-            class="w-4 h-4" 
-            :class="{ 'animate-spin': isLoading }"
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-          </svg>
-          {{ isLoading ? '刷新中...' : '刷新数据' }}
+          <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          方案自动监听中...
         </button>
         <button class="bg-[#23b586] hover:bg-[#1a8a66] text-white px-5 py-2 rounded shadow transition-colors flex items-center gap-2 font-medium">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -36,38 +27,31 @@
 
     <main class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 h-full overflow-hidden">
       
-      <!-- 等待加载状态 -->
-      <template v-if="!hasData">
+      <template v-for="(group, index) in allGroupData" :key="group.id">
+        
         <div 
-          v-for="i in 4" 
-          :key="i"
+          v-if="!uploadedStates[index]"
           class="bg-[#1c2126] border border-[#2d353e] rounded-lg flex flex-col shadow-lg overflow-hidden items-center justify-center"
         >
           <div class="waiting-animation">
             <div class="spinner"></div>
             <div class="waiting-text">
               <span 
-                v-for="(char, index) in '等待学生提交方案。。。'" 
-                :key="index"
+                v-for="(char, charIndex) in '等待学生提交方案。。。'" 
+                :key="charIndex"
                 class="waiting-char"
-                :style="{ animationDelay: `${index * 0.1 + i * 0.2}s` }"
+                :style="{ animationDelay: `${charIndex * 0.1 + (index + 1) * 0.2}s` }"
               >
                 {{ char }}
               </span>
             </div>
-            <div class="waiting-subtext">第 {{ i }} 组</div>
+            <div class="waiting-subtext">第 {{ index + 1 }} 组</div>
           </div>
         </div>
-      </template>
 
-      <!-- 数据显示状态 -->
-      <template v-else>
         <div 
-          v-for="(group, index) in displayedGroups" 
-          :key="group.id"
-          class="bg-[#1c2126] border border-[#2d353e] rounded-lg flex flex-col shadow-lg overflow-hidden group-card"
-          :class="{ 'slide-in': group.show }"
-          :style="{ animationDelay: `${index * 0.3}s` }"
+          v-else
+          class="bg-[#1c2126] border border-[#2d353e] rounded-lg flex flex-col shadow-lg overflow-hidden group-card slide-in"
         >
           <div class="px-4 py-3 border-b border-[#2d353e] bg-[#232930] flex justify-between items-center shrink-0">
             <h2 class="font-bold flex items-center gap-2 text-lg" :style="{ color: group.color }">
@@ -96,9 +80,8 @@
               <div 
                 v-for="(scheme, sIndex) in group.schemes" 
                 :key="sIndex"
-                class="bg-[#232930] rounded p-3 border border-[#2d353e] hover:border-[#4b5563] transition scheme-card"
-                :class="{ 'fade-in-up': group.show }"
-                :style="{ animationDelay: `${index * 0.3 + sIndex * 0.15 + 0.3}s` }"
+                class="bg-[#232930] rounded p-3 border border-[#2d353e] hover:border-[#4b5563] transition scheme-card fade-in-up"
+                :style="{ animationDelay: `${sIndex * 0.15}s` }"
               >
                 <div class="text-xs text-[#6b7280] mb-1">方案名称：<span class="text-gray-300 font-medium">{{ scheme.name }}</span></div>
                 <div class="text-sm text-gray-200 mb-2 leading-relaxed">{{ scheme.content }}</div>
@@ -110,6 +93,7 @@
 
           </div>
         </div>
+
       </template>
 
     </main>
@@ -117,15 +101,16 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const hasData = ref(false);
-const isLoading = ref(false);
-const displayedGroups = ref([]);
 
-// 原始数据
+// 核心状态绑定：数组索引 0-3 分别对应 第1-4组的上传状态
+const uploadedStates = ref([false, false, false, false]);
+let pollingTimer = null;
+
+// 原始数据 (一字未改)
 const allGroupData = [
   {
     id: 1,
@@ -201,33 +186,33 @@ const goToAiEvaluate = () => {
   router.push('/teacher/ai-evaluate');
 };
 
-// 刷新数据 - 逐个显示方案
-const refreshData = () => {
-  if (isLoading.value) return;
-  
-  isLoading.value = true;
-  hasData.value = false;
-  displayedGroups.value = [];
-  
-  // 模拟加载延迟
-  setTimeout(() => {
-    hasData.value = true;
+// 轮询后端获取 4 组方案的上传状态
+const fetchState = async () => {
+  try {
+    const res = await fetch('http://localhost:3000/api/state');
+    const state = await res.json();
     
-    // 逐个添加组，带有延迟
-    allGroupData.forEach((group, index) => {
-      setTimeout(() => {
-        displayedGroups.value.push({
-          ...group,
-          show: true
-        });
-      }, index * 300);
-    });
+    // 直接映射后端字段到前端的布尔值数组中
+    uploadedStates.value[0] = state.scheme_uploaded_g1 === 1;
+    uploadedStates.value[1] = state.scheme_uploaded_g2 === 1;
+    uploadedStates.value[2] = state.scheme_uploaded_g3 === 1;
+    uploadedStates.value[3] = state.scheme_uploaded_g4 === 1;
     
-    setTimeout(() => {
-      isLoading.value = false;
-    }, allGroupData.length * 300 + 500);
-  }, 800);
+  } catch (error) {
+    // 忽略网络错误，不影响页面崩溃
+  }
 };
+
+onMounted(() => {
+  fetchState(); // 先立刻查一次
+  pollingTimer = setInterval(fetchState, 1000); // 每秒轮询一次
+});
+
+onUnmounted(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
+});
 </script>
 
 <style scoped>
