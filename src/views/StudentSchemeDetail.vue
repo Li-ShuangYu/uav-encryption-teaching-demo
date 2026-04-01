@@ -370,14 +370,18 @@ const groups = [
   }
 ];
 
-// 修改：只读取 URL 中的 groupId，并且不支持通过 select 切换
-const currentGroupId = ref(parseInt(route.query.groupId) || 1);
+// 修改：从 localStorage 读取组信息
+const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
 onMounted(() => {
-  const groupIdFromParam = parseInt(route.query.groupId);
-  if (groupIdFromParam) {
-    currentGroupId.value = groupIdFromParam;
+  // 从 localStorage 读取组信息
+  const storedInfo = localStorage.getItem('selectedGroupInfo');
+  if (storedInfo) {
+    const groupInfo = JSON.parse(storedInfo);
+    if (groupInfo.groupId) {
+      currentGroupId.value = groupInfo.groupId;
+    }
   }
   
   currentLyricIndex.value = 1; 

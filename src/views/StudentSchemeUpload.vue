@@ -136,12 +136,27 @@
             AI 架构评审反馈
           </h2>
           <button 
+            v-if="currentGroup.state.evalStatus === 'waiting'"
             @click="startEvaluation" 
             class="text-xs px-3 py-1.5 rounded border transition-colors font-medium"
             :class="currentGroup.state.isSubmitted ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700' : 'bg-darkBg text-gray-600 border-gray-800 cursor-not-allowed'"
             :disabled="!currentGroup.state.isSubmitted"
           >
             接收评估
+          </button>
+          <button 
+            v-else-if="currentGroup.state.evalStatus === 'loading'"
+            disabled
+            class="text-xs px-3 py-1.5 rounded border transition-colors font-medium bg-darkBg text-gray-500 border-gray-700 cursor-not-allowed"
+          >
+            推演中...
+          </button>
+          <button 
+            v-else
+            @click="goToSchemeDetail"
+            class="text-xs px-3 py-1.5 rounded border transition-colors font-medium bg-accentGreen/20 text-accentGreen border-accentGreen/50 hover:bg-accentGreen/30"
+          >
+            查看详情
           </button>
         </div>
 
@@ -196,7 +211,10 @@
 
 <script setup>
 import { reactive, ref, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
+
+const router = useRouter();
 
 // ==== 状态管理与数据源 ====
 const showDropdown = ref(false);
@@ -269,6 +287,20 @@ const groups = reactive([
 ]);
 
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
+
+// 从 localStorage 读取组信息
+onMounted(() => {
+  const storedInfo = localStorage.getItem('selectedGroupInfo');
+  console.log('StudentSchemeUpload - 从localStorage读取:', storedInfo);
+  if (storedInfo) {
+    const groupInfo = JSON.parse(storedInfo);
+    if (groupInfo.groupId) {
+      // 将数字ID转换为 'g1', 'g2', 'g3', 'g4' 格式
+      currentGroupId.value = 'g' + groupInfo.groupId;
+      console.log('StudentSchemeUpload - 设置currentGroupId为:', currentGroupId.value);
+    }
+  }
+});
 
 
 // ==== 核心交互逻辑 ====
@@ -354,6 +386,11 @@ const startEvaluation = () => {
       initRadarChart();
     });
   }, 2050);
+};
+
+// 跳转到方案详情页面
+const goToSchemeDetail = () => {
+  router.push('/student/scheme-detail');
 };
 
 // ==== ECharts 图表渲染 ====

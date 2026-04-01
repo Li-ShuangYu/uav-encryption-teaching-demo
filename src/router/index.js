@@ -116,6 +116,12 @@ const routes = [
         name: 'StudentSchemeUpload',
         component: () => import('../views/StudentSchemeUpload.vue'),
         meta: { title: '学生工作台' }
+      },
+      {
+        path: 'scheme-detail',
+        name: 'StudentSchemeDetail',
+        component: () => import('../views/StudentSchemeDetail.vue'),
+        meta: { title: '学生工作台' }
       }
     ]
   }
