@@ -9,17 +9,17 @@
                     <span class="text-accentGreenDark text-sm ml-2">主线/支线任务归档</span>
                 </div>
                 <div class="flex space-x-1 text-sm">
-                    <button @click="startSimulation" :disabled="isSimulating || hasFinished" class="bg-panelBg text-white px-3 py-1 rounded border border-borderColor shadow-inner hover:bg-cardInnerBg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1">
+                    <button disabled class="bg-panelBg text-white px-3 py-1 rounded border border-borderColor shadow-inner transition disabled:opacity-80 flex items-center space-x-1">
                         <svg v-if="isSimulating" class="animate-spin -ml-1 mr-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        <span>{{ isSimulating ? '提交中...' : (hasFinished ? '已完成' : '刷新') }}</span>
+                        <div v-else-if="!hasFinished" class="w-2 h-2 rounded-full bg-green-500 mr-1 animate-pulse"></div>
+                        <span>{{ isSimulating ? `接收第 ${currentPlayingGroup} 组...` : (hasFinished ? '全部接收完毕' : '自动监听中') }}</span>
                     </button>
                 </div>
             </div>
             
-            <!-- 统计数据 -->
             <div class="grid grid-cols-3 gap-2 p-3 border-b border-borderColor">
                 <div class="bg-panelBg border border-borderColor rounded-lg p-2 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
                     <div class="text-sm text-textMuted">学生任务接收完成率</div>
@@ -224,12 +224,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, onUnmounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// --- 状态与统计数据初始为空 (Rule 1) ---
+// --- 状态与统计数据初始为空 ---
 const isSimulating = ref(false)
 const hasFinished = ref(false)
 const stats = reactive({
@@ -240,6 +240,14 @@ const stats = reactive({
 const visibleDemands = ref([])
 const visibleWords = ref([])
 
+// 用于界面显示的当前正在播放的组
+const currentPlayingGroup = ref(0) 
+
+// --- 核心：队列与已播放记录（防止重复和混乱） ---
+const animationQueue = reactive([]) // 存放等待播放动画的组号 [1, 2, 3, 4]
+const playedGroups = new Set()      // 记录已经播放过的组号
+let pollingTimer = null
+
 // --- AI评审状态 (0: 未开始, 1: 动画中, 2: 完成) ---
 const aiReviewState = ref(0)
 const progressBars = reactive([
@@ -249,39 +257,15 @@ const progressBars = reactive([
     { label: '计算后量子算法硬件功耗适配率...', progress: 0, textColor: 'text-purple-400', bgColor: 'bg-purple-500' }
 ])
 
-// --- 组数据 --- 
+// --- 组数据 (原有布局数据完全不变) --- 
 const groups = reactive([
-  { 
-    id: 1, name: '第一组', color: '#3b82f6', progress: 0, isLoading: true, delay: 300,
-    title: '【需求点一】',
-    description: '高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。',
-    tag: '安全加密',
-    priority: '高'
-  },
-  { 
-    id: 2, name: '第二组', color: '#ef4444', progress: 0, isLoading: true, delay: 600,
-    title: '【需求点二】',
-    description: '高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。',
-    tag: '数据校验',
-    priority: '高'
-  },
-  { 
-    id: 3, name: '第三组', color: '#f59e0b', progress: 0, isLoading: true, delay: 900,
-    title: '【需求点三】',
-    description: '低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。',
-    tag: '实时响应',
-    priority: '中'
-  },
-  { 
-    id: 4, name: '第四组', color: '#8b5cf6', progress: 0, isLoading: true, delay: 1200,
-    title: '【需求点四】',
-    description: '低功耗适配要求。受限于无人机机载电池容量，加密算法与安全机制需严格控制额外功耗，适配嵌入式设备算力约束。',
-    tag: '低耗适配',
-    priority: '中'
-  }
+  { id: 1, name: '第一组', color: '#3b82f6', progress: 0, isLoading: true, delay: 300, title: '【需求点一】', description: '高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。', tag: '安全加密', priority: '高' },
+  { id: 2, name: '第二组', color: '#ef4444', progress: 0, isLoading: true, delay: 600, title: '【需求点二】', description: '高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。', tag: '数据校验', priority: '高' },
+  { id: 3, name: '第三组', color: '#f59e0b', progress: 0, isLoading: true, delay: 900, title: '【需求点三】', description: '低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。', tag: '实时响应', priority: '中' },
+  { id: 4, name: '第四组', color: '#8b5cf6', progress: 0, isLoading: true, delay: 1200, title: '【需求点四】', description: '低功耗适配要求。受限于无人机机载电池容量，加密算法与安全机制需严格控制额外功耗，适配嵌入式设备算力约束。', tag: '低耗适配', priority: '中' }
 ]);
 
-// --- 预设的28条学生需求数据 (基于剧本和AI多模态交互要求扩展) ---
+// --- 预设的28条学生需求数据 (绝对不改变你的数据) ---
 const allDemands = [
     { id: 1, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '主线需求', content: '通过AI资料推送工具查到，密码系统需满足机密性、完整性、可用性。' },
     { id: 2, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '核心约束', content: '结合无人机场景特性，必须将算力有限、时延敏感作为核心约束。' },
@@ -313,7 +297,7 @@ const allDemands = [
     { id: 28, name: '吴组', role: '组织型', avatarBg: 'f59e0b', color: 'yellow', tag: '最终提交', content: '各组讨论完毕，确认无误，最终需求大纲准备提交系统进行统一审批。' }
 ]
 
-// --- 预设的15个词云词汇库 (自带样式参数) ---
+// --- 预设的15个词云词汇库 (绝对不改变你的数据) ---
 const wordCloudPool = [
     { text: '通信加密', top: '45%', left: '45%', colorClass: 'text-green-500', sizeClass: 'text-4xl font-bold' },
     { text: '低功耗优化', top: '25%', left: '32%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-3xl' },
@@ -332,103 +316,157 @@ const wordCloudPool = [
     { text: '低功耗', top: '82%', left: '32%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' }
 ]
 
-let simulationInterval = null
 let timeUpdateInterval = null
 
-// --- 开始核心模拟动画 ---
-const startSimulation = () => {
-    isSimulating.value = true
-    hasFinished.value = false
-    
-    // 重置状态
-    visibleDemands.value = []
-    visibleWords.value = []
-    stats.completionRate = 0
-    stats.totalDemands = 0
-    stats.studentCount = 0
-    stats.validRate = 0.0
-    aiReviewState.value = 0
-    
-    let currentTick = 0
-    const totalTicks = 28
-    const totalTimeMs = 13000 // 模拟总时长约13秒
-    const intervalMs = totalTimeMs / totalTicks
+// --- 第0步：重置后端状态 ---
+const resetBackendState = async () => {
+    try {
+        await fetch('http://localhost:3000/api/state/reset', {
+            method: 'POST'
+        });
+        console.log('后端状态已重置为默认值');
+    } catch (error) {
+        console.error('重置后端状态失败:', error);
+        // 即使重置失败，也继续执行后续逻辑
+    }
+}
 
-    // 内部时间计时器，让"x秒前"动起来
+// --- 第1步：轮询后端获取状态 ---
+const fetchState = async () => {
+    try {
+        const res = await fetch('http://localhost:3000/api/state');
+        const state = await res.json();
+        
+        // 检查四组的状态，如果变成1，且没播过，且不在队列中，则加入播放队列
+        [1, 2, 3, 4].forEach(groupId => {
+            const fieldName = `demand_g${groupId}_submitted`;
+            if (state[fieldName] === 1 && !playedGroups.has(groupId) && !animationQueue.includes(groupId)) {
+                animationQueue.push(groupId);
+            }
+        });
+        
+        // 尝试触发队列消费
+        processQueue();
+    } catch (error) {
+        // 忽略网络错误，不影响页面崩溃
+    }
+}
+
+// --- 第2步：队列处理器（防止多组同时提交导致页面混乱） ---
+const processQueue = () => {
+    // 如果当前正在播放动画，或者队列为空，则不动作
+    if (isSimulating.value || animationQueue.length === 0) return;
+    
+    // 取出队列里的第一个组开始播放
+    const nextGroup = animationQueue.shift();
+    playGroupAnimation(nextGroup);
+}
+
+// --- 第3步：按组分段模拟动画数据写入 ---
+const playGroupAnimation = (groupId) => {
+    isSimulating.value = true;
+    currentPlayingGroup.value = groupId;
+    playedGroups.add(groupId);
+
+    // 均分 28 条需求 (每组 7 条)
+    const demandStart = (groupId - 1) * 7;
+    const demandEnd = groupId * 7;
+    const groupDemands = allDemands.slice(demandStart, demandEnd);
+
+    // 均分 15 个词云 (前三组4个，第四组3个)
+    const wordStart = (groupId - 1) * 4;
+    const wordEnd = groupId === 4 ? 15 : groupId * 4;
+    const groupWords = wordCloudPool.slice(wordStart, wordEnd);
+
+    let currentTick = 0;
+    const totalTicks = groupDemands.length; // 7步
+    const intervalMs = 600; // 每条需求间隔 0.6 秒
+
+    const groupSimInterval = setInterval(() => {
+        if (currentTick >= totalTicks) {
+            // 本组播放完毕
+            clearInterval(groupSimInterval);
+            isSimulating.value = false;
+            
+            // 检查是否4组全部播完
+            if (playedGroups.size === 4) {
+                hasFinished.value = true;
+            }
+            
+            // 立即看队列里还有没有下一组需要播
+            processQueue(); 
+            return;
+        }
+
+        // 1. 插入当前组的需求条目
+        const newItem = { ...groupDemands[currentTick], timestamp: Date.now(), timeText: '刚刚' };
+        visibleDemands.value.unshift(newItem);
+        if (visibleDemands.value.length > 5) {
+            visibleDemands.value.pop();
+        }
+
+        // 2. 累加更新总统计面板
+        stats.totalDemands++;
+        stats.completionRate = Math.min(100, Math.floor((stats.totalDemands / 28) * 100));
+        stats.studentCount = Math.min(12, Math.ceil((stats.totalDemands / 28) * 12));
+
+        // 3. 均匀插入词云 (每两步插一个词)
+        if (currentTick % 2 === 0 && (currentTick / 2) < groupWords.length) {
+             visibleWords.value.push(groupWords[currentTick / 2]);
+        }
+
+        currentTick++;
+    }, intervalMs);
+}
+
+// --- 时间流逝更新 (原有逻辑保留) ---
+const startTimeUpdater = () => {
     if(timeUpdateInterval) clearInterval(timeUpdateInterval);
     timeUpdateInterval = setInterval(() => {
         visibleDemands.value.forEach(d => {
-            const diff = Math.floor((Date.now() - d.timestamp) / 1000)
-            d.timeText = diff === 0 ? '刚刚' : `${diff}秒前`
+            const diff = Math.floor((Date.now() - d.timestamp) / 1000);
+            d.timeText = diff === 0 ? '刚刚' : `${diff}秒前`;
         })
     }, 1000)
-
-    simulationInterval = setInterval(() => {
-        if (currentTick >= totalTicks) {
-            clearInterval(simulationInterval)
-            isSimulating.value = false
-            hasFinished.value = true
-            return
-        }
-
-        // 1. 插入新需求 (新来的放在最前面)
-        const newItem = { ...allDemands[currentTick], timestamp: Date.now(), timeText: '刚刚' }
-        visibleDemands.value.unshift(newItem)
-        
-        // 维持列表最多显示5个（多出的平滑挤掉）
-        if (visibleDemands.value.length > 5) {
-            visibleDemands.value.pop()
-        }
-
-        // 2. 更新顶部数据面板
-        currentTick++
-        stats.totalDemands = currentTick
-        stats.completionRate = Math.min(100, Math.floor((currentTick / 28) * 100))
-        stats.studentCount = Math.min(12, Math.ceil((currentTick / 28) * 12)) // 12个学生
-
-        // 3. 词云字词逐渐浮现
-        if (currentTick % 2 === 0 && visibleWords.value.length < wordCloudPool.length) {
-             visibleWords.value.push(wordCloudPool[visibleWords.value.length])
-        }
-
-    }, intervalMs)
 }
 
-// --- 触发AI评审动画 ---
+// --- 挂载时启动 ---
+onMounted(() => {
+    // 第0步：重置后端状态
+    resetBackendState();
+    
+    startTimeUpdater();
+    // 先查一次
+    fetchState();
+    // 每秒轮询一次后端状态
+    pollingTimer = setInterval(fetchState, 1000);
+})
+
+// --- 销毁时清理 ---
+onUnmounted(() => {
+    if (pollingTimer) clearInterval(pollingTimer);
+    if (timeUpdateInterval) clearInterval(timeUpdateInterval);
+})
+
+// --- 原有：触发AI评审动画 (保留完全不变) ---
 const triggerAIReview = () => {
     if(aiReviewState.value !== 0) return;
-    
     aiReviewState.value = 1
-    
-    // 重置组加载状态
     groups.forEach(group => {
         group.isLoading = true;
         group.progress = 0;
     });
-    
     const startLoadingSimulation = () => {
         groups.forEach((group) => {
             setTimeout(() => {
                 group.progress = 100;
-                setTimeout(() => {
-                    group.isLoading = false;
-                }, 1200);
+                setTimeout(() => { group.isLoading = false; }, 1200);
             }, group.delay);
         });
     };
-    
     startLoadingSimulation();
-    
-    // 4秒后切换到完成状态
-    setTimeout(() => {
-        aiReviewState.value = 2;
-    }, 4000);
+    setTimeout(() => { aiReviewState.value = 2; }, 4000);
 }
-
-onUnmounted(() => {
-    if (simulationInterval) clearInterval(simulationInterval)
-    if (timeUpdateInterval) clearInterval(timeUpdateInterval)
-})
 
 // 跳转到任务发布页
 const navigateToTaskPublish = () => {

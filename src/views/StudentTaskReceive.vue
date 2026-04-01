@@ -137,7 +137,6 @@
           </div>
         </section>
 
-        <!-- 学生需求提交（合并：本组需求响应单填写 + 提交与 AI 分类处理） -->
         <section class="col-span-2 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden relative">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
             <h2 class="font-bold text-white flex items-center gap-2">
@@ -152,7 +151,6 @@
             <span class="text-xs text-textMuted">建议与AI多模态交互辅助完成</span>
           </div>
           <div class="p-5 flex flex-col gap-5 flex-1">
-            <!-- 主线方案设计方向 -->
             <div>
               <label class="block text-sm font-bold text-textMain mb-2">主线方案设计方向 </label>
               <div class="fake-textarea w-full rounded-md p-3 text-sm flex items-start gap-2 bg-darkBg opacity-80 cursor-not-allowed">
@@ -195,7 +193,6 @@
               </div>
             </div>
 
-            <!-- 提交前检查事项 -->
             <div class="bg-darkBg border border-borderColor rounded-lg p-3">
               <h3 class="text-xs font-bold text-textMain mb-2 border-b border-borderColor/50 pb-1.5">提交前检查事项</h3>
               <ul class="space-y-1.5 text-xs text-textMuted">
@@ -209,7 +206,6 @@
               </ul>
             </div>
 
-            <!-- 状态文本和提交按钮 -->
             <div class="flex items-center gap-4">
               <div 
                 :class="[
@@ -421,11 +417,39 @@ const handleButtonClick = () => {
 
 const router = useRouter();
 
-// 模拟提交给 AI 助手
-const handleSubmit = () => {
+// 真实提交给状态机后端并保留 UI 动画
+const handleSubmit = async () => {
   currentGroup.value.isLoading = true;
   
-  // 模拟 API / AI 处理延迟
+  try {
+    // 核心改造：向状态机发送对应组别的提交请求
+    const groupId = currentGroupIndex.value + 1; // 转换为 1, 2, 3, 4
+    const stateKey = `demand_g${groupId}_submitted`;
+    
+    // 创建请求体对象
+    const requestBody = {};
+    requestBody[stateKey] = 1;
+    
+    console.log('正在发送请求到后端:', {
+      url: 'http://localhost:3000/api/state/update',
+      stateKey: stateKey,
+      requestBody: requestBody
+    });
+    
+    await fetch('http://localhost:3000/api/state/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // 动态生成键值对，例如 {"demand_g1_submitted": 1}
+      body: JSON.stringify(requestBody)
+    });
+  } catch (error) {
+    console.error('推送状态至教师端失败:', error);
+    // 失败不阻塞前端原本的演示流
+  }
+
+  // 完美保留原有页面 UI 的模拟交互延迟和表现
   setTimeout(() => {
     currentGroup.value.isLoading = false;
     currentGroup.value.isSubmitted = true;
