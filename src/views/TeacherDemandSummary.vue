@@ -1,25 +1,25 @@
 <template>
   <div class="flex flex-col flex-1 overflow-hidden h-full min-h-0">
     <div class="grid grid-cols-4 gap-3 p-3 border-b border-borderColor">
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative">
+        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
             <div class="text-sm text-textMuted">学生任务接收完成率</div>
             <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <div class="text-3xl text-white mt-1">100%</div>
+            <div class="text-3xl text-white mt-1">{{ stats.completionRate }}%</div>
         </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative">
+        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
             <div class="text-sm text-textMuted">学生提交需求总条数</div>
             <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-            <div class="text-3xl text-white mt-1">28<span class="text-sm text-textMuted ml-1">条</span></div>
+            <div class="text-3xl text-white mt-1">{{ stats.totalDemands }}<span class="text-sm text-textMuted ml-1">条</span></div>
         </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative">
-            <div class="text-sm text-textMuted">参与提交的小组数</div>
+        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
+            <div class="text-sm text-textMuted">参与提交的学生数</div>
             <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-            <div class="text-3xl text-white mt-1">4<span class="text-sm text-textMuted ml-1">组</span></div>
+            <div class="text-3xl text-white mt-1">{{ stats.studentCount }}<span class="text-sm text-textMuted ml-1">人</span></div>
         </div>
-        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative">
+        <div class="bg-panelBg border border-borderColor rounded-lg p-3 flex flex-col justify-between h-20 relative transition-colors" :class="{'shadow-[0_0_15px_rgba(59,130,246,0.3)]': isSimulating}">
             <div class="text-sm text-textMuted">有效需求占比</div>
             <svg class="w-4 h-4 text-accentGreen absolute top-4 right-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-            <div class="text-3xl text-white mt-1">92.5%</div>
+            <div class="text-3xl text-white mt-1">{{ stats.validRate }}%</div>
         </div>
     </div>
 
@@ -32,143 +32,65 @@
                     <span class="text-accentGreenDark text-xs ml-2">主线/支线任务归档</span>
                 </div>
                 <div class="flex space-x-1 text-xs">
-                    <button class="bg-cardInnerBg text-textMuted px-2 py-1 rounded-l border border-borderColor hover:text-white">按时间</button>
-                    <button class="bg-panelBg text-white px-2 py-1 rounded-r border border-borderColor border-l-0 shadow-inner">按组别</button>
+                    <button @click="startSimulation" :disabled="isSimulating || hasFinished" class="bg-panelBg text-white px-3 py-1 rounded border border-borderColor shadow-inner hover:bg-cardInnerBg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1">
+                        <svg v-if="isSimulating" class="animate-spin -ml-1 mr-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{{ isSimulating ? '提交中...' : (hasFinished ? '已完成' : '刷新模拟') }}</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto scrollbar-hide">
-                <div class="flex flex-col">
-                    
-                    <div class="px-4 py-3 border-b border-borderColor hover:bg-panelBg transition relative group">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
-                            <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
-                            <span>2分钟前</span>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组1&background=3b82f6&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
-                            <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug">密码系统需满足机密性、完整性、可用性，结合无人机场景特性，必须将算力有限、时延敏感作为核心约束。</div>
-                                <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">第1组 - 李论（理论型）</span>
-                                    <span class="bg-blue-900/40 text-blue-400 text-[10px] px-1.5 py-0.5 rounded border border-blue-800/50">主线需求</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3 border-b border-borderColor hover:bg-panelBg transition relative group">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
-                            <button class="text-gray-500 hover:text-yellow-400 opacity-30 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
-                            <span>3分钟前</span>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组1&background=3b82f6&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
-                            <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug">补充：密钥更新低功耗需求，无人机机载设备电池容量有限，加密算法执行时额外功耗需控制在最低水平。</div>
-                                <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">第1组 - 张实（实践型）</span>
-                                    <span class="bg-blue-900/40 text-blue-400 text-[10px] px-1.5 py-0.5 rounded border border-blue-800/50">支线低功耗</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3 border-b border-borderColor hover:bg-panelBg transition relative group">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
-                            <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
-                            <span>5分钟前</span>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组2&background=ef4444&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
-                            <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug">无人机易遭受侧信道攻击与重放攻击，通信协议设计必须包含严格的侧信道防护与抗重放机制。</div>
-                                <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">第2组 - 王论（理论型）</span>
-                                    <span class="bg-red-900/40 text-red-400 text-[10px] px-1.5 py-0.5 rounded border border-red-800/50">支线侧信道</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3 border-b border-borderColor hover:bg-panelBg transition relative group">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
-                            <button class="text-gray-500 hover:text-yellow-400 opacity-30 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
-                            <span>8分钟前</span>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组3&background=f59e0b&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
-                            <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug">避免非法设备接入通信链路，必须实现双向身份认证，且认证握手时延需控制在毫秒级以内。</div>
-                                <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">第3组 - 赵组（组织型）</span>
-                                    <span class="bg-yellow-900/40 text-yellow-400 text-[10px] px-1.5 py-0.5 rounded border border-yellow-800/50">主线需求</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="px-4 py-3 border-b border-borderColor hover:bg-panelBg transition relative group">
-                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
-                            <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </button>
-                            <span>12分钟前</span>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <img src="https://ui-avatars.com/api/?name=组4&background=8b5cf6&color=fff" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
-                            <div class="flex-col w-full pr-14">
-                                <div class="text-sm text-gray-200 leading-snug">后量子算法适配需求：除基础安全性外，需重点评估算法复杂度对现有嵌入式芯片算力的兼容性要求。</div>
-                                <div class="flex items-center mt-1.5 space-x-2">
-                                    <span class="text-xs text-textMuted">第4组 - 陈论（理论型）</span>
-                                    <span class="bg-purple-900/40 text-purple-400 text-[10px] px-1.5 py-0.5 rounded border border-purple-800/50">支线后量子</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+            <div class="flex-1 overflow-y-hidden relative bg-darkBg">
+                <div v-if="visibleDemands.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-sm">
+                    等待学生提交需求...
                 </div>
+                <transition-group name="list" tag="div" class="flex flex-col h-full relative">
+                    <div v-for="(demand, index) in visibleDemands" :key="demand.id" class="list-item absolute w-full px-4 py-3 border-b border-borderColor bg-darkBg hover:bg-panelBg transition group" :style="{ top: `${index * 88}px`, height: '88px' }">
+                        <div class="absolute top-3 right-4 text-xxs text-textMuted flex items-center space-x-2">
+                            <button class="text-yellow-500 hover:text-yellow-400 opacity-80 hover:opacity-100 transition" title="标记重点">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            </button>
+                            <span>{{ demand.timeText }}</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <img :src="`https://ui-avatars.com/api/?name=${demand.name}&background=${demand.avatarBg}&color=fff`" class="w-8 h-8 rounded-full flex-shrink-0" alt="avatar">
+                            <div class="flex-col w-full pr-14">
+                                <div class="text-sm text-gray-200 leading-snug truncate-2-lines" :title="demand.content">{{ demand.content }}</div>
+                                <div class="flex items-center mt-1.5 space-x-2">
+                                    <span class="text-xs text-textMuted">{{ demand.name }}（{{ demand.role }}）</span>
+                                    <span :class="`bg-${demand.color}-900/40 text-${demand.color}-400 border-${demand.color}-800/50`" class="text-[10px] px-1.5 py-0.5 rounded border">{{ demand.tag }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </transition-group>
             </div>
 
             <div class="px-4 py-2.5 flex justify-center border-t border-borderColor text-xs space-x-3 bg-darkBg text-textMuted min-h-[36px]">
-                <span class="text-accentGreen font-bold">1</span>
-                <span class="hover:text-white cursor-pointer">2</span>
-                <span class="hover:text-white cursor-pointer">3</span>
+                <span class="text-accentGreen font-bold" v-if="stats.totalDemands > 0">1</span>
+                <span class="hover:text-white cursor-pointer" v-if="stats.totalDemands > 5">2</span>
+                <span class="hover:text-white cursor-pointer" v-if="stats.totalDemands > 10">3</span>
             </div>
         </div>
 
         <div class="flex-1 flex flex-col bg-darkBg min-h-0">
-            
             <div class="p-4 flex-1 flex flex-col border-b border-borderColor min-h-0">
                 <div class="text-sm font-bold text-accentGreen mb-2 flex items-center">
                     <svg class="w-4 h-4 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     需求词云分析 <span class="text-textMuted font-normal">（当前任务：无人机通信加密设计）</span>
                 </div>
                 
-                <div class="bg-panelBg flex-1 rounded-lg border border-borderColor p-4 relative word-cloud-container min-h-0">
-                    <div class="wc-item text-[#3b82f6] text-4xl" style="top: 50%; left: 50%;">通信加密</div>
-                    <div class="wc-item text-[#3b82f6] text-3xl" style="top: 25%; left: 30%;">低功耗优化</div>
-                    <div class="wc-item text-[#ef4444] text-2xl" style="top: 75%; left: 70%;">侧信道防护</div>
-                    <div class="wc-item text-[#8b5cf6] text-xl" style="top: 30%; left: 75%;">抗重放攻击</div>
-                    <div class="wc-item text-[#f59e0b] text-xl" style="top: 70%; left: 25%;">后量子算法</div>
-                    <div class="wc-item text-[#3b82f6] text-lg" style="top: 50%; left: 20%;">机密性</div>
-                    <div class="wc-item text-[#ef4444] text-lg" style="top: 50%; left: 80%;">完整性</div>
-                    <div class="wc-item text-[#f59e0b] text-base" style="top: 15%; left: 50%;">可用性</div>
-                    <div class="wc-item text-[#8b5cf6] text-base" style="top: 85%; left: 50%;">时延敏感</div>
-                    <div class="wc-item text-[#3b82f6] text-sm" style="top: 20%; left: 15%;">算力有限</div>
-                    <div class="wc-item text-[#ef4444] text-sm" style="top: 80%; left: 85%;">身份认证</div>
-                    <div class="wc-item text-[#f59e0b] text-sm" style="top: 80%; left: 15%;">密钥更新</div>
-                    <div class="wc-item text-[#8b5cf6] text-sm" style="top: 20%; left: 85%;">兼容性</div>
-                    <div class="wc-item text-[#3b82f6] text-sm" style="top: 10%; left: 70%;">低时延</div>
-                    <div class="wc-item text-[#ef4444] text-sm" style="top: 90%; left: 30%;">低功耗</div>
+                <div class="bg-panelBg flex-1 rounded-lg border border-borderColor p-4 relative word-cloud-container min-h-0 overflow-hidden">
+                    <div v-if="visibleWords.length === 0" class="absolute inset-0 flex items-center justify-center text-textMuted text-sm">
+                        等待数据源生成词云...
+                    </div>
+                    <transition-group name="fade">
+                        <div v-for="word in visibleWords" :key="word.text" class="wc-item absolute" :class="[word.colorClass, word.sizeClass]" :style="{ top: word.top, left: word.left }">
+                            {{ word.text }}
+                        </div>
+                    </transition-group>
                 </div>
             </div>
 
@@ -178,12 +100,31 @@
                         <svg class="w-4 h-4 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
                         需求汇总梳理
                     </div>
-                    <button @click="viewGroupDemands" class="bg-accentGreen hover:bg-accentGreenDark text-white text-xs px-3 py-1 rounded transition">
+                    <button @click="triggerAIReview" :disabled="stats.totalDemands === 0 || aiReviewState !== 0" class="bg-accentGreen hover:bg-accentGreenDark text-white text-xs px-3 py-1 rounded transition disabled:opacity-50 disabled:cursor-not-allowed">
                         AI评审各组需求
                     </button>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-3 flex-1 min-h-0">
+                <div v-if="aiReviewState === 0" class="flex-1 flex items-center justify-center border border-dashed border-borderColor rounded-lg bg-cardInnerBg text-textMuted text-sm">
+                    暂无汇总数据，请先提取学生需求并进行AI评审
+                </div>
+
+                <div v-else-if="aiReviewState === 1" class="flex-1 border border-borderColor rounded-lg bg-cardInnerBg p-6 flex flex-col justify-center space-y-5">
+                    <div v-for="(bar, index) in progressBars" :key="index">
+                        <div class="flex justify-between text-xs mb-1.5">
+                            <span :class="bar.textColor" class="font-bold flex items-center space-x-1">
+                                <svg class="w-3 h-3 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
+                                <span>{{ bar.label }}</span>
+                            </span>
+                            <span class="text-textMuted">{{ Math.round(bar.progress) }}%</span>
+                        </div>
+                        <div class="w-full bg-darkBg rounded-full h-2 border border-borderColor overflow-hidden">
+                            <div class="h-2 rounded-full transition-all duration-100 ease-linear shadow-[0_0_10px_currentColor]" :class="[bar.bgColor, bar.textColor]" :style="{ width: bar.progress + '%' }"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else class="grid grid-cols-2 gap-3 flex-1 min-h-0 fade-in-up">
                     <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-blue-500 transition overflow-y-auto scrollbar-hide">
                         <div class="flex items-start space-x-2">
                             <div class="bg-blue-500/20 text-blue-400 p-1 rounded mt-0.5 shrink-0">
@@ -256,11 +197,233 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { ref, reactive, onUnmounted } from 'vue'
 
-const router = useRouter()
+// --- 状态与统计数据初始为空 (Rule 1) ---
+const isSimulating = ref(false)
+const hasFinished = ref(false)
+const stats = reactive({
+    completionRate: 0,
+    totalDemands: 0,
+    studentCount: 0,
+    validRate: 0.0
+})
+const visibleDemands = ref([])
+const visibleWords = ref([])
 
-const viewGroupDemands = () => {
-  router.push('/teacher/demand-split')
+// --- AI评审状态 (0: 未开始, 1: 动画中, 2: 完成) ---
+const aiReviewState = ref(0)
+const progressBars = reactive([
+    { label: '解析提取安全加密核心特征...', progress: 0, textColor: 'text-blue-400', bgColor: 'bg-blue-500' },
+    { label: '验证侧信道与数据校验模型...', progress: 0, textColor: 'text-red-400', bgColor: 'bg-red-500' },
+    { label: '正在评估时延毫秒级响应标准...', progress: 0, textColor: 'text-yellow-400', bgColor: 'bg-yellow-500' },
+    { label: '计算后量子算法硬件功耗适配率...', progress: 0, textColor: 'text-purple-400', bgColor: 'bg-purple-500' }
+])
+
+// --- 预设的28条学生需求数据 (基于剧本和AI多模态交互要求扩展) ---
+const allDemands = [
+    { id: 1, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '主线需求', content: '通过AI资料推送工具查到，密码系统需满足机密性、完整性、可用性。' },
+    { id: 2, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '核心约束', content: '结合无人机场景特性，必须将算力有限、时延敏感作为核心约束。' },
+    { id: 3, name: '张实', role: '实践型', avatarBg: '3b82f6', color: 'blue', tag: '支线低功耗', content: '我之前做过仿真，无人机机载设备功耗不能太高，这也是重要需求。' },
+    { id: 4, name: '赵组', role: '组织型', avatarBg: '3b82f6', color: 'blue', tag: 'AI工具交互', content: 'AI助教，我们组梳理了初始需求，麻烦用AI需求分类工具帮我们分类。' },
+    { id: 5, name: '赵组', role: '组织型', avatarBg: '3b82f6', color: 'blue', tag: 'AI工具交互', content: '请重点标注通信加密相关的核心需求（语音输入同步记录）。' },
+    { id: 6, name: '王论', role: '理论型', avatarBg: 'ef4444', color: 'red', tag: '支线侧信道', content: 'AI资料推送工具显示，无人机易受侧信道攻击与重放攻击。' },
+    { id: 7, name: '王论', role: '理论型', avatarBg: 'ef4444', color: 'red', tag: '通信协议', content: '通信协议设计必须包含严格的侧信道防护与抗重放机制。' },
+    { id: 8, name: '刘实', role: '实践型', avatarBg: 'ef4444', color: 'red', tag: '时延约束', content: '通信加密的时延不能太长，否则严重影响无人机指令传输。' },
+    { id: 9, name: '陈组', role: '组织型', avatarBg: 'ef4444', color: 'red', tag: 'AI同步', content: 'AI助教，我们需求已提交，请用分类工具处理，并推送防护资料。' },
+    { id: 10, name: '孙论', role: '理论型', avatarBg: 'f59e0b', color: 'yellow', tag: '主线需求', content: 'AI工具推送资料显示，避免非法设备接入链路是核心，必须身份认证。' },
+    { id: 11, name: '孙论', role: '理论型', avatarBg: 'f59e0b', color: 'yellow', tag: '身份认证', content: '必须实现双向身份认证，且认证握手时延需控制在毫秒级以内。' },
+    { id: 12, name: '周实', role: '实践型', avatarBg: 'f59e0b', color: 'yellow', tag: '硬件适配', content: '加密算法要适配无人机算力，不能太复杂，否则现实中无法落地。' },
+    { id: 13, name: '吴组', role: '组织型', avatarBg: 'f59e0b', color: 'yellow', tag: 'AI校验', content: 'AI助教，用需求分类工具帮我们检查是否有遗漏，补充典型安全需求。' },
+    { id: 14, name: '郑论', role: '理论型', avatarBg: '8b5cf6', color: 'purple', tag: '支线后量子', content: '后量子算法适配是支线，通过AI资料推送工具获取了算力兼容要求。' },
+    { id: 15, name: '郑论', role: '理论型', avatarBg: '8b5cf6', color: 'purple', tag: '兼容性', content: '除基础安全性外，需重点评估算法复杂度对现有嵌入式芯片算力的兼容性。' },
+    { id: 16, name: '王实', role: '实践型', avatarBg: '8b5cf6', color: 'purple', tag: '数据安全', content: '通信数据加密需要支持多种数据类型，确保指令、传输数据都安全。' },
+    { id: 17, name: '李组', role: '组织型', avatarBg: '8b5cf6', color: 'purple', tag: '可视化图表', content: 'AI助教，请分类整理并标注主线与支线相关需求，生成可视化分类图表。' },
+    { id: 18, name: '赵组', role: '组织型', avatarBg: '3b82f6', color: 'blue', tag: '确认接收', content: '组1核心需求5条分类完成，已收到AI推送的低功耗相关参考资料。' },
+    { id: 19, name: '陈组', role: '组织型', avatarBg: 'ef4444', color: 'red', tag: '确认接收', content: '组2补充的侧信道防护细节已通过AI需求分类工具录入系统。' },
+    { id: 20, name: '吴组', role: '组织型', avatarBg: 'f59e0b', color: 'yellow', tag: '确认接收', content: '组3需求无遗漏，身份认证时延控制的细节已补充并同步完成。' },
+    { id: 21, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '支线低功耗', content: '结合AI资料补充：机载电池容量有限，加密算法执行时功耗需最低水平。' },
+    { id: 22, name: '张实', role: '实践型', avatarBg: '3b82f6', color: 'blue', tag: '方案设计', content: '没问题，增加的1条密钥更新低功耗需求在后续方案我会重点考虑。' },
+    { id: 23, name: '赵组', role: '组织型', avatarBg: '3b82f6', color: 'blue', tag: 'AI备案', content: '同步更新最终需求清单，提交给AI需求分类工具完成备案。' },
+    { id: 24, name: '王论', role: '理论型', avatarBg: 'ef4444', color: 'red', tag: '支线侧信道', content: 'AI提示我们在物理层面的硬件侧信道防护考量还不够，需要补充。' },
+    { id: 25, name: '刘实', role: '实践型', avatarBg: 'ef4444', color: 'red', tag: '方案设计', content: '确实，我把硬件侧信道防护也加进补充需求里了。' },
+    { id: 26, name: '李组', role: '组织型', avatarBg: '8b5cf6', color: 'purple', tag: '确认接收', content: '后量子算法适配相关技术参数已通过AI资料推送工具全部同步。' },
+    { id: 27, name: '孙论', role: '理论型', avatarBg: 'f59e0b', color: 'yellow', tag: '主线需求', content: 'AI生成的图表很清晰，主线认证机制的毫秒级时延是设计的硬指标。' },
+    { id: 28, name: '吴组', role: '组织型', avatarBg: 'f59e0b', color: 'yellow', tag: '最终提交', content: '各组讨论完毕，确认无误，最终需求大纲准备提交系统进行统一审批。' }
+]
+
+// --- 预设的15个词云词汇库 (自带样式参数) ---
+const wordCloudPool = [
+    { text: '通信加密', top: '45%', left: '45%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-4xl font-bold' },
+    { text: '低功耗优化', top: '25%', left: '30%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-3xl' },
+    { text: '侧信道防护', top: '70%', left: '65%', colorClass: 'text-[#ef4444]', sizeClass: 'text-2xl' },
+    { text: '抗重放攻击', top: '30%', left: '75%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-xl' },
+    { text: '后量子算法', top: '65%', left: '25%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-xl' },
+    { text: '机密性', top: '50%', left: '20%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-lg' },
+    { text: '完整性', top: '50%', left: '80%', colorClass: 'text-[#ef4444]', sizeClass: 'text-lg' },
+    { text: '可用性', top: '15%', left: '50%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-base' },
+    { text: '时延敏感', top: '80%', left: '50%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-base' },
+    { text: '算力有限', top: '20%', left: '15%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
+    { text: '身份认证', top: '80%', left: '85%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' },
+    { text: '密钥更新', top: '80%', left: '15%', colorClass: 'text-[#f59e0b]', sizeClass: 'text-sm' },
+    { text: '兼容性', top: '20%', left: '85%', colorClass: 'text-[#8b5cf6]', sizeClass: 'text-sm' },
+    { text: '低时延', top: '10%', left: '70%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-sm' },
+    { text: '低功耗', top: '85%', left: '30%', colorClass: 'text-[#ef4444]', sizeClass: 'text-sm' }
+]
+
+let simulationInterval = null
+let timeUpdateInterval = null
+
+// --- 开始核心模拟动画 ---
+const startSimulation = () => {
+    isSimulating.value = true
+    hasFinished.value = false
+    
+    // 重置状态
+    visibleDemands.value = []
+    visibleWords.value = []
+    stats.completionRate = 0
+    stats.totalDemands = 0
+    stats.studentCount = 0
+    stats.validRate = 0.0
+    aiReviewState.value = 0
+    
+    let currentTick = 0
+    const totalTicks = 28
+    const totalTimeMs = 13000 // 模拟总时长约13秒
+    const intervalMs = totalTimeMs / totalTicks
+
+    // 内部时间计时器，让“x秒前”动起来
+    if(timeUpdateInterval) clearInterval(timeUpdateInterval);
+    timeUpdateInterval = setInterval(() => {
+        visibleDemands.value.forEach(d => {
+            const diff = Math.floor((Date.now() - d.timestamp) / 1000)
+            d.timeText = diff === 0 ? '刚刚' : `${diff}秒前`
+        })
+    }, 1000)
+
+    simulationInterval = setInterval(() => {
+        if (currentTick >= totalTicks) {
+            clearInterval(simulationInterval)
+            isSimulating.value = false
+            hasFinished.value = true
+            return
+        }
+
+        // 1. 插入新需求 (新来的放在最前面)
+        const newItem = { ...allDemands[currentTick], timestamp: Date.now(), timeText: '刚刚' }
+        visibleDemands.value.unshift(newItem)
+        
+        // 维持列表最多显示5个（多出的平滑挤掉）
+        if (visibleDemands.value.length > 5) {
+            visibleDemands.value.pop()
+        }
+
+        // 2. 更新顶部数据面板
+        currentTick++
+        stats.totalDemands = currentTick
+        stats.completionRate = Math.min(100, Math.floor((currentTick / 28) * 100))
+        stats.studentCount = Math.min(12, Math.ceil((currentTick / 28) * 12)) // 12个学生
+        // 模拟一个逐渐上升然后稳定在 92.5 的有效率
+        stats.validRate = (currentTick === 28) ? 92.5 : Number((Math.random() * 5 + 85).toFixed(1))
+
+        // 3. 词云字词逐渐浮现
+        if (currentTick % 2 === 0 && visibleWords.value.length < wordCloudPool.length) {
+             visibleWords.value.push(wordCloudPool[visibleWords.value.length])
+        }
+
+    }, intervalMs)
 }
+
+// --- 触发AI评审动画 ---
+const triggerAIReview = () => {
+    if(aiReviewState.value !== 0) return;
+    
+    aiReviewState.value = 1
+    
+    // 重置进度条
+    progressBars.forEach(p => p.progress = 0)
+    
+    // 模拟2.5秒的快速评估计算过程
+    const reviewDuration = 2500
+    const updateInterval = 50
+    let elapsed = 0
+    
+    const progressTimer = setInterval(() => {
+        elapsed += updateInterval
+        
+        // 随机增加进度
+        progressBars.forEach(p => {
+            const increment = (Math.random() * 5) + 2 // 随机步长
+            p.progress = Math.min(100, p.progress + increment)
+        })
+        
+        // 如果时间到了，结束动画并切出结果卡片
+        if (elapsed >= reviewDuration) {
+            clearInterval(progressTimer)
+            progressBars.forEach(p => p.progress = 100) // 补齐100%
+            
+            setTimeout(() => {
+                aiReviewState.value = 2 // 切换到展示卡片状态
+            }, 300)
+        }
+    }, updateInterval)
+}
+
+onUnmounted(() => {
+    if (simulationInterval) clearInterval(simulationInterval)
+    if (timeUpdateInterval) clearInterval(timeUpdateInterval)
+})
 </script>
+
+<style scoped>
+/* 针对列表项平滑插拔的过渡动画 */
+.list-move, 
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+}
+/* 必须将离开的元素设为绝对定位，才能使平移生效 (JS里通过行内style配合绝对定位实现了精确定轨) */
+
+/* 词云渐变出现动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s ease, transform 1s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* 最终AI结果卡片上浮动画 */
+.fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 截断文本保持两行 */
+.truncate-2-lines {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
