@@ -321,7 +321,7 @@ let timeUpdateInterval = null
 // --- 第0步：重置后端状态 ---
 const resetBackendState = async () => {
     try {
-        await fetch('http://localhost:3000/api/state/reset', {
+        await fetch('/api/state/reset', {
             method: 'POST'
         });
         console.log('后端状态已重置为默认值');
@@ -334,7 +334,7 @@ const resetBackendState = async () => {
 // --- 第1步：轮询后端获取状态 ---
 const fetchState = async () => {
     try {
-        const res = await fetch('http://localhost:3000/api/state');
+        const res = await fetch('/api/state');
         const state = await res.json();
         
         // 检查四组的状态，如果变成1，且没播过，且不在队列中，则加入播放队列

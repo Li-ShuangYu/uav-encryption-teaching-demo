@@ -302,7 +302,7 @@ let pollingTimer = null
 // ===== 后端轮询监听逻辑 =====
 const fetchState = async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/state')
+    const res = await fetch('/api/state')
     const state = await res.json()
 
     if (state.task_selected_g1 === 1 && !showGroup1.value) {
@@ -392,7 +392,7 @@ const handleRefresh = async () => {
     
     // 通知状态机：教师已发布任务 (task_published: 1)
     try {
-      await fetch('http://localhost:3000/api/state/update', {
+      await fetch('/api/state/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task_published: 1 })

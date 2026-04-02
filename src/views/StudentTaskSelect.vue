@@ -242,7 +242,7 @@ let pollingTimer = null;
 // 轮询获取后端教师任务发布状态
 const fetchState = async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/state');
+    const res = await fetch('/api/state');
     const state = await res.json();
     
     // 如果收到教师端发布的信号，且目前还在等待态，则解除等待
@@ -358,7 +358,7 @@ const confirmTask = async () => {
     // 提交选择状态到后端
     try {
       const stateKey = `task_selected_g${selectedGroupId.value}`;
-      await fetch('http://localhost:3000/api/state/update', {
+      await fetch('/api/state/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [stateKey]: 1 })

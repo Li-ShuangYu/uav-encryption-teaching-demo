@@ -200,7 +200,7 @@ const navigateToHome = () => {
 // 刷新数据
 const handleRefreshData = async () => {
   try {
-    await fetch('http://localhost:3000/api/state/reset', {
+    await fetch('/api/state/reset', {
       method: 'POST'
     });
     refreshToastSuccess.value = true;
