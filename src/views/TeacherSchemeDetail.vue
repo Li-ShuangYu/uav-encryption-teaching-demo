@@ -18,14 +18,12 @@
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
         <div class="flex items-center">
-          <span class="text-2xl font-black text-white tracking-wide mr-4">方案架构蓝图：</span>
+          <span class="text-2xl font-black text-white tracking-wide mr-4">各组方案评分：</span>
           
           <div class="flex items-center bg-gray-800/60 rounded-lg px-2 border border-gray-700 shadow-inner">
             <button 
               @click="prevGroup" 
-              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
-              :disabled="currentGroupId === 1" 
-              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 1}"
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
             </button>
@@ -34,9 +32,7 @@
             </span>
             <button 
               @click="nextGroup" 
-              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
-              :disabled="currentGroupId === 4" 
-              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 4}"
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
             </button>
@@ -57,11 +53,13 @@
           </svg>
           返回方案AI评估页
         </button>
-        <button 
+        <button
           @click="completeEvaluation"
-          class="bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+          :disabled="!allReviewsSubmitted"
+          class="font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+          :class="allReviewsSubmitted ? 'bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white' : 'bg-gray-700 border border-gray-600 text-gray-400 cursor-not-allowed'"
         >
-          完成评估
+          {{ allReviewsSubmitted ? '完成评估' : '等待各组方案评分完成' }}
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
           </svg>
@@ -236,8 +234,8 @@
               ></textarea>
             </div>
 
-            <button 
-              @click="submitReview" 
+            <button
+              @click="submitReview"
               :disabled="currentGroup.review.isSubmitted"
               class="w-full py-2.5 rounded-lg text-white font-bold text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mt-auto shrink-0"
               :class="currentGroup.review.isSubmitted ? 'bg-gray-800 text-gray-500 cursor-not-allowed shadow-none border border-gray-700' : 'hover:brightness-110 active:scale-[0.98]'"
@@ -387,7 +385,7 @@ const groups = reactive([
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ],
     review: {
-      scores: { security: 0, integrity: 0, innovation: 0 },
+      scores: { security: 0, integrity: 0, usability: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -401,11 +399,24 @@ const showContent = ref(false);
 const showAnimation = ref(false);
 const isLoading = ref(false);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
+const studentScored = ref(false); // 学生互评是否完成
+let pollingTimer = null;
 
 // 检查是否所有组都已完成评估
 const allReviewsSubmitted = computed(() => {
   return groups.every(group => group.review.isSubmitted);
 });
+
+// 轮询获取后端学生互评状态
+const fetchState = async () => {
+  try {
+    const res = await fetch('/api/state');
+    const state = await res.json();
+    studentScored.value = state.student_scored_group === 1;
+  } catch (error) {
+    // 静默处理轮询错误
+  }
+};
 
 // 分组切换逻辑
 const prevGroup = () => {
@@ -603,9 +614,16 @@ onMounted(() => {
   setTimeout(() => {
     showContent.value = true;
   }, 100);
+
+  // 开启轮询监听学生互评状态
+  fetchState();
+  pollingTimer = setInterval(fetchState, 1000);
 });
 
 onBeforeUnmount(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
 });
 </script>
 
