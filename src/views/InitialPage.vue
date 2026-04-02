@@ -52,76 +52,43 @@
       <div class="bg-[#181a20] rounded-xl p-6 max-w-2xl w-full">
         <div class="text-center mb-6">
           <h2 class="text-2xl font-bold text-white mb-2">选择你的演示剧本</h2>
-          <p class="text-gray-400">请选择一个密码学攻坚方向</p>
         </div>
         
         <div class="grid grid-cols-2 gap-4">
           <button 
             @click="selectGroup(0)"
-            class="bg-[#181a20] border border-blue-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+            class="bg-[#181a20] border border-blue-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] flex items-center justify-center"
           >
-            <div class="flex items-center space-x-2 mb-3">
-              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-blue-600">
-                组1
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">低功耗优化方向</h3>
-                <p class="text-sm text-blue-400">PRESENT 轻量级密码算法</p>
-              </div>
+            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-blue-600">
+              组1
             </div>
-            <div class="w-full h-px bg-gray-800/80 my-2"></div>
-            <p class="text-sm text-gray-400">目标导向极强，懂得Trade-off（取舍）。别人追求花哨，你追求“刚刚好”和“性价比”。</p>
           </button>
 
           <button 
             @click="selectGroup(1)"
-            class="bg-[#181a20] border border-red-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+            class="bg-[#181a20] border border-red-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] flex items-center justify-center"
           >
-            <div class="flex items-center space-x-2 mb-3">
-              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-red-600">
-                组2
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">侧信道防护方向</h3>
-                <p class="text-sm text-red-400">SM4 + 掩码与恒定时间防线</p>
-              </div>
+            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-red-600">
+              组2
             </div>
-            <div class="w-full h-px bg-gray-800/80 my-2"></div>
-            <p class="text-sm text-gray-400">习惯性保持防御姿态，做事滴水不漏。不仅关注正面逻辑，更关注“物理暗处”泄露的把柄。</p>
           </button>
 
           <button 
             @click="selectGroup(2)"
-            class="bg-[#181a20] border border-amber-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]"
+            class="bg-[#181a20] border border-amber-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] flex items-center justify-center"
           >
-            <div class="flex items-center space-x-2 mb-3">
-              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-amber-500">
-                组3
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">抗重放攻击方向</h3>
-                <p class="text-sm text-amber-400">SM4 + 动态随机数校验协议</p>
-              </div>
+            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-amber-500">
+              组3
             </div>
-            <div class="w-full h-px bg-gray-800/80 my-2"></div>
-            <p class="text-sm text-gray-400">对“炒冷饭”和“旧账”深恶痛绝，极其看重时效性。做事一码归一码，有着严格的校验机制和底线。</p>
           </button>
 
           <button 
             @click="selectGroup(3)"
-            class="bg-[#181a20] border border-purple-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+            class="bg-[#181a20] border border-purple-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] flex items-center justify-center"
           >
-            <div class="flex items-center space-x-2 mb-3">
-              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-purple-600">
-                组4
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-white">后量子算法适配方向</h3>
-                <p class="text-sm text-purple-400">Kyber 密钥封装防降维打击</p>
-              </div>
+            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-purple-600">
+              组4
             </div>
-            <div class="w-full h-px bg-gray-800/80 my-2"></div>
-            <p class="text-sm text-gray-400">绝对的长期主义者，对颠覆性新技术充满好奇。具有宏观战略眼光，敢于做第一个吃螃蟹的人。</p>
           </button>
         </div>
 
@@ -139,7 +106,8 @@
 </template>
 
 <script setup>
-import { ref, useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showStudentGroupModal = ref(false)

@@ -149,7 +149,7 @@ const router = createRouter({
 })
 
 // ================= 新增：全局前置路由守卫 =================
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   // 检查前往的路由是否配置了 title
   if (to.meta && to.meta.title) {
     // 设置浏览器的标题
@@ -158,8 +158,8 @@ router.beforeEach((to, from, next) => {
     // 如果没有配置，给一个默认的兜底标题
     document.title = '密盾智学平台';
   }
-  // 必须调用 next() 才能完成页面跳转
-  next();
+  // 直接返回，不需要调用 next()
+  return true;
 })
 
 export default router
