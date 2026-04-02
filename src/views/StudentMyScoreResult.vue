@@ -11,8 +11,14 @@
         </div>
       </div>
     </header>
+<div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
+      <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
+      <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
+      <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
+    </div>
 
-    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <!-- <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden"> -->
       
       <div class="col-span-3 flex flex-col gap-3">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
@@ -292,7 +298,7 @@ const groups = [
 const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
-const isEvaluated = ref(true);
+const isEvaluated = ref(false);
 const radarChartRef = ref(null);
 let chartInstance = null;
 

@@ -29,7 +29,7 @@
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
         <div class="flex items-center">
-          <span class="text-2xl font-black text-white tracking-wide mr-4">方案架构蓝图：</span>
+          <span class="text-2xl font-black text-white tracking-wide mr-4">各组方案互评：</span>
           
           <div class="flex items-center bg-gray-800/60 rounded-lg px-2 border border-gray-700 shadow-inner">
             <button 
