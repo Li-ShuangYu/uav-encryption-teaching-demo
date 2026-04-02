@@ -265,7 +265,7 @@
             </div>
 
             <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
-              <span class="text-sm font-medium text-textMuted">综合得分</span>
+              <span class="text-sm font-medium text-textMuted">综合评分</span>
               <div class="flex items-baseline gap-1">
                 <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
                   {{ calculateTotalScore(currentGroup) }}
