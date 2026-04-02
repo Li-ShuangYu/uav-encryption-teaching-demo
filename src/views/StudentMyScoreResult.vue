@@ -250,7 +250,20 @@ const groups = [
       { text: "我漫步在月光之下", duration: 5000 },
       { text: "微风轻抚着我的脸颊", duration: 4500 },
       { text: "宁静在心中慢慢流淌", duration: 5000 },
-      { text: "时光仿佛停止了步伐", duration: 4000 }
+      { text: "时光仿佛停止了步伐", duration: 4000 },
+      { text: "这宁静让我心醉", duration: 4600 },
+      { text: "让我忘记所有疲惫", duration: 7100 },
+      { text: "这宁静让我沉醉", duration: 5500 },
+      { text: "让我在这夜色中静美", duration: 12000 },
+      { text: "我沉醉在这夜色中心", duration: 9000 },
+      { text: "微风轻抚着我的脸颊", duration: 10000 },
+      { text: "宁静在心中缓缓流淌", duration: 9800 },
+      { text: "时光仿佛凝固了年华", duration: 6300 },
+      { text: "这宁静让我心醉", duration: 5000 },
+      { text: "让我忘记所有疲惫", duration: 5500 },
+      { text: "这宁静让我沉醉", duration: 4500 },
+      { text: "让我在这夜色中静美", duration: 5500 },
+      { text: "end~", duration: 15000 }
     ] }
   },
   {
@@ -270,7 +283,13 @@ const groups = [
       { text: "侧信道", duration: 1200 },
       { text: "挣脱了羁绊", duration: 3000 },
       { text: "我在网络中跳跃", duration: 3300 },
-      { text: "你听那轻微的高频正在掩埋", duration: 3700 }
+      { text: "你听那轻微的高频正在掩埋", duration: 3700 },
+      { text: "动荡的节拍在流淌", duration: 3300 },
+      { text: "我在虚拟世界探索远方", duration: 3500 },
+      { text: "那瞬间光芒在闪掉", duration: 3500 },
+      { text: "你是我在网络中的心跳", duration: 3500 },
+      { text: "穿越比特间起伏的信号", duration: 3500 },
+      { text: "感受这轻微的拥抱", duration: 3500 }
     ] }
   },
   {
@@ -283,17 +302,28 @@ const groups = [
     hardware: 'STM32L432',
     scores: { ai: 89, teacher: 88, peer: 92, total: 89 },
     evaluation: '滑动窗口完美阻断一切旧包重放攻击。', 
-<<<<<<< HEAD
-    optimization: '拟加时间戳双重校验，升级布隆过滤。',
-=======
     optimization: '拟平滑优化轮换逻辑，升级布隆过滤。', 
->>>>>>> a9424e5e2403140af68f7faba17d67e6398af941
     radarData: [89, 88, 92],
     music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
-      { text: "", duration: 0 },
+     { text: "", duration: 0 },
       { text: "抗重放", duration: 8200 },
       { text: "单行道上 时针在倒转", duration: 3950 },
-      { text: "指针划破 沉默的河岸", duration: 3650 }
+      { text: "指针划破 沉默的河岸", duration: 3650 },
+      { text: "数字在闪烁 倒数着遗憾", duration: 3900 },
+      { text: "却停不下 前进的船", duration: 3200 },
+      { text: "重复的风景 在倒退", duration: 3400 },
+      { text: "心跳却加速 如潮水", duration: 3950 },
+      { text: "把昨天装进 漂流瓶", duration: 3800 },
+      { text: "让未来在 掌心沸腾", duration: 20000 },
+      { text: "单行道上 黎明在追赶", duration: 3800 },
+      { text: "路灯把影子 切成两半", duration: 3800 },
+      { text: "呼吸在发烫 脉搏在震颤", duration: 3900 },
+      { text: "脚步丈量着 地平线", duration: 3800 },
+      { text: "年轮在胸口 刻下疤", duration: 3800 },
+      { text: "时光却催促着 发芽", duration: 3900 },
+      { text: "把叹息折成 纸飞机", duration: 3900 },
+      { text: "让远方在 云端呼吸", duration: 8300 },
+      { text: "end", duration: 29700 }
     ] }
   },
   {
