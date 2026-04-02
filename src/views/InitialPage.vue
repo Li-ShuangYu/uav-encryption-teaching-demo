@@ -56,8 +56,8 @@ const router = useRouter()
 
 const navigateToStudent = () => {
   localStorage.removeItem('selectedGroupInfo')
-  router.push('/student-home')
-}
+  router.push('/student/task-receive')
+};
 
 const navigateToTeacher = () => {
   // 上传教师身份信息到localStorage

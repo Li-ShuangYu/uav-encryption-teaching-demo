@@ -114,6 +114,53 @@
         <p class="text-gray-400">正在进入需求提交页面...</p>
       </div>
     </div>
+    
+    <!-- 组队成功弹框 -->
+    <div v-if="showTeamSuccessModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div class="bg-[#181a20] rounded-xl p-6 max-w-md w-full text-center border-2" :class="groups[selectedGroupId.value].activeBorderClass">
+        <div class="flex justify-center mb-4">
+          <div class="w-16 h-16 rounded-full flex items-center justify-center" :class="groups[selectedGroupId.value].badgeBgClass">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">组队成功！</h3>
+        <p class="text-gray-400 mb-6">你已成功加入 <span :class="groups[selectedGroupId.value].textClass">{{ groups[selectedGroupId.value].title }}</span> 小组</p>
+        
+        <!-- 小组成员名单 -->
+        <transition name="fade-in">
+          <div v-if="showTeamMembers" class="mb-6">
+            <h4 class="text-lg font-bold text-white mb-3">小组成员</h4>
+            <div class="space-y-3">
+              <div v-for="(member, index) in teamMembers" :key="index" class="flex items-center justify-between p-3 rounded-lg bg-[#13151a] border border-gray-800">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center" :class="groups[selectedGroupId.value].badgeBgClass">
+                    <span class="text-white text-sm font-bold">{{ member.name.charAt(0) }}</span>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-white font-medium">{{ member.name }}</div>
+                    <div class="text-xs text-gray-400">{{ member.role }}</div>
+                  </div>
+                </div>
+                <div class="text-xs text-gray-400">{{ member.specialty }}</div>
+              </div>
+            </div>
+          </div>
+        </transition>
+        
+        <button 
+          @click="goToTaskSelect"
+          class="w-full py-3 rounded-lg font-bold transition-all duration-300 flex items-center justify-center"
+          :class="groups[selectedGroupId.value].badgeBgClass + ' hover:opacity-90 text-white shadow-lg'"
+        >
+          进入接取任务界面
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -134,6 +181,11 @@ const showContent = ref(false);
 const selectGroup = (index) => {
   selectedGroupId.value = index;
 };
+
+// 组队成功弹框状态
+const showTeamSuccessModal = ref(false);
+const showTeamMembers = ref(false);
+const teamMembers = ref([]);
 
 // 确认提交
 const confirmSelection = () => {
@@ -167,11 +219,30 @@ const confirmSelection = () => {
     localStorage.setItem('selectedGroupInfo', JSON.stringify(groupInfo));
     console.log('组别信息已保存到localStorage:', groupInfo);
     
-    // 2秒后跳转到学生任务接收页面
+    // 2秒后显示组队成功弹框
     setTimeout(() => {
-      router.push('/student/task-receive');
+      isLoading.value = false;
+      showTeamSuccessModal.value = true;
+      
+      // 模拟获取小组成员数据
+      teamMembers.value = [
+        { name: '张三', role: '组长', specialty: '密码学算法' },
+        { name: '李四', role: '组员', specialty: '硬件实现' },
+        { name: '王五', role: '组员', specialty: '安全分析' }
+      ];
+      
+      // 再等待2秒后显示小组成员名单
+      setTimeout(() => {
+        showTeamMembers.value = true;
+      }, 2000);
     }, 2000);
   }
+};
+
+// 进入接取任务界面
+const goToTaskSelect = () => {
+  showTeamSuccessModal.value = false;
+  router.push('/student/task-select');
 };
 
 // 入场动画

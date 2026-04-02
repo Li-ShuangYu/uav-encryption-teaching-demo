@@ -15,37 +15,10 @@
     <transition name="fade-in">
       <header v-if="showContent" class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
         <div class="flex items-center gap-3">
-          <div class="w-1 h-6 rounded-full transition-colors duration-300" :class="[
-            currentGroupIndex === 0 && 'bg-blue-500',
-            currentGroupIndex === 1 && 'bg-red-500',
-            currentGroupIndex === 2 && 'bg-yellow-500',
-            currentGroupIndex === 3 && 'bg-purple-500'
-          ]"></div>
+          <div class="w-1 h-6 rounded-full transition-colors duration-300 bg-accentGreen"></div>
           <h1 class="text-xl font-bold text-white tracking-wide">需求分析阶段：需求提交</h1>
         </div>
       <div class="flex items-center gap-4">
-        
-        <div class="flex items-center gap-2 px-4 py-1.5 rounded-full transition-colors" :class="[
-          currentGroupIndex === 0 && 'bg-blue-500/10 border border-blue-500/30',
-          currentGroupIndex === 1 && 'bg-red-500/10 border border-red-500/30',
-          currentGroupIndex === 2 && 'bg-yellow-500/10 border border-yellow-500/30',
-          currentGroupIndex === 3 && 'bg-purple-500/10 border border-purple-500/30'
-        ]">
-          <svg class="w-4 h-4" :class="[
-            currentGroupIndex === 0 && 'text-blue-500',
-            currentGroupIndex === 1 && 'text-red-500',
-            currentGroupIndex === 2 && 'text-yellow-500',
-            currentGroupIndex === 3 && 'text-purple-500'
-          ]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          <span class="font-bold text-sm" :class="[
-            currentGroupIndex === 0 && 'text-blue-500',
-            currentGroupIndex === 1 && 'text-red-500',
-            currentGroupIndex === 2 && 'text-yellow-500',
-            currentGroupIndex === 3 && 'text-purple-500'
-          ]">{{ currentGroup.name }}</span>
-        </div>
         
       </div>
     </header>
@@ -63,21 +36,11 @@
             </h2>
            </div>
           <div class="p-5 flex flex-col gap-4">
-            <div class="bg-darkBg border border-borderColor p-4 rounded-lg flex items-center justify-between border-l-4 transition-colors duration-300" :class="[
-              currentGroupIndex === 0 && 'border-l-blue-500',
-              currentGroupIndex === 1 && 'border-l-red-500',
-              currentGroupIndex === 2 && 'border-l-yellow-500',
-              currentGroupIndex === 3 && 'border-l-purple-500'
-            ]">
+            <div class="bg-darkBg border border-borderColor p-4 rounded-lg flex items-center justify-between border-l-4 border-l-accentGreen transition-colors duration-300">
               <div>
                 <div class="text-lg font-bold text-white tracking-wide">{{ taskInfo.title }}</div>
               </div>
-              <div class="px-3 py-1 rounded text-sm font-bold border transition-colors duration-300" :class="[
-                currentGroupIndex === 0 && 'bg-blue-500/10 text-blue-500 border-blue-500/30',
-                currentGroupIndex === 1 && 'bg-red-500/10 text-red-500 border-red-500/30',
-                currentGroupIndex === 2 && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
-                currentGroupIndex === 3 && 'bg-purple-500/10 text-purple-500 border-purple-500/30'
-              ]">
+              <div class="px-3 py-1 rounded text-sm font-bold border bg-accentGreen/10 text-accentGreen border-accentGreen/30 transition-colors duration-300">
                 目标对象：无人机通信链路
               </div>
             </div>
@@ -97,12 +60,7 @@
         <section class="col-span-2 bg-panelBg border border-borderColor rounded-lg shadow-lg flex flex-col overflow-hidden relative">
           <div class="px-5 py-3 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
             <h2 class="font-bold text-white flex items-center gap-2">
-              <svg class="w-5 h-5 transition-colors duration-300" :class="[
-                currentGroupIndex === 0 && 'text-blue-500',
-                currentGroupIndex === 1 && 'text-red-500',
-                currentGroupIndex === 2 && 'text-yellow-500',
-                currentGroupIndex === 3 && 'text-purple-500'
-              ]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+              <svg class="w-5 h-5 transition-colors duration-300 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
               学生需求提交
             </h2>
             <span class="text-xs text-textMuted">建议与AI多模态交互辅助完成</span>
@@ -123,24 +81,13 @@
               <div class="relative flex-1">
                 <textarea 
                   v-model="currentGroup.branchContent"
-                  class="fake-textarea w-full h-full rounded-md p-3 text-xs resize-none leading-relaxed"
-                  :class="[
-                    currentGroupIndex === 0 && 'border-blue-500',
-                    currentGroupIndex === 1 && 'border-red-500',
-                    currentGroupIndex === 2 && 'border-yellow-500',
-                    currentGroupIndex === 3 && 'border-purple-500'
-                  ]"
+                  class="fake-textarea w-full h-full rounded-md p-3 text-xs resize-none leading-relaxed border-accentGreen"
                   :readonly="currentGroup.isSubmitted || currentGroup.isOptimizing"
                   placeholder="在此输入本组需求分析结果（理论型梳理要点，实践型补充细节）..."
                 ></textarea>
                 <div v-if="currentGroup.isOptimizing" class="absolute inset-0 bg-darkBg/50 flex items-center justify-center rounded-md">
                   <div class="flex flex-col items-center">
-                    <svg class="animate-spin h-8 w-8 mb-2" :class="[
-                      currentGroupIndex === 0 && 'text-blue-500',
-                      currentGroupIndex === 1 && 'text-red-500',
-                      currentGroupIndex === 2 && 'text-yellow-500',
-                      currentGroupIndex === 3 && 'text-purple-500'
-                    ]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin h-8 w-8 mb-2 text-accentGreen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -167,8 +114,7 @@
               <div 
                 :class="[
                   'text-sm font-bold transition-all flex-1',
-                  currentGroup.isOptimizing ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') :
-                  currentGroup.isLoading ? (currentGroupIndex === 0 && 'text-blue-500 animate-pulse' || currentGroupIndex === 1 && 'text-red-500 animate-pulse' || currentGroupIndex === 2 && 'text-yellow-500 animate-pulse' || currentGroupIndex === 3 && 'text-purple-500 animate-pulse') :
+                  (currentGroup.isOptimizing || currentGroup.isLoading) ? 'text-accentGreen animate-pulse' :
                   (currentGroup.isSubmitted ? 'text-accentGreen' : 'text-warningYellow')
                 ]"
               >
@@ -178,13 +124,7 @@
               <button 
                 @click="handleButtonClick" 
                 :disabled="currentGroup.isSubmitted || currentGroup.isLoading || currentGroup.isOptimizing"
-                :class="[
-                  currentGroupIndex === 0 && 'bg-blue-500 hover:bg-blue-600 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)]',
-                  currentGroupIndex === 1 && 'bg-red-500 hover:bg-red-600 shadow-[0_4px_14px_0_rgba(239,68,68,0.39)]',
-                  currentGroupIndex === 2 && 'bg-yellow-500 hover:bg-yellow-600 shadow-[0_4px_14px_0_rgba(245,158,11,0.39)]',
-                  currentGroupIndex === 3 && 'bg-purple-500 hover:bg-purple-600 shadow-[0_4px_14px_0_rgba(139,92,246,0.39)]',
-                  'disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2'
-                ]"
+                class="bg-accentGreen hover:bg-accentGreen/90 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] disabled:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
               >
                 <template v-if="currentGroup.isOptimizing">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -229,6 +169,8 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
+const router = useRouter(); // <--- 仅保留这一次声明
+
 // 图标组件
 const LockIcon = { template: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>' };
 const ShieldIcon = { template: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>' };
@@ -242,6 +184,11 @@ const showContent = ref(false);
 
 // 从 localStorage 读取组信息
 const currentGroupIndex = ref(0);
+
+// 跳转到StudentHome页面
+const goToStudentHome = () => {
+  router.push('/student-home');
+};
 
 onMounted(() => { 
   // 从 localStorage 读取组信息
@@ -370,8 +317,6 @@ const handleButtonClick = () => {
   }
 };
 
-const router = useRouter();
-
 // 真实提交给状态机后端并保留 UI 动画
 const handleSubmit = async () => {
   currentGroup.value.isLoading = true;
@@ -410,9 +355,9 @@ const handleSubmit = async () => {
     currentGroup.value.isSubmitted = true;
     showToast.value = true;
     
-    // 2秒后跳转到 StudentTaskSelect 页面
+    // 2秒后跳转到 StudentHome 页面（选组页面）
     setTimeout(() => {
-      router.push('/student/task-select');
+      router.push('/student-home');
     }, 2000);
   }, 1500);
 };

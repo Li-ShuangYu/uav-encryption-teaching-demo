@@ -68,7 +68,7 @@
         <div class="flex-1 flex flex-col bg-darkBg min-h-0 fade-in" style="animation-delay: 0.8s;">
             <div class="p-4 flex-1 flex flex-col border-b border-borderColor min-h-0 fade-in" style="animation-delay: 0.9s;">
                 <div class="text-base font-bold text-accentGreen mb-2 flex items-center fade-in" style="animation-delay: 1s;">
-                    <svg class="w-5 h-5 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    <svg class="w-5 h-5 text-accentGreen mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                     需求词云分析 <span class="text-textMuted font-normal">（当前任务：无人机通信加密设计）</span>
                 </div>
                 
@@ -92,9 +92,9 @@
                     </div>
                     <div class="flex space-x-2">
                         <button @click="triggerAIReview" :disabled="stats.totalDemands === 0 || aiReviewState !== 0" class="bg-accentGreen hover:bg-accentGreenDark text-white text-xs px-3 py-1 rounded transition disabled:opacity-50 disabled:cursor-not-allowed">
-                            AI评审各组需求
+                            {{ aiReviewState === 2 ? 'AI 评审已完成' : 'AI 评审各组需求' }}
                         </button>
-                        <button @click="navigateToTaskPublish" class="bg-accentCyan hover:bg-[#00d0dd] text-black text-xs px-3 py-1 rounded transition flex items-center space-x-1">
+                        <button @click="navigateToTaskPublish" :disabled="aiReviewState !== 2" class="bg-accentCyan hover:bg-[#00d0dd] text-black text-xs px-3 py-1 rounded transition flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             <span>跳转至任务发布页</span>
                         </button>
@@ -105,12 +105,15 @@
                     暂无汇总数据，请先提取学生需求并进行AI评审
                 </div>
 
-                <div v-else-if="aiReviewState === 1" class="grid grid-cols-2 gap-3 flex-1 min-h-0">
+                <div v-else-if="aiReviewState === 1 || aiReviewState === 2" class="grid grid-cols-2 gap-3 flex-1 min-h-0">
                     <div 
                         v-for="(group, index) in groups" 
                         :key="group.id"
-                        class="bg-cardInnerBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden fade-in"
-                        :style="{ animationDelay: (1.5 + index * 0.1) + 's' }"
+                        class="bg-cardInnerBg border rounded-lg flex flex-col relative overflow-hidden fade-in transition-colors duration-500"
+                        :style="{ 
+                            animationDelay: (1.5 + index * 0.1) + 's',
+                            borderColor: !group.isLoading ? (group.color + '66') : '#2d353e'
+                        }"
                     >
                         <transition name="fade-overlay">
                             <div v-if="group.isLoading" class="absolute inset-0 bg-cardInnerBg z-30 flex flex-col items-center justify-center">
@@ -133,88 +136,38 @@
                         </transition>
                         
                         <transition name="fade-content">
-                            <div v-show="!group.isLoading" class="p-3 flex flex-col justify-between">
-                                <div class="flex items-start space-x-2">
-                                    <div :style="{ backgroundColor: group.color + '20', color: group.color }" class="p-1 rounded mt-0.5 shrink-0">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <div v-show="!group.isLoading" class="p-3 flex flex-col h-full overflow-y-auto custom-scrollbar">
+                                
+                                <div class="flex items-center justify-between mb-2.5 border-b border-borderColor pb-2 shrink-0">
+                                    <div class="flex items-center gap-2">
+                                        <div :style="{ backgroundColor: group.color + '20', color: group.color }" class="p-1 rounded shrink-0">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                        </div>
+                                        <div :style="{ color: group.color }" class="font-bold text-sm tracking-wide">{{ group.direction }}</div>
+                                    </div>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-green-900/30 text-green-400 border border-green-800/50">任务已确认</span>
+                                </div>
+
+                                <div class="flex flex-col gap-2 flex-1">
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-300 mb-1">{{ group.mainTaskTitle }}</div>
+                                        <p class="text-xs text-gray-400 leading-snug">{{ group.mainTaskDesc }}</p>
                                     </div>
                                     <div>
-                                        <div :style="{ color: group.color }" class="font-bold text-sm mb-1">{{ group.title }}</div>
-                                        <p class="text-sm text-gray-200 leading-snug">{{ group.description }}</p>
+                                        <div class="text-xs font-bold text-gray-300 mb-1">{{ group.branchTaskTitle }}</div>
+                                        <p class="text-xs text-gray-400 leading-snug">{{ group.branchTaskDesc }}</p>
                                     </div>
                                 </div>
-                                <div class="mt-2 flex items-center space-x-3 text-xs">
-                                    <span :style="{ color: group.color }">{{ group.tag }}</span>
-                                    <span class="text-textMuted">优先级：{{ group.priority }}</span>
+
+                                <div class="mt-2 bg-darkBg border border-borderColor rounded p-2 shrink-0">
+                                    <div class="text-[11px] font-bold mb-1 flex items-center gap-1" :style="{ color: group.color }">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        AI 任务辅助分析
+                                    </div>
+                                    <p class="text-[11px] text-gray-400 leading-snug">{{ group.aiAnalysis }}</p>
                                 </div>
                             </div>
                         </transition>
-                    </div>
-                </div>
-
-                <div v-else class="grid grid-cols-2 gap-3 flex-1 min-h-0">
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-blue-500 transition overflow-y-auto scrollbar-hide fade-in-up" style="animation-delay: 0.1s;">
-                        <div class="flex items-start space-x-2">
-                            <div class="bg-blue-500/20 text-blue-400 p-1 rounded mt-0.5 shrink-0">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-blue-400 font-bold text-sm mb-1">【需求点一】</div>
-                                <p class="text-sm text-gray-200 leading-snug">高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-blue-400">安全加密</span>
-                            <span class="text-textMuted">优先级：高</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-red-500 transition overflow-y-auto scrollbar-hide fade-in-up" style="animation-delay: 0.2s;">
-                        <div class="flex items-start space-x-2">
-                            <div class="bg-red-500/20 text-red-400 p-1 rounded mt-0.5 shrink-0">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-red-400 font-bold text-sm mb-1">【需求点二】</div>
-                                <p class="text-sm text-gray-200 leading-snug">高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-red-400">数据校验</span>
-                            <span class="text-textMuted">优先级：高</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-yellow-500 transition overflow-y-auto scrollbar-hide fade-in-up" style="animation-delay: 0.3s;">
-                        <div class="flex items-start space-x-2">
-                            <div class="bg-yellow-500/20 text-yellow-400 p-1 rounded mt-0.5 shrink-0">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-yellow-400 font-bold text-sm mb-1">【需求点三】</div>
-                                <p class="text-sm text-gray-200 leading-snug">低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-yellow-400">实时响应</span>
-                            <span class="text-textMuted">优先级：中</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-cardInnerBg rounded-lg p-3 border border-borderColor flex flex-col justify-between hover:border-purple-500 transition overflow-y-auto scrollbar-hide fade-in-up" style="animation-delay: 0.4s;">
-                        <div class="flex items-start space-x-2">
-                            <div class="bg-purple-500/20 text-purple-400 p-1 rounded mt-0.5 shrink-0">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                            </div>
-                            <div>
-                                <div class="text-purple-400 font-bold text-sm mb-1">【需求点四】</div>
-                                <p class="text-sm text-gray-200 leading-snug">低功耗适配要求。受限于无人机机载电池容量，加密算法与安全机制需严格控制额外功耗，适配嵌入式设备算力约束。</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex items-center space-x-3 text-xs">
-                            <span class="text-purple-400">低耗适配</span>
-                            <span class="text-textMuted">优先级：中</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -245,28 +198,55 @@ const visibleWords = ref([])
 const currentPlayingGroup = ref(0) 
 
 // --- 核心：队列与已播放记录（防止重复和混乱） ---
-const animationQueue = reactive([]) // 存放等待播放动画的组号 [1, 2, 3, 4]
-const playedGroups = new Set()      // 记录已经播放过的组号
+const animationQueue = reactive([]) 
+const playedGroups = new Set()      
 let pollingTimer = null
 
 // --- AI评审状态 (0: 未开始, 1: 动画中, 2: 完成) ---
 const aiReviewState = ref(0)
-const progressBars = reactive([
-    { label: '解析提取安全加密核心特征...', progress: 0, textColor: 'text-blue-400', bgColor: 'bg-blue-500' },
-    { label: '验证侧信道与数据校验模型...', progress: 0, textColor: 'text-red-400', bgColor: 'bg-red-500' },
-    { label: '正在评估时延毫秒级响应标准...', progress: 0, textColor: 'text-yellow-400', bgColor: 'bg-yellow-500' },
-    { label: '计算后量子算法硬件功耗适配率...', progress: 0, textColor: 'text-purple-400', bgColor: 'bg-purple-500' }
-])
 
-// --- 组数据 (原有布局数据完全不变) --- 
+// --- 组数据 (更新为需求的详细主干/分支结构) --- 
+// 1: Blue, 2: Red, 3: Yellow, 4: Purple
 const groups = reactive([
-  { id: 1, name: '第一组', color: '#3b82f6', progress: 0, isLoading: true, delay: 300, title: '【需求点一】', description: '高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。', tag: '安全加密', priority: '高' },
-  { id: 2, name: '第二组', color: '#ef4444', progress: 0, isLoading: true, delay: 600, title: '【需求点二】', description: '高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。', tag: '数据校验', priority: '高' },
-  { id: 3, name: '第三组', color: '#f59e0b', progress: 0, isLoading: true, delay: 900, title: '【需求点三】', description: '低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。', tag: '实时响应', priority: '中' },
-  { id: 4, name: '第四组', color: '#8b5cf6', progress: 0, isLoading: true, delay: 1200, title: '【需求点四】', description: '低功耗适配要求。受限于无人机机载电池容量，加密算法与安全机制需严格控制额外功耗，适配嵌入式设备算力约束。', tag: '低耗适配', priority: '中' }
+  { 
+    id: 1, color: '#3b82f6', progress: 0, isLoading: true, delay: 300, 
+    direction: '低功耗优化方向', 
+    mainTaskTitle: '【主线任务：通信加密设计】', 
+    mainTaskDesc: '实现数据加密传输与双向身份认证，需重点适应无人机算力有限与时延敏感特性。', 
+    branchTaskTitle: '【支线任务：低功耗专项】', 
+    branchTaskDesc: '机载设备功耗严格受限，需优化加密算法与密钥流程以降低整体算力开销。', 
+    aiAnalysis: '已辅助明确低功耗与加密平衡指标，推送PRESENT算法架构与简化流程资料，为最终方案奠定基础。' 
+  },
+  { 
+    id: 2, color: '#ef4444', progress: 0, isLoading: true, delay: 600, 
+    direction: '侧信道防护方向', 
+    mainTaskTitle: '【主线任务：通信加密设计】', 
+    mainTaskDesc: '保障无线通信数据机密性与完整性，加密时延需严格控制以确保飞行指令实时传输。', 
+    branchTaskTitle: '【支线任务：侧信道防护专项】', 
+    branchTaskDesc: '需阻断功耗、时序等物理信息泄露，抵御差分功耗分析等侧信道攻击风险。', 
+    aiAnalysis: '已辅助排查物理信息泄露风险点，推送轻量级掩码与恒定时间代码参考，成功引导加固选型。' 
+  },
+  { 
+    id: 3, color: '#f59e0b', progress: 0, isLoading: true, delay: 900, 
+    direction: '抗重放攻击方向', 
+    mainTaskTitle: '【主线任务：通信加密设计】', 
+    mainTaskDesc: '全程加密控制指令与飞行数据，强化身份认证，算法需高度适配机载算力限制。', 
+    branchTaskTitle: '【支线任务：抗重放专项】', 
+    branchTaskDesc: '需设置严格的滑动窗口与同步校验机制，阻止截取旧数据包干扰，确保指令唯一有效。', 
+    aiAnalysis: '已辅助梳理同步校验逻辑细节，下发滑动窗口计数器与动态机制参考，确保防护方案有效无误触。' 
+  },
+  { 
+    id: 4, color: '#8b5cf6', progress: 0, isLoading: true, delay: 1200, 
+    direction: '后量子算法适配方向', 
+    mainTaskTitle: '【主线任务：通信加密设计】', 
+    mainTaskDesc: '支持多种数据类型加密，底层通信算法需满足未来量子计算环境下的安全要求。', 
+    branchTaskTitle: '【支线任务：后量子适配专项】', 
+    branchTaskDesc: '采用抗量子破解的轻量机制，需评估算力消耗并简化适配流程，降低机载硬件负担。', 
+    aiAnalysis: '已辅助生成算法适配算力评估指标，推送Kyber密钥封装机制与降耗优化指南，铺垫最终方案。' 
+  }
 ]);
 
-// --- 预设的28条学生需求数据 (绝对不改变你的数据) ---
+// --- 预设的28条学生需求数据 ---
 const allDemands = [
     { id: 1, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '主线需求', content: '通过AI资料推送工具查到，密码系统需满足机密性、完整性、可用性。' },
     { id: 2, name: '李论', role: '理论型', avatarBg: '3b82f6', color: 'blue', tag: '核心约束', content: '结合无人机场景特性，必须将算力有限、时延敏感作为核心约束。' },
@@ -298,7 +278,7 @@ const allDemands = [
     { id: 28, name: '吴组', role: '组织型', avatarBg: 'f59e0b', color: 'yellow', tag: '最终提交', content: '各组讨论完毕，确认无误，最终需求大纲准备提交系统进行统一审批。' }
 ]
 
-// --- 预设的15个词云词汇库 (绝对不改变你的数据) ---
+// --- 预设的15个词云词汇库 ---
 const wordCloudPool = [
     { text: '通信加密', top: '45%', left: '45%', colorClass: 'text-green-500', sizeClass: 'text-4xl font-bold' },
     { text: '低功耗优化', top: '25%', left: '32%', colorClass: 'text-[#3b82f6]', sizeClass: 'text-3xl' },
@@ -322,13 +302,10 @@ let timeUpdateInterval = null
 // --- 第0步：重置后端状态 ---
 const resetBackendState = async () => {
     try {
-        await fetch('/api/state/reset', {
-            method: 'POST'
-        });
+        await fetch('/api/state/reset', { method: 'POST' });
         console.log('后端状态已重置为默认值');
     } catch (error) {
         console.error('重置后端状态失败:', error);
-        // 即使重置失败，也继续执行后续逻辑
     }
 }
 
@@ -338,7 +315,6 @@ const fetchState = async () => {
         const res = await fetch('/api/state');
         const state = await res.json();
         
-        // 检查四组的状态，如果变成1，且没播过，且不在队列中，则加入播放队列
         [1, 2, 3, 4].forEach(groupId => {
             const fieldName = `demand_g${groupId}_submitted`;
             if (state[fieldName] === 1 && !playedGroups.has(groupId) && !animationQueue.includes(groupId)) {
@@ -346,19 +322,15 @@ const fetchState = async () => {
             }
         });
         
-        // 尝试触发队列消费
         processQueue();
     } catch (error) {
-        // 忽略网络错误，不影响页面崩溃
+        // 忽略网络错误
     }
 }
 
-// --- 第2步：队列处理器（防止多组同时提交导致页面混乱） ---
+// --- 第2步：队列处理器 ---
 const processQueue = () => {
-    // 如果当前正在播放动画，或者队列为空，则不动作
     if (isSimulating.value || animationQueue.length === 0) return;
-    
-    // 取出队列里的第一个组开始播放
     const nextGroup = animationQueue.shift();
     playGroupAnimation(nextGroup);
 }
@@ -369,49 +341,41 @@ const playGroupAnimation = (groupId) => {
     currentPlayingGroup.value = groupId;
     playedGroups.add(groupId);
 
-    // 均分 28 条需求 (每组 7 条)
     const demandStart = (groupId - 1) * 7;
     const demandEnd = groupId * 7;
     const groupDemands = allDemands.slice(demandStart, demandEnd);
 
-    // 均分 15 个词云 (前三组4个，第四组3个)
     const wordStart = (groupId - 1) * 4;
     const wordEnd = groupId === 4 ? 15 : groupId * 4;
     const groupWords = wordCloudPool.slice(wordStart, wordEnd);
 
     let currentTick = 0;
-    const totalTicks = groupDemands.length; // 7步
-    const intervalMs = 600; // 每条需求间隔 0.6 秒
+    const totalTicks = groupDemands.length; 
+    const intervalMs = 600; 
 
     const groupSimInterval = setInterval(() => {
         if (currentTick >= totalTicks) {
-            // 本组播放完毕
             clearInterval(groupSimInterval);
             isSimulating.value = false;
             
-            // 检查是否4组全部播完
             if (playedGroups.size === 4) {
                 hasFinished.value = true;
             }
             
-            // 立即看队列里还有没有下一组需要播
             processQueue(); 
             return;
         }
 
-        // 1. 插入当前组的需求条目
         const newItem = { ...groupDemands[currentTick], timestamp: Date.now(), timeText: '刚刚' };
         visibleDemands.value.unshift(newItem);
         if (visibleDemands.value.length > 5) {
             visibleDemands.value.pop();
         }
 
-        // 2. 累加更新总统计面板
         stats.totalDemands++;
         stats.completionRate = Math.min(100, Math.floor((stats.totalDemands / 28) * 100));
         stats.studentCount = Math.min(12, Math.ceil((stats.totalDemands / 28) * 12));
 
-        // 3. 均匀插入词云 (每两步插一个词)
         if (currentTick % 2 === 0 && (currentTick / 2) < groupWords.length) {
              visibleWords.value.push(groupWords[currentTick / 2]);
         }
@@ -420,7 +384,7 @@ const playGroupAnimation = (groupId) => {
     }, intervalMs);
 }
 
-// --- 时间流逝更新 (原有逻辑保留) ---
+// --- 时间流逝更新 ---
 const startTimeUpdater = () => {
     if(timeUpdateInterval) clearInterval(timeUpdateInterval);
     timeUpdateInterval = setInterval(() => {
@@ -433,13 +397,9 @@ const startTimeUpdater = () => {
 
 // --- 挂载时启动 ---
 onMounted(() => {
-    // 第0步：重置后端状态
     resetBackendState();
-    
     startTimeUpdater();
-    // 先查一次
     fetchState();
-    // 每秒轮询一次后端状态
     pollingTimer = setInterval(fetchState, 1000);
 })
 
@@ -449,7 +409,7 @@ onUnmounted(() => {
     if (timeUpdateInterval) clearInterval(timeUpdateInterval);
 })
 
-// --- 原有：触发AI评审动画 (保留完全不变) ---
+// --- 触发AI评审动画 ---
 const triggerAIReview = () => {
     if(aiReviewState.value !== 0) return;
     aiReviewState.value = 1
@@ -466,12 +426,13 @@ const triggerAIReview = () => {
         });
     };
     startLoadingSimulation();
+    // 4000ms 后所有的动画都播完了，将状态设置为 2 (此时可以进行跳转了)
     setTimeout(() => { aiReviewState.value = 2; }, 4000);
 }
 
 // 跳转到任务发布页
 const navigateToTaskPublish = () => {
-  router.push('/teacher/task-publish')
+  router.push('/teacher/task-split')
 }
 </script>
 
@@ -490,7 +451,6 @@ const navigateToTaskPublish = () => {
   opacity: 0;
   transform: translateY(30px) scale(0.95);
 }
-/* 必须将离开的元素设为绝对定位，才能使平移生效 (JS里通过行内style配合绝对定位实现了精确定轨) */
 
 /* 词云渐变出现动画 */
 .fade-enter-active,
@@ -501,21 +461,6 @@ const navigateToTaskPublish = () => {
 .fade-leave-to {
   opacity: 0;
   transform: scale(0.8);
-}
-
-/* 最终AI结果卡片上浮动画 */
-.fade-in-up {
-    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 /* 截断文本保持两行 */
@@ -570,5 +515,17 @@ const navigateToTaskPublish = () => {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 自定义卡片滚动条，防止文字过多溢出 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 4px;
 }
 </style>
