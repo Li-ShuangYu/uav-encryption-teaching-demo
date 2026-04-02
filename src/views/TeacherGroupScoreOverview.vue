@@ -16,7 +16,29 @@
       </button>
     </header>
 
-    <main class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
+    <div v-if="!isReady" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
+      <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" style="border-top-color: #23b586"></div>
+      <h2 class="text-2xl font-bold text-white mb-6 tracking-wider">等待评分完成...</h2>
+      <div class="space-y-3 w-80">
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 AI 批改</span>
+          <span v-if="states.aiEvaluated" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 教师评分</span>
+          <span v-if="states.teacherScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 组间互评</span>
+          <span v-if="states.studentScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+      </div>
+    </div>
+
+    <main v-else class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
       <div 
         v-for="(group, index) in groups" 
         :key="group.id"
@@ -108,6 +130,15 @@ import * as echarts from 'echarts';
 const router = useRouter();
 const hoveredGroup = ref(null);
 
+// 阻塞等待状态
+const isReady = ref(false);
+const states = reactive({
+  aiEvaluated: false,
+  teacherScored: false,
+  studentScored: false
+});
+let pollingTimer = null;
+
 const backToSchemeSplit = () => {
   router.push('/teacher/scheme-split');
 };
@@ -198,23 +229,53 @@ const initChart = (group) => {
   chartInstances.push(myChart);
 };
 
+const handleResize = () => {
+  chartInstances.forEach(instance => instance.resize());
+};
+
+// 轮询后端状态
+const fetchState = async () => {
+  try {
+    const res = await fetch('/api/state');
+    const state = await res.json();
+    
+    // 更新状态
+    states.aiEvaluated = state.ai_evaluated === 1;
+    states.teacherScored = state.teacher_scored_group === 1;
+    states.studentScored = state.student_scored_group === 1;
+    
+    // 检查是否所有评分都完成
+    if (states.aiEvaluated && states.teacherScored && states.studentScored) {
+      isReady.value = true;
+      if (pollingTimer) {
+        clearInterval(pollingTimer);
+      }
+      // 评分完成后初始化图表
+      nextTick(() => {
+        groups.forEach(group => {
+          initChart(group);
+        });
+      });
+    }
+  } catch (error) {
+    // 静默处理，避免影响页面
+  }
+};
+
 onMounted(() => {
-  nextTick(() => {
-    groups.forEach(group => {
-      initChart(group);
-    });
-  });
+  // 开始轮询
+  fetchState(); // 立即执行一次
+  pollingTimer = setInterval(fetchState, 1000); // 每秒轮询一次
   window.addEventListener('resize', handleResize);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
   chartInstances.forEach(instance => instance.dispose());
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
 });
-
-const handleResize = () => {
-  chartInstances.forEach(instance => instance.resize());
-};
 </script>
 
 <style scoped>
