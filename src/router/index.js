@@ -70,6 +70,12 @@ const routes = [
         name: 'TeacherSchemeDetail',
         component: () => import('../views/TeacherSchemeDetail.vue'),
         meta: { title: '方案详情页' }
+      },
+      {
+        path: 'group-score-overview',
+        name: 'TeacherGroupScoreOverview',
+        component: () => import('../views/TeacherGroupScoreOverview.vue'),
+        meta: { title: '综合方案评估' }
       }
     ]
   },
