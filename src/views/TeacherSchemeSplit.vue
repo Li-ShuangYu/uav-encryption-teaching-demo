@@ -7,9 +7,17 @@
         <h1 class="text-xl font-bold text-white tracking-wide">无人机通信加密 - 4 组方案分屏</h1>
       </div>
       <div class="flex gap-4 items-center">
-        <button @click="goToAiEvaluate" class="btn-agent bg-[#1c2126] border border-[#00e5ff] text-[#00e5ff] px-5 py-2 rounded transition-colors flex items-center gap-2 font-bold hover:bg-[#00e5ff] hover:text-black">
+        <button 
+          @click="goToAiEvaluate" 
+          :disabled="!allSchemesUploaded"
+          class="px-5 py-2 rounded transition-colors flex items-center gap-2 font-bold"
+          :class="{
+            'btn-agent bg-[#1c2126] border border-[#00e5ff] text-[#00e5ff] hover:bg-[#00e5ff] hover:text-black': allSchemesUploaded,
+            'bg-[#1c2126] border border-[#2d353e] text-gray-500 cursor-not-allowed opacity-60': !allSchemesUploaded
+          }"
+        >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-          架构评审 Agent
+          {{ allSchemesUploaded ? '架构评审 Agent' : '等待所有组上传方案...' }}
         </button>
         <button 
           disabled
@@ -101,13 +109,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 // 核心状态绑定：数组索引 0-3 分别对应 第1-4组的上传状态
 const uploadedStates = ref([false, false, false, false]);
+
+// 计算属性：判断是否所有组都已上传方案
+const allSchemesUploaded = computed(() => {
+  return uploadedStates.value.every(state => state === true);
+});
+
 let pollingTimer = null;
 
 // 原始数据 (一字未改)
