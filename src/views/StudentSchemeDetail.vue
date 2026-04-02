@@ -1,5 +1,15 @@
 <template>
   <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden">
+    <!-- Loading弹框 -->
+    <div v-if="isLoading" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+      <div class="bg-panelBg border border-borderColor rounded-lg p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="w-12 h-12 border-4 border-accentGreen border-t-transparent rounded-full animate-spin"></div>
+        <div class="text-center">
+          <div class="text-lg font-bold text-white mb-2">评分完成√</div>
+          <div class="text-sm text-textMuted">正在进入总结页面...</div>
+        </div>
+      </div>
+    </div>
     <header class="h-16 shrink-0 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
@@ -9,9 +19,7 @@
           <div class="flex items-center bg-gray-800/60 rounded-lg px-2 border border-gray-700 shadow-inner">
             <button 
               @click="prevGroup" 
-              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
-              :disabled="currentGroupId === 1" 
-              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 1}"
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
             </button>
@@ -20,9 +28,7 @@
             </span>
             <button 
               @click="nextGroup" 
-              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
-              :disabled="currentGroupId === 4" 
-              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 4}"
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
             </button>
@@ -353,7 +359,7 @@ const groups = reactive([
     ],
     // 教师评审数据
     review: {
-      scores: { security: 95, integrity: 90, usability: 85, cost: 80, innovation: 90 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -378,7 +384,7 @@ const groups = reactive([
       { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
     ],
     review: {
-      scores: { security: 95, integrity: 90, usability: 85, cost: 80, innovation: 90 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -403,7 +409,7 @@ const groups = reactive([
       { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
     ],
     review: {
-      scores: { security: 80, integrity: 85, usability: 95, cost: 75, innovation: 85 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -428,7 +434,7 @@ const groups = reactive([
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ],
     review: {
-      scores: { security: 88, integrity: 95, usability: 80, cost: 70, innovation: 95 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -442,6 +448,7 @@ const isGenerating = ref(false);
 const showContent = ref(false);
 const showAnimation = ref(false);
 const chartInstance = ref(null);
+const isLoading = ref(false);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 const isStudentOwnGroup = computed(() => {
   return studentGroupId.value && currentGroupId.value === studentGroupId.value;
@@ -471,40 +478,40 @@ const allReviewsSubmitted = computed(() => {
 const completeEvaluation = () => {
   if (!allReviewsSubmitted.value) return;
   
+  // 显示loading弹框
+  isLoading.value = true;
+  
   // 模拟完成互评的逻辑
   setTimeout(() => {
-    // 可以添加跳转到其他页面的逻辑
-  }, 300);
+    // 跳转到StudentMyScoreResult页面
+    router.push('/student/my-score-result');
+  }, 1500);
 };
 
 // 分组切换逻辑
 const prevGroup = () => {
-  if (currentGroupId.value > 1) {
-    // 触发切换动画
-    showAnimation.value = true;
+  // 触发切换动画
+  showAnimation.value = true;
+  setTimeout(() => {
+    currentGroupId.value = currentGroupId.value > 1 ? currentGroupId.value - 1 : 4;
+    showAnimation.value = false;
+    // 更新雷达图
     setTimeout(() => {
-      currentGroupId.value--;
-      showAnimation.value = false;
-      // 更新雷达图
-      setTimeout(() => {
-        initChart();
-      }, 100);
-    }, 300);
-  }
+      initChart();
+    }, 100);
+  }, 300);
 };
 const nextGroup = () => {
-  if (currentGroupId.value < 4) {
-    // 触发切换动画
-    showAnimation.value = true;
+  // 触发切换动画
+  showAnimation.value = true;
+  setTimeout(() => {
+    currentGroupId.value = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
+    showAnimation.value = false;
+    // 更新雷达图
     setTimeout(() => {
-      currentGroupId.value++;
-      showAnimation.value = false;
-      // 更新雷达图
-      setTimeout(() => {
-        initChart();
-      }, 100);
-    }, 300);
-  }
+      initChart();
+    }, 100);
+  }, 300);
 };
 
 // 计算综合得分
@@ -514,12 +521,88 @@ const calculateTotalScore = (group) => {
   return Math.round((s.security + s.integrity + s.usability + s.cost + s.innovation) / 5);
 };
 
+// 缓动函数
+const easeInOutQuad = (t) => {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+};
+
+// 自动评分函数（缓动效果）
+const autoScore = (group, targetScores) => {
+  const duration = 1500; // 动画持续时间
+  const startTime = Date.now();
+  const initialScores = { ...group.review.scores };
+  
+  const animate = () => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutQuad(progress);
+    
+    // 计算当前分数
+    Object.keys(targetScores).forEach(key => {
+      group.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
+    });
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      // 评分完成后更新雷达图
+      initChart();
+    }
+  };
+  
+  animate();
+};
+
 // 提交评审
 const submitReview = () => {
   if (currentGroup.value.review.isSubmitted) return;
   // 模拟提交网络请求
   setTimeout(() => {
     currentGroup.value.review.isSubmitted = true;
+    
+    // 检查是否所有其他组都已完成评估
+    const allSubmitted = groups.every(group => {
+      if (group.id === studentGroupId.value) {
+        return true;
+      }
+      return group.review.isSubmitted;
+    });
+    
+    if (allSubmitted) {
+      // 所有组都已完成，停止操作，不自动跳转到评分结果页面
+      return;
+    } else {
+      // 等待1.5秒后跳转到下一个组
+      setTimeout(() => {
+        // 跳转到下一个组，跳过学生自己的小组
+        let nextId = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
+        
+        // 如果下一个组是学生自己的小组，继续跳过
+        if (nextId === studentGroupId.value) {
+          nextId = nextId < 4 ? nextId + 1 : 1;
+        }
+        
+        // 触发切换动画
+        showAnimation.value = true;
+        setTimeout(() => {
+          currentGroupId.value = nextId;
+          showAnimation.value = false;
+          
+          // 在下一组加载完成后，自动开始写评语
+          setTimeout(() => {
+            // 为下一组设置默认分数为0
+            const nextGroup = groups.find(g => g.id === currentGroupId.value);
+            if (nextGroup && !nextGroup.review.isSubmitted) {
+              // 重置分数为0
+              nextGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
+              
+              // 自动开始生成评语（包含评分动画）
+              generateReview();
+            }
+          }, 500);
+        }, 300);
+      }, 1500);
+    }
   }, 300);
 };
 
@@ -529,30 +612,98 @@ const generateReview = async () => {
   
   isGenerating.value = true;
   
-  // 为当前小组生成评审指导意见
-  const reviewComments = {
-    1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
-    2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
-    3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
-    4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
-  };
-  
   const currentGroup = groups.find(g => g.id === currentGroupId.value);
-  if (currentGroup && reviewComments[currentGroup.id]) {
-    const comment = reviewComments[currentGroup.id];
+  if (currentGroup) {
+    // 1. 自动评分（缓动效果）
+    const targetScores = {
+      1: { security: 90, integrity: 85, usability: 80, cost: 75, innovation: 85 },
+      2: { security: 85, integrity: 90, usability: 75, cost: 80, innovation: 90 },
+      3: { security: 80, integrity: 75, usability: 90, cost: 85, innovation: 80 },
+      4: { security: 95, integrity: 90, usability: 70, cost: 75, innovation: 95 }
+    }[currentGroupId.value] || { security: 80, integrity: 80, usability: 80, cost: 80, innovation: 80 };
+    
+    // 重置分数为0
+    currentGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
+    
+    // 执行自动评分动画（逐条拉动）
+    const scoreAnimationPromise = new Promise((resolve) => {
+      const duration = 1000; // 单个拉条动画持续时间
+      const delayBetween = 300; // 拉条之间的延迟
+      const keys = ['security', 'integrity', 'usability', 'cost', 'innovation'];
+      const initialScores = { ...currentGroup.review.scores };
+      let currentIndex = 0;
+      
+      const animateNext = () => {
+        if (currentIndex >= keys.length) {
+          // 评分完成后更新雷达图
+          initChart();
+          resolve();
+          return;
+        }
+        
+        const key = keys[currentIndex];
+        const startTime = Date.now();
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeInOutQuad(progress);
+          
+          // 只更新当前拉条的分数
+          currentGroup.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            // 当前拉条动画完成，开始下一个
+            currentIndex++;
+            setTimeout(animateNext, delayBetween);
+          }
+        };
+        
+        animate();
+      };
+      
+      animateNext();
+    });
+    
+    // 等待评分动画完成
+    await scoreAnimationPromise;
+    
+    // 2. 生成评审指导意见
+    const reviewComments = {
+      1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
+      2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
+      3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
+      4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
+    };
+    
+    const comment = reviewComments[currentGroup.id] || '该方案整体设计合理，建议在实际部署中进一步验证安全性。';
     currentGroup.review.comment = ''; // 清空原有内容
     
     // 逐字输入动画
-    let index = 0;
-    const typingInterval = setInterval(() => {
-      if (index < comment.length) {
-        currentGroup.review.comment += comment.charAt(index);
-        index++;
-      } else {
-        clearInterval(typingInterval);
-        isGenerating.value = false;
-      }
-    }, 50); // 每50毫秒输入一个字符
+    const typingPromise = new Promise((resolve) => {
+      let index = 0;
+      const typingInterval = setInterval(() => {
+        if (index < comment.length) {
+          currentGroup.review.comment += comment.charAt(index);
+          index++;
+        } else {
+          clearInterval(typingInterval);
+          resolve();
+        }
+      }, 50); // 每50毫秒输入一个字符
+    });
+    
+    // 等待文字生成完成
+    await typingPromise;
+    
+    // 3. 自动提交评审
+    isGenerating.value = false;
+    
+    setTimeout(() => {
+      submitReview();
+    }, 1000);
   } else {
     isGenerating.value = false;
   }

@@ -15,7 +15,7 @@ const routes = [
     path: '/group-recommendation',
     name: 'GroupRecommendation',
     component: () => import('../views/GroupRecommendation.vue'),
-    meta: { title: '分组推荐' }
+    meta: { title: '教师控制台' }
   },
   // ================= 教师端页面 =================
   {
@@ -27,55 +27,55 @@ const routes = [
         path: 'task-publish',
         name: 'TeacherTaskPublish',
         component: () => import('../views/TeacherTaskPublish.vue'),
-        meta: { title: '屏1：任务发布页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'demand-summary',
         name: 'TeacherDemandSummary',
         component: () => import('../views/TeacherDemandSummary.vue'),
-        meta: { title: '屏 2：教学控制台 - 需求分析汇总页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'demand-split',
         name: 'TeacherDemandSplit',
         component: () => import('../views/TeacherDemandSplit.vue'),
-        meta: { title: '屏 3：教学控制台 - 4 组需求分屏页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'task-split',
         name: 'TeacherTaskSplit',
         component: () => import('../views/TeacherTaskSplit.vue'),
-        meta: { title: '屏 4：教学控制台 - 4 组任务分屏页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'scheme-split',
         name: 'TeacherSchemeSplit',
         component: () => import('../views/TeacherSchemeSplit.vue'),
-        meta: { title: '屏 5：教学控制台 - 4 组方案分屏页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'ai-evaluate',
         name: 'TeacherAiEvaluate',
         component: () => import('../views/TeacherAiEvaluate.vue'),
-        meta: { title: '屏 6：教学控制台 - 方案 AI 评估页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'simulation',
         name: 'TeacherSimulation',
         component: () => import('../views/TeacherSimulation.vue'),
-        meta: { title: '屏 8：教学控制台 - 4 组仿真性能分屏页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'scheme-detail',
         name: 'TeacherSchemeDetail',
         component: () => import('../views/TeacherSchemeDetail.vue'),
-        meta: { title: '方案详情页' }
+        meta: { title: '教师控制台' }
       },
       {
         path: 'group-score-overview',
         name: 'TeacherGroupScoreOverview',
         component: () => import('../views/TeacherGroupScoreOverview.vue'),
-        meta: { title: '综合方案评估' }
+        meta: { title: '教师控制台' }
       }
     ]
   },
@@ -113,6 +113,12 @@ const routes = [
         path: 'scheme-detail',
         name: 'StudentSchemeDetail',
         component: () => import('../views/StudentSchemeDetail.vue'),
+        meta: { title: '学生工作台' }
+      },
+      {
+        path: 'my-score-result',
+        name: 'StudentMyScoreResult',
+        component: () => import('../views/StudentMyScoreResult.vue'),
         meta: { title: '学生工作台' }
       }
     ]

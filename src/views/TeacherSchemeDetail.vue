@@ -1,5 +1,15 @@
 <template>
   <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden">
+    <!-- Loading弹框 -->
+    <div v-if="isLoading" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+      <div class="bg-panelBg border border-borderColor rounded-lg p-6 flex flex-col items-center gap-4 shadow-lg">
+        <div class="w-12 h-12 border-4 border-accentGreen border-t-transparent rounded-full animate-spin"></div>
+        <div class="text-center">
+          <div class="text-lg font-bold text-white mb-2">评分完成√</div>
+          <div class="text-sm text-textMuted">正在进入总结页面...</div>
+        </div>
+      </div>
+    </div>
     <header class="h-16 shrink-0 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
@@ -28,22 +38,36 @@
             </button>
           </div>
 
+          <button @click="generateReview" :disabled="isGenerating" class="text-accentCyan hover:text-white transition-all transform hover:rotate-180 duration-500 disabled:opacity-50 disabled:cursor-not-allowed ml-4" title="生成评审指导意见">
+            <svg class="w-5 h-5 drop-shadow-[0_0_5px_rgba(0,240,255,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          </button>
         </div>
       </div>
-      <button 
-        @click="backToWorkspace"
-        class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-        </svg>
-        返回方案AI评估页
-      </button>
+      <div class="flex items-center gap-3">
+        <button 
+          @click="backToWorkspace"
+          class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+          返回方案AI评估页
+        </button>
+        <button 
+          @click="completeEvaluation"
+          class="bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+        >
+          完成评估
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden" v-if="showContent">
       
-      <div class="col-span-3 flex flex-col gap-3">
+      <div class="col-span-3 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
           <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
           <div class="flex justify-between items-center mb-2 relative z-10">
@@ -89,34 +113,69 @@
         </div>
       </div>
 
-      <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;">
-        <div class="text-base font-black text-white mb-4 flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          系统架构与数据流转参考
-        </div>
-        <div class="flex-1 flex flex-col justify-between mb-4 relative py-1">
-          <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-borderColor -translate-x-1/2 z-0 rounded-full"></div>
-          <div v-for="(layer, index) in currentGroup.archLayers" :key="index" class="relative z-10 w-[85%] mx-auto bg-cardInnerBg border rounded-lg py-2.5 px-4 flex items-center justify-between transition-all duration-500 hover:scale-[1.02]" :style="{ borderColor: layer.highlight ? currentGroup.themeColor : '#374151', backgroundColor: layer.highlight ? '#1f2937' : '' }">
-            <div class="text-xs font-black transition-colors duration-500" :style="{ color: layer.highlight ? currentGroup.themeColor : '#9ca3af' }">{{ layer.name }}</div>
-            <div class="text-xs font-bold text-textMain text-right w-2/3 leading-snug">{{ layer.desc }}</div>
+      <div class="col-span-5 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
+        <div class="bg-panelBg border border-borderColor rounded-lg p-5 flex flex-col shadow-lg animate-fade-in-up h-full" :style="{ animationDelay: '0.25s' }">
+          <div class="text-base font-black text-white mb-5 flex items-center gap-2 shrink-0">
+            <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500 shadow-sm" :style="{ backgroundColor: currentGroup.themeColor, boxShadow: `0 0 8px ${currentGroup.themeColor}80` }"></div>
+            系统架构与数据流转参考
           </div>
-        </div>
-        <div class="shrink-0 bg-darkBg/80 rounded-lg p-3 border border-borderColor">
-          <div class="text-[11px] font-black text-textMuted mb-2 uppercase tracking-widest flex justify-between items-center">
-            <span>Security Flow / 时序图节点</span>
-            <span class="text-[#3b82f6] hover:underline cursor-pointer">查看详细UML图</span>
+
+          <div class="flex-1 flex flex-col justify-between mb-6 px-1 relative min-h-[240px]">
+            
+            <div class="absolute top-6 bottom-6 left-[56px] w-px bg-gray-600 z-0 opacity-50"></div>
+
+            <div v-for="(layer, index) in currentGroup.archLayers" :key="index" 
+                 class="relative group rounded-xl p-3 flex items-center gap-4 transition-all duration-300 border"
+                 :class="layer.highlight ? 'bg-[#1f2937] shadow-md z-10 scale-[1.02]' : 'bg-cardInnerBg/40 hover:bg-cardInnerBg z-0'" 
+                 :style="{ borderColor: layer.highlight ? currentGroup.themeColor : '#374151' }">
+              
+              <div class="shrink-0 w-20 py-1.5 flex justify-center items-center rounded bg-darkBg border transition-colors duration-500 relative z-10"
+                   :style="{ borderColor: layer.highlight ? currentGroup.themeColor + '80' : '#2d353e' }">
+                <span class="text-xs font-black transition-colors duration-500" :style="{ color: layer.highlight ? currentGroup.themeColor : '#9ca3af' }">
+                  {{ layer.name }}
+                </span>
+              </div>
+
+              <div class="flex-1 text-xs font-medium leading-relaxed transition-colors duration-500 relative z-10"
+                   :class="layer.highlight ? 'text-gray-200' : 'text-textMuted'">
+                {{ layer.desc }}
+              </div>
+
+              <div v-if="layer.highlight" class="absolute right-0 top-0 bottom-0 w-1.5 rounded-r-xl opacity-80 z-10" 
+                   :style="{ backgroundColor: currentGroup.themeColor }"></div>
+            </div>
           </div>
-          <div class="flex items-center justify-between text-xs font-black font-mono transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-            <template v-for="(step, index) in currentGroup.flow" :key="index">
-              <span>{{ step }}</span>
-              <span v-if="index < currentGroup.flow.length - 1" class="text-textMuted opacity-50">➔</span>
-            </template>
+
+          <div class="shrink-0 bg-darkBg rounded-xl p-4 border border-borderColor relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 blur-3xl opacity-10 transition-colors duration-500" 
+                 :style="{ backgroundColor: currentGroup.themeColor }"></div>
+
+            <div class="text-[11px] font-black text-textMuted mb-3 uppercase tracking-widest flex justify-between items-center relative z-10">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Security Flow / 时序节点
+              </span>
+              <span class="text-[#3b82f6] hover:text-blue-400 hover:underline cursor-pointer transition-colors flex items-center gap-1">
+                查看详细UML图
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-y-2.5 relative z-10">
+              <template v-for="(step, index) in currentGroup.flow" :key="index">
+                <div class="text-xs font-bold font-mono transition-colors duration-500 bg-cardInnerBg px-2 py-1 rounded border border-gray-700/50 shadow-sm" 
+                     :style="{ color: currentGroup.themeColor }">
+                  {{ step }}
+                </div>
+                <svg v-if="index < currentGroup.flow.length - 1" class="w-4 h-4 mx-1.5 text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </template>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="col-span-4 flex flex-col gap-3">
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
+      <div class="col-span-4 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" :style="{ animationDelay: '0.3s', borderTopWidth: '4px', borderTopColor: currentGroup.themeColor }">
           
           <div class="px-4 pt-3 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
             <div class="text-base font-black flex items-center gap-2 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
@@ -131,6 +190,18 @@
           
           <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
             
+
+
+            <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
+              <span class="text-sm font-medium text-textMuted">系统计算综合得分</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
+                  {{ calculateTotalScore(currentGroup) }}
+                </span>
+                <span class="text-lg text-gray-500 font-bold">/100</span>
+              </div>
+            </div>
+
             <div class="bg-darkBg rounded-lg border border-borderColor p-3 space-y-3">
               <div v-for="dim in dimensions" :key="dim.key" class="flex items-center justify-between">
                 <span class="text-sm font-medium text-gray-300 w-18">{{ dim.label }}</span>
@@ -146,16 +217,6 @@
                 <span class="text-base font-mono font-bold w-8 text-right" :style="{ color: currentGroup.themeColor }">
                   {{ currentGroup.review.scores[dim.key] }}
                 </span>
-              </div>
-            </div>
-
-            <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
-              <span class="text-sm font-medium text-textMuted">系统计算综合得分</span>
-              <div class="flex items-baseline gap-1">
-                <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
-                  {{ calculateTotalScore(currentGroup) }}
-                </span>
-                <span class="text-lg text-gray-500 font-bold">/100</span>
               </div>
             </div>
 
@@ -193,7 +254,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
@@ -237,7 +298,7 @@ const groups = reactive([
     ],
     // 教师评审数据
     review: {
-      scores: { security: 85, integrity: 80, usability: 90, cost: 95, innovation: 75 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -262,7 +323,7 @@ const groups = reactive([
       { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
     ],
     review: {
-      scores: { security: 95, integrity: 90, usability: 75, cost: 70, innovation: 85 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -287,7 +348,7 @@ const groups = reactive([
       { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
     ],
     review: {
-      scores: { security: 85, integrity: 95, usability: 85, cost: 80, innovation: 75 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -312,7 +373,7 @@ const groups = reactive([
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ],
     review: {
-      scores: { security: 98, integrity: 90, usability: 60, cost: 50, innovation: 95 },
+      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -321,14 +382,28 @@ const groups = reactive([
 
 // 状态管理
 const currentGroupId = ref(1);
+const isGenerating = ref(false);
+const showContent = ref(false);
+const showAnimation = ref(false);
+const isLoading = ref(false);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
 // 分组切换逻辑
 const prevGroup = () => {
-  if (currentGroupId.value > 1) currentGroupId.value--;
+  // 触发切换动画
+  showAnimation.value = true;
+  setTimeout(() => {
+    currentGroupId.value = currentGroupId.value > 1 ? currentGroupId.value - 1 : 4;
+    showAnimation.value = false;
+  }, 300);
 };
 const nextGroup = () => {
-  if (currentGroupId.value < 4) currentGroupId.value++;
+  // 触发切换动画
+  showAnimation.value = true;
+  setTimeout(() => {
+    currentGroupId.value = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
+    showAnimation.value = false;
+  }, 300);
 };
 
 // 计算综合得分
@@ -339,14 +414,188 @@ const calculateTotalScore = (group) => {
 };
 
 // 提交评审
+// 缓动函数
+const easeInOutQuad = (t) => {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+};
+
+// 自动评分函数（缓动效果）
+const autoScore = (group, targetScores) => {
+  const duration = 1500; // 动画持续时间
+  const startTime = Date.now();
+  const initialScores = { ...group.review.scores };
+  
+  const animate = () => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeInOutQuad(progress);
+    
+    // 计算当前分数
+    Object.keys(targetScores).forEach(key => {
+      group.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
+    });
+    
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    }
+  };
+  
+  animate();
+};
+
+// 提交评审
 const submitReview = () => {
   if (currentGroup.value.review.isSubmitted) return;
   // 模拟提交网络请求
   setTimeout(() => {
     currentGroup.value.review.isSubmitted = true;
-    alert(`已成功录入 ${currentGroup.value.name} 的综合评审结果！`);
+    
+    // 检查是否所有组都已完成评估
+    const allSubmitted = groups.every(group => group.review.isSubmitted);
+    if (allSubmitted) {
+      // 所有组都已完成，停止操作，不自动跳转到评分概览页面
+      return;
+    } else {
+      // 等待1.5秒后跳转到下一个组
+      setTimeout(() => {
+        // 跳转到下一个组
+        showAnimation.value = true;
+        setTimeout(() => {
+          currentGroupId.value = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
+          showAnimation.value = false;
+          
+          // 在下一组加载完成后，自动开始写评语
+          setTimeout(() => {
+            // 为下一组设置默认分数为0
+            const nextGroup = groups.find(g => g.id === currentGroupId.value);
+            if (nextGroup && !nextGroup.review.isSubmitted) {
+              // 重置分数为0
+              nextGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
+              
+              // 自动开始生成评语（包含评分动画）
+              generateReview();
+            }
+          }, 500);
+        }, 300);
+      }, 1500);
+    }
   }, 300);
 };
+
+// 生成评审指导意见
+const generateReview = async () => {
+  if (isGenerating.value) return;
+  
+  isGenerating.value = true;
+  
+  const currentGroup = groups.find(g => g.id === currentGroupId.value);
+  if (currentGroup) {
+    // 1. 自动评分（缓动效果）
+    const targetScores = {
+      1: { security: 90, integrity: 85, usability: 80, cost: 75, innovation: 85 },
+      2: { security: 85, integrity: 90, usability: 75, cost: 80, innovation: 90 },
+      3: { security: 80, integrity: 75, usability: 90, cost: 85, innovation: 80 },
+      4: { security: 95, integrity: 90, usability: 70, cost: 75, innovation: 95 }
+    }[currentGroupId.value] || { security: 80, integrity: 80, usability: 80, cost: 80, innovation: 80 };
+    
+    // 重置分数为0
+    currentGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
+    
+    // 执行自动评分动画（逐条拉动）
+    const scoreAnimationPromise = new Promise((resolve) => {
+      const duration = 1000; // 单个拉条动画持续时间
+      const delayBetween = 300; // 拉条之间的延迟
+      const keys = ['security', 'integrity', 'usability', 'cost', 'innovation'];
+      const initialScores = { ...currentGroup.review.scores };
+      let currentIndex = 0;
+      
+      const animateNext = () => {
+        if (currentIndex >= keys.length) {
+          resolve();
+          return;
+        }
+        
+        const key = keys[currentIndex];
+        const startTime = Date.now();
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easedProgress = easeInOutQuad(progress);
+          
+          // 只更新当前拉条的分数
+          currentGroup.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            // 当前拉条动画完成，开始下一个
+            currentIndex++;
+            setTimeout(animateNext, delayBetween);
+          }
+        };
+        
+        animate();
+      };
+      
+      animateNext();
+    });
+    
+    // 等待评分动画完成
+    await scoreAnimationPromise;
+    
+    // 2. 生成评审指导意见
+    const reviewComments = {
+      1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
+      2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
+      3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
+      4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
+    };
+    
+    const comment = reviewComments[currentGroup.id] || '该方案整体设计合理，建议在实际部署中进一步验证安全性。';
+    currentGroup.review.comment = ''; // 清空原有内容
+    
+    // 逐字输入动画
+    const typingPromise = new Promise((resolve) => {
+      let index = 0;
+      const typingInterval = setInterval(() => {
+        if (index < comment.length) {
+          currentGroup.review.comment += comment.charAt(index);
+          index++;
+        } else {
+          clearInterval(typingInterval);
+          resolve();
+        }
+      }, 50); // 每50毫秒输入一个字符
+    });
+    
+    // 等待文字生成完成
+    await typingPromise;
+    
+    // 3. 自动提交评审
+    isGenerating.value = false;
+    
+    setTimeout(() => {
+      submitReview();
+    }, 1000);
+  } else {
+    isGenerating.value = false;
+  }
+};
+
+// 完成所有评估
+const completeEvaluation = () => {
+  // 显示loading弹框
+  isLoading.value = true;
+  
+  // 模拟完成评估的逻辑
+  setTimeout(() => {
+    // 跳转到TeacherGroupScoreOverview页面
+    router.push('/teacher/group-score-overview');
+  }, 1500);
+};
+
+
 
 onMounted(() => {
   // 从路由参数读取初始组信息
@@ -354,6 +603,15 @@ onMounted(() => {
     const id = parseInt(route.query.groupId);
     if (id >= 1 && id <= 4) currentGroupId.value = id;
   }
+  
+  // 入场动画
+  setTimeout(() => {
+    showContent.value = true;
+  }, 100);
+});
+
+onBeforeUnmount(() => {
+  // 清理工作
 });
 </script>
 
