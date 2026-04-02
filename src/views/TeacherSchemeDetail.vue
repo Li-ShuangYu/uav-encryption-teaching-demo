@@ -1,6 +1,10 @@
 <template>
   <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden">
-    <!-- Loading弹框 -->
+    <div v-if="showToast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[80] bg-[#1f2937] border border-accentGreen text-accentGreen px-6 py-3 rounded-lg shadow-[0_0_15px_rgba(16,185,129,0.3)] flex items-center gap-3 transition-all duration-300">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span class="font-bold text-lg">{{ toastMsg }}</span>
+    </div>
+
     <div v-if="isLoading" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div class="bg-panelBg border border-borderColor rounded-lg p-6 flex flex-col items-center gap-4 shadow-lg">
         <div class="w-12 h-12 border-4 border-accentGreen border-t-transparent rounded-full animate-spin"></div>
@@ -38,7 +42,7 @@
             </button>
           </div>
 
-          <button @click="generateReview" :disabled="isGenerating" class="text-accentCyan hover:text-white transition-all transform hover:rotate-180 duration-500 disabled:opacity-50 disabled:cursor-not-allowed ml-4" title="生成评审指导意见">
+          <button @click="generateReview" :disabled="isGenerating" class="text-accentCyan hover:text-white transition-all transform hover:rotate-180 duration-500 disabled:opacity-50 disabled:cursor-not-allowed ml-4" title="一键自动评估">
             <svg class="w-5 h-5 drop-shadow-[0_0_5px_rgba(0,240,255,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
           </button>
         </div>
@@ -190,8 +194,6 @@
           
           <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
             
-
-
             <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
               <span class="text-sm font-medium text-textMuted">系统计算综合得分</span>
               <div class="flex items-baseline gap-1">
@@ -260,21 +262,35 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 
+// 提示弹窗控制
+const toastMsg = ref('');
+const showToast = ref(false);
+
+const showToastMessage = (msg, duration = 1500) => {
+  toastMsg.value = msg;
+  showToast.value = true;
+  return new Promise(resolve => {
+    setTimeout(() => {
+      showToast.value = false;
+      resolve();
+    }, duration);
+  });
+};
+
 // 返回方案AI评估页
 const backToWorkspace = () => {
   router.push('/teacher/ai-evaluate');
 };
 
-// 预设打分维度
+// 修复：仅保留 4 个打分维度，彻底移除 cost
 const dimensions = [
   { key: 'security', label: '安全保密性' },
   { key: 'integrity', label: '数据完整性' },
   { key: 'usability', label: '系统可用性' },
-  // { key: 'cost', label: '硬件成本控制' },
   { key: 'innovation', label: '方案创新性' }
 ];
 
-// 初始化带有 review 数据的 groups
+// 初始化带有 review 数据的 groups (彻底移除了内部所有的 cost 初始值)
 const groups = reactive([
   {
     id: 1,
@@ -296,9 +312,8 @@ const groups = reactive([
       { label: '轻量级数据加密', name: 'PRESENT 算法', desc: '64bit分组/80bit密钥，SPN结构31轮迭代。控制指令采用 ECB，影像数据采用 CBC 模式。' },
       { label: '双向身份认证', name: 'ECC (secp256r1)', desc: '无人机与终端基于 ECC 验证双方合法性，认证通过后动态协商生成一次一密的会话密钥。' }
     ],
-    // 教师评审数据
     review: {
-      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
+      scores: { security: 0, integrity: 0, usability: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -323,7 +338,7 @@ const groups = reactive([
       { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
     ],
     review: {
-      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
+      scores: { security: 0, integrity: 0, usability: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -348,7 +363,7 @@ const groups = reactive([
       { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
     ],
     review: {
-      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
+      scores: { security: 0, integrity: 0, usability: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -373,7 +388,7 @@ const groups = reactive([
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ],
     review: {
-      scores: { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 },
+      scores: { security: 0, integrity: 0, innovation: 0 },
       comment: '',
       isSubmitted: false
     }
@@ -388,9 +403,13 @@ const showAnimation = ref(false);
 const isLoading = ref(false);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
+// 检查是否所有组都已完成评估
+const allReviewsSubmitted = computed(() => {
+  return groups.every(group => group.review.isSubmitted);
+});
+
 // 分组切换逻辑
 const prevGroup = () => {
-  // 触发切换动画
   showAnimation.value = true;
   setTimeout(() => {
     currentGroupId.value = currentGroupId.value > 1 ? currentGroupId.value - 1 : 4;
@@ -398,7 +417,6 @@ const prevGroup = () => {
   }, 300);
 };
 const nextGroup = () => {
-  // 触发切换动画
   showAnimation.value = true;
   setTimeout(() => {
     currentGroupId.value = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
@@ -406,212 +424,189 @@ const nextGroup = () => {
   }, 300);
 };
 
-// 计算综合得分
+// 修复：计算综合得分分母修改为 4
 const calculateTotalScore = (group) => {
   if (!group || !group.review) return 0;
   const s = group.review.scores;
-  return Math.round((s.security + s.integrity + s.usability + s.cost + s.innovation) / 5);
+  return Math.round((s.security + s.integrity + s.usability + s.innovation) / 4);
 };
 
-// 提交评审
 // 缓动函数
 const easeInOutQuad = (t) => {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 };
 
-// 自动评分函数（缓动效果）
-const autoScore = (group, targetScores) => {
-  const duration = 1500; // 动画持续时间
-  const startTime = Date.now();
-  const initialScores = { ...group.review.scores };
-  
-  const animate = () => {
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const easedProgress = easeInOutQuad(progress);
-    
-    // 计算当前分数
-    Object.keys(targetScores).forEach(key => {
-      group.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
-    });
-    
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    }
-  };
-  
-  animate();
-};
-
-// 提交评审
-const submitReview = () => {
-  if (currentGroup.value.review.isSubmitted) return;
-  // 模拟提交网络请求
-  setTimeout(() => {
-    currentGroup.value.review.isSubmitted = true;
-    
-    // 检查是否所有组都已完成评估
-    const allSubmitted = groups.every(group => group.review.isSubmitted);
-    if (allSubmitted) {
-      // 所有组都已完成，停止操作，不自动跳转到评分概览页面
-      return;
-    } else {
-      // 等待1.5秒后跳转到下一个组
-      setTimeout(() => {
-        // 跳转到下一个组
-        showAnimation.value = true;
-        setTimeout(() => {
-          currentGroupId.value = currentGroupId.value < 4 ? currentGroupId.value + 1 : 1;
-          showAnimation.value = false;
-          
-          // 在下一组加载完成后，自动开始写评语
-          setTimeout(() => {
-            // 为下一组设置默认分数为0
-            const nextGroup = groups.find(g => g.id === currentGroupId.value);
-            if (nextGroup && !nextGroup.review.isSubmitted) {
-              // 重置分数为0
-              nextGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
-              
-              // 自动开始生成评语（包含评分动画）
-              generateReview();
-            }
-          }, 500);
-        }, 300);
-      }, 1500);
-    }
-  }, 300);
-};
-
-// 生成评审指导意见
+// 重构：自动一键执行全体打分
 const generateReview = async () => {
   if (isGenerating.value) return;
-  
   isGenerating.value = true;
-  
-  const currentGroup = groups.find(g => g.id === currentGroupId.value);
-  if (currentGroup) {
-    // 1. 自动评分（缓动效果）
-    const targetScores = {
-      1: { security: 90, integrity: 85, usability: 80, cost: 75, innovation: 85 },
-      2: { security: 85, integrity: 90, usability: 75, cost: 80, innovation: 90 },
-      3: { security: 80, integrity: 75, usability: 90, cost: 85, innovation: 80 },
-      4: { security: 95, integrity: 90, usability: 70, cost: 75, innovation: 95 }
-    }[currentGroupId.value] || { security: 80, integrity: 80, usability: 80, cost: 80, innovation: 80 };
-    
-    // 重置分数为0
-    currentGroup.review.scores = { security: 0, integrity: 0, usability: 0, cost: 0, innovation: 0 };
-    
-    // 执行自动评分动画（逐条拉动）
-    const scoreAnimationPromise = new Promise((resolve) => {
-      const duration = 1000; // 单个拉条动画持续时间
-      const delayBetween = 300; // 拉条之间的延迟
-      const keys = ['security', 'integrity', 'usability', 'cost', 'innovation'];
-      const initialScores = { ...currentGroup.review.scores };
-      let currentIndex = 0;
-      
-      const animateNext = () => {
-        if (currentIndex >= keys.length) {
-          resolve();
-          return;
-        }
-        
-        const key = keys[currentIndex];
-        const startTime = Date.now();
-        
-        const animate = () => {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easedProgress = easeInOutQuad(progress);
-          
-          // 只更新当前拉条的分数
-          currentGroup.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
-          
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            // 当前拉条动画完成，开始下一个
-            currentIndex++;
-            setTimeout(animateNext, delayBetween);
+
+  const allGroups = [1, 2, 3, 4];
+
+  for (let targetId of allGroups) {
+    const group = groups.find(g => g.id === targetId);
+
+    // 切换到目标组
+    if (currentGroupId.value !== targetId) {
+      showAnimation.value = true;
+      await new Promise(r => setTimeout(r, 300));
+      currentGroupId.value = targetId;
+      showAnimation.value = false;
+      await new Promise(r => setTimeout(r, 500)); // 等待UI就绪
+    }
+
+    if (!group.review.isSubmitted) {
+      // 1. 初始化分数为0 (彻底去除cost)
+      group.review.scores = { security: 0, integrity: 0, usability: 0, innovation: 0 };
+
+      // 2. 预设目标分
+      const targetScores = {
+        1: { security: 90, integrity: 85, usability: 80, innovation: 85 },
+        2: { security: 85, integrity: 90, usability: 75, innovation: 90 },
+        3: { security: 80, integrity: 75, usability: 90, innovation: 80 },
+        4: { security: 95, integrity: 90, usability: 70, innovation: 95 }
+      }[targetId] || { security: 80, integrity: 80, usability: 80, innovation: 80 };
+
+      // 3. 执行拉条动画
+      await new Promise((resolve) => {
+        const duration = 800; // 单个拉条拖动时间
+        const delayBetween = 200; // 拉条间延迟
+        const keys = ['security', 'integrity', 'usability', 'innovation'];
+        const initialScores = { ...group.review.scores };
+        let currentIndex = 0;
+
+        const animateNext = () => {
+          if (currentIndex >= keys.length) {
+            resolve();
+            return;
           }
+
+          const key = keys[currentIndex];
+          const startTime = Date.now();
+
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeInOutQuad(progress);
+
+            group.review.scores[key] = Math.round(initialScores[key] + (targetScores[key] - initialScores[key]) * easedProgress);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              currentIndex++;
+              setTimeout(animateNext, delayBetween);
+            }
+          };
+
+          animate();
         };
-        
-        animate();
+
+        animateNext();
+      });
+
+      // 4. 逐字生成评语
+      const reviewComments = {
+        1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
+        2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
+        3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
+        4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
       };
-      
-      animateNext();
+
+      const comment = reviewComments[targetId] || '该方案整体设计合理，建议在实际部署中进一步验证安全性。';
+      group.review.comment = '';
+
+      await new Promise((resolve) => {
+        let index = 0;
+        const typingInterval = setInterval(() => {
+          if (index < comment.length) {
+            group.review.comment += comment.charAt(index);
+            index++;
+          } else {
+            clearInterval(typingInterval);
+            resolve();
+          }
+        }, 30);
+      });
+
+      // 5. 提交并弹窗提示
+      group.review.isSubmitted = true;
+      const finalScore = calculateTotalScore(group);
+      await showToastMessage(`给第${targetId}组评${finalScore}分成功`, 1500);
+    }
+  }
+
+  // 所有循环结束，推送后端状态更新
+  try {
+    console.log('教师全部评估结束，发送状态至后端');
+    await fetch('/api/state/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "teacher_scored_group": 1 })
     });
-    
-    // 等待评分动画完成
-    await scoreAnimationPromise;
-    
-    // 2. 生成评审指导意见
-    const reviewComments = {
-      1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
-      2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
-      3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
-      4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
-    };
-    
-    const comment = reviewComments[currentGroup.id] || '该方案整体设计合理，建议在实际部署中进一步验证安全性。';
-    currentGroup.review.comment = ''; // 清空原有内容
-    
-    // 逐字输入动画
-    const typingPromise = new Promise((resolve) => {
-      let index = 0;
-      const typingInterval = setInterval(() => {
-        if (index < comment.length) {
-          currentGroup.review.comment += comment.charAt(index);
-          index++;
-        } else {
-          clearInterval(typingInterval);
-          resolve();
-        }
-      }, 50); // 每50毫秒输入一个字符
-    });
-    
-    // 等待文字生成完成
-    await typingPromise;
-    
-    // 3. 自动提交评审
-    isGenerating.value = false;
-    
-    setTimeout(() => {
-      submitReview();
-    }, 1000);
+  } catch (error) {
+    console.error('推送状态至后端失败:', error);
+  }
+
+  isGenerating.value = false;
+};
+
+// 手动单次提交评审
+const submitReview = async () => {
+  if (currentGroup.value.review.isSubmitted) return;
+  currentGroup.value.review.isSubmitted = true;
+
+  const finalScore = calculateTotalScore(currentGroup.value);
+  await showToastMessage(`给第${currentGroupId.value}组评${finalScore}分成功`, 1500);
+  
+  // 检查是否全部评估完成，是则推送状态，否则自动切下一组
+  if (allReviewsSubmitted.value) {
+    try {
+      await fetch('/api/state/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ "teacher_scored_group": 1 })
+      });
+    } catch (e) {
+      console.error(e);
+    }
   } else {
-    isGenerating.value = false;
+    // 自动跳转到下一个未评价的组
+    const nextUnsubmitted = groups.find(g => !g.review.isSubmitted);
+    if (nextUnsubmitted) {
+      showAnimation.value = true;
+      setTimeout(() => {
+        currentGroupId.value = nextUnsubmitted.id;
+        showAnimation.value = false;
+      }, 500);
+    }
   }
 };
 
-// 完成所有评估
+// 完成所有评估并跳转
 const completeEvaluation = () => {
-  // 显示loading弹框
+  if (!allReviewsSubmitted.value) return; // 需要防误触拦截
   isLoading.value = true;
   
-  // 模拟完成评估的逻辑
   setTimeout(() => {
-    // 跳转到TeacherGroupScoreOverview页面
     router.push('/teacher/group-score-overview');
   }, 1500);
 };
 
-
-
 onMounted(() => {
-  // 从路由参数读取初始组信息
   if (route.query.groupId) {
     const id = parseInt(route.query.groupId);
     if (id >= 1 && id <= 4) currentGroupId.value = id;
   }
   
-  // 入场动画
   setTimeout(() => {
     showContent.value = true;
   }, 100);
 });
 
 onBeforeUnmount(() => {
-  // 清理工作
 });
 </script>
 
