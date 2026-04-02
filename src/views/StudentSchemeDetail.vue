@@ -4,13 +4,30 @@
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
         <div class="flex items-center">
-          <span class="text-2xl font-black text-white tracking-wide mr-2">我的架构蓝图：</span>
-          <span class="text-2xl font-black transition-all" :style="{ color: currentGroup.themeColor }">
-            {{ currentGroup.name }} - {{ currentGroup.title }}
-          </span>
-          <span class="ml-4 px-2 py-0.5 border border-gray-600 rounded bg-gray-800 text-xs text-gray-400 font-mono tracking-widest">
-            [ 开发者模式 ]
-          </span>
+          <span class="text-2xl font-black text-white tracking-wide mr-4">方案架构蓝图：</span>
+          
+          <div class="flex items-center bg-gray-800/60 rounded-lg px-2 border border-gray-700 shadow-inner">
+            <button 
+              @click="prevGroup" 
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
+              :disabled="currentGroupId === 1" 
+              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 1}"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <span class="text-xl font-black transition-colors duration-500 mx-4 min-w-[280px] text-center" :style="{ color: currentGroup.themeColor }">
+              {{ currentGroup.name }} - {{ currentGroup.title }}
+            </span>
+            <button 
+              @click="nextGroup" 
+              class="p-1.5 hover:text-white text-gray-400 transition-all duration-300 rounded hover:bg-gray-700" 
+              :disabled="currentGroupId === 4" 
+              :class="{'opacity-30 cursor-not-allowed': currentGroupId === 4}"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+
         </div>
       </div>
       <button 
@@ -20,17 +37,11 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
         </svg>
-        返回我的工作台
+        返回方案AI评估页
       </button>
     </header>
 
-    <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
-      <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
-      <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
-      <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
-    </div>
-
-    <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
       
       <div class="col-span-3 flex flex-col gap-3">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
@@ -105,91 +116,164 @@
       </div>
 
       <div class="col-span-4 flex flex-col gap-3">
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
+        <!-- 学生查看自己小组时显示AI评价 -->
+        <div v-if="isStudentOwnGroup" class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
           
-          <div class="px-5 pt-5 shrink-0 relative z-20 flex justify-between items-start">
+          <div class="px-4 pt-3 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
+            <div class="text-base font-black flex items-center gap-2 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              AI 智能评分与评价
+            </div>
             <div>
-              <div class="text-sm font-black mb-1 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
-                项目专属队歌
-              </div>
-              <div class="text-lg text-white font-black tracking-widest">{{ getAudioFileName(currentGroup.music.audio) }}</div>
-            </div>
-            
-            <div class="text-right max-w-[55%]">
-              <div class="text-[11px] font-black transition-colors duration-500 mb-0.5" :style="{ color: currentGroup.themeColor }">STYLE / 风格解码</div>
-              <div class="font-bold text-white text-sm leading-tight truncate">{{ currentGroup.music.tags }}</div>
-              <div class="text-[10px] mt-1 text-textMuted truncate">{{ currentGroup.music.type }}</div>
+              <span class="text-xs px-2 py-1 rounded bg-blue-900/30 text-blue-400 border border-blue-800/50">AI 分析完成</span>
             </div>
           </div>
           
-          <div class="relative w-full flex-1 overflow-hidden z-10 flex items-center justify-center">
-            <div class="absolute top-1/4 w-[85%] pointer-events-none transition-transform duration-500 ease-in-out"
-                 :style="{ transform: `translateY(calc(-${(currentLyricIndex - 1) * 2.5 + 1.25}rem))` }">
-              <div 
-                    v-for="(lyric, index) in currentLyrics" 
-                    :key="index"
-                    class="h-10 flex items-center justify-center text-center transition-all duration-500 ease-out truncate"
-                    :class="[
-                      index < (currentLyricIndex - 1) - 2 ? 'opacity-0 scale-90' : '', 
-                      index === (currentLyricIndex - 1) - 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', 
-                      index === (currentLyricIndex - 1) - 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', 
-                      index === currentLyricIndex - 1 ? 'font-black text-lg scale-110 opacity-100' : '', 
-                      index === (currentLyricIndex - 1) + 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', 
-                      index === (currentLyricIndex - 1) + 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', 
-                      index > (currentLyricIndex - 1) + 2 ? 'opacity-0 scale-90' : '' 
-                    ]"
-                    :style="{ color: index === currentLyricIndex - 1 ? currentGroup.themeColor : '' }"
-                  >
-                    {{ lyric.text }}
-                  </div>
-            </div>
-          </div>
-
-          <div 
-            class="absolute z-30 cursor-pointer transition-transform duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] drop-shadow-2xl hover:scale-105"
-            :style="{
-              left: 'calc(50% - 210px)',
-              bottom: '220px',
-              transform: `scaleX(-1) ${isPlaying ? 'rotate(34deg)' : 'rotate(10deg)'}`,
-              transformOrigin: '16px 16px'
-            }"
-            @click="togglePlay"
-            title="点击播放/暂停"
-          >
-            <div class="relative w-8 h-8">
-              <div class="absolute inset-0 bg-black/40 rounded-full scale-125 blur-[3px] translate-y-1"></div>
-              <div class="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 rounded-full border border-gray-300 shadow-md"></div>
-              <div class="absolute inset-[5px] bg-gradient-to-tr from-gray-700 to-gray-900 rounded-full shadow-inner flex items-center justify-center border border-gray-600">
-                <div class="w-1.5 h-1.5 bg-gradient-to-br from-white to-gray-400 rounded-full shadow-sm"></div>
-              </div>
-            </div>
-            <div class="absolute top-[16px] left-[12px] w-2 h-[95px] bg-gradient-to-r from-gray-300 via-white to-gray-300 shadow-sm border-x border-gray-200/50"></div>
-            <div class="absolute top-[110px] left-[12px] w-2 origin-top -rotate-[30deg]">
-              <div class="absolute -top-[4px] left-0 w-2 h-2 bg-gradient-to-br from-white to-gray-300 rounded-full shadow-sm"></div>
-              <div class="w-full h-[75px] bg-gradient-to-r from-gray-300 via-white to-gray-300 shadow-sm border-x border-gray-200/50"></div>
-              <div class="absolute top-[71px] left-1/2 -translate-x-1/2 flex flex-col items-center">
-                <div class="w-3.5 h-2.5 bg-gradient-to-b from-gray-400 to-gray-500 rounded-t-sm shadow-inner"></div>
-                <div class="w-8 h-[42px] bg-gradient-to-b from-gray-50 to-gray-200 rounded-[4px] shadow-lg flex justify-center gap-1.5 pt-3 pb-2 border-t border-b-2 border-x border-gray-100 border-b-gray-400">
-                  <div class="w-[2.5px] h-full bg-gray-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] rounded-full"></div>
-                  <div class="w-[2.5px] h-full bg-gray-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] rounded-full"></div>
+          <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
+            
+            <!-- 雷达图 -->
+            <div class="bg-darkBg rounded-lg border border-borderColor p-4">
+              <div class="text-sm font-bold text-gray-300 mb-3">方案能力雷达图</div>
+              <div class="w-full h-[200px] flex items-center justify-center">
+                <div class="w-full h-full relative">
+                  <!-- 简化版雷达图 -->
+                  <svg class="w-full h-full" viewBox="0 0 200 200">
+                    <!-- 网格 -->
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="40" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="20" fill="none" stroke="#2d353e" stroke-width="1" />
+                    
+                    <!-- 轴线 -->
+                    <line x1="100" y1="20" x2="100" y2="180" stroke="#2d353e" stroke-width="1" />
+                    <line x1="20" y1="100" x2="180" y2="100" stroke="#2d353e" stroke-width="1" />
+                    <line x1="46.5" y1="46.5" x2="153.5" y2="153.5" stroke="#2d353e" stroke-width="1" />
+                    <line x1="153.5" y1="46.5" x2="46.5" y2="153.5" stroke="#2d353e" stroke-width="1" />
+                    
+                    <!-- 数据区域 -->
+                    <polygon 
+                      :points="getRadarPoints(currentGroup.review.scores)" 
+                      fill="rgba(59, 130, 246, 0.2)" 
+                      stroke="#3b82f6" 
+                      stroke-width="2" 
+                    />
+                  </svg>
                 </div>
               </div>
             </div>
-          </div>
 
-          <audio ref="audioElement" class="hidden" preload="metadata"></audio>
-
-          <div 
-            class="absolute w-[400px] h-[400px] rounded-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)] border-[8px] border-gray-900 flex items-center justify-center vinyl-spin z-0" 
-            :class="{ 'vinyl-playing': isPlaying }"
-            style="left: calc(50% - 200px); bottom: -180px;"
-          >
-            <div class="absolute inset-0 rounded-full" style="background: repeating-radial-gradient(#1f2937 0, #1f2937 5px, #111827 6px, #111827 8px);"></div>
-            <div class="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-white/10 to-transparent pointer-events-none"></div>
-            <div class="relative w-20 h-20 rounded-full shadow-inner flex items-center justify-center transition-colors duration-500 z-10" :style="{ backgroundColor: currentGroup.themeColor }">
-              <div class="w-4 h-4 rounded-full bg-darkBg border border-black/50 shadow-inner"></div>
+            <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
+              <span class="text-sm font-medium text-textMuted">AI 计算综合得分</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
+                  {{ calculateTotalScore(currentGroup) }}
+                </span>
+                <span class="text-lg text-gray-500 font-bold">/100</span>
+              </div>
             </div>
+
+            <div class="flex flex-col gap-2 flex-1">
+              <label class="text-sm font-bold text-gray-300 flex justify-between">
+                <span>AI 智能评价</span>
+                <span class="text-xs font-normal text-gray-500">系统自动分析</span>
+              </label>
+              <div class="w-full flex-1 min-h-[90px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 disabled:opacity-60">
+                <div v-if="currentGroupId === 1">
+                  <p class="mb-2"><span class="text-green-400 font-bold">✓ 优势：</span>方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。</p>
+                  <p class="mb-2"><span class="text-yellow-400 font-bold">⚠ 改进空间：</span>建议关注硬件随机数生成器的实现细节，以提高系统安全性。</p>
+                  <p><span class="text-blue-400 font-bold">📊 综合评价：</span>该方案针对STM32L432硬件平台进行了充分优化，在保证安全性能的同时，有效控制了功耗和资源占用，适合作为轻量级无人机加密解决方案。</p>
+                </div>
+                <div v-else-if="currentGroupId === 2">
+                  <p class="mb-2"><span class="text-green-400 font-bold">✓ 优势：</span>侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。</p>
+                  <p class="mb-2"><span class="text-yellow-400 font-bold">⚠ 改进空间：</span>防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。</p>
+                  <p><span class="text-blue-400 font-bold">📊 综合评价：</span>该方案在安全性方面表现突出，特别适合对安全要求较高的应用场景，建议在实际部署前进行充分的性能测试。</p>
+                </div>
+                <div v-else-if="currentGroupId === 3">
+                  <p class="mb-2"><span class="text-green-400 font-bold">✓ 优势：</span>抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。</p>
+                  <p class="mb-2"><span class="text-yellow-400 font-bold">⚠ 改进空间：</span>需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。</p>
+                  <p><span class="text-blue-400 font-bold">📊 综合评价：</span>该方案在时效性和安全性方面取得了良好平衡，能够有效防止恶意重放攻击，适合对实时性要求较高的无人机控制场景。</p>
+                </div>
+                <div v-else-if="currentGroupId === 4">
+                  <p class="mb-2"><span class="text-green-400 font-bold">✓ 优势：</span>采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。</p>
+                  <p class="mb-2"><span class="text-yellow-400 font-bold">⚠ 改进空间：</span>后量子算法的计算复杂度较高，可能会对系统性能产生影响。</p>
+                  <p><span class="text-blue-400 font-bold">📊 综合评价：</span>该方案具有长远的安全视野，适合对未来安全性有较高要求的场景，建议在硬件平台上进行优化以提升性能。</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+        <!-- 学生查看其他小组时显示教师评价和互评输入 -->
+        <div v-else class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
+          
+          <div class="px-4 pt-3 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
+            <div class="text-base font-black flex items-center gap-2 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+              小组互评
+            </div>
+            <div>
+              <span v-if="currentGroup.review.isSubmitted" class="text-xs px-2 py-1 rounded bg-green-900/30 text-green-400 border border-green-800/50">已完成评估</span>
+              <span v-else class="text-xs px-2 py-1 rounded bg-yellow-900/30 text-yellow-400 border border-yellow-800/50">待评估打分</span>
+            </div>
+          </div>
+          
+          <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
+            
+            <div class="bg-darkBg rounded-lg border border-borderColor p-3 space-y-3">
+              <div v-for="dim in dimensions" :key="dim.key" class="flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-300 w-18">{{ dim.label }}</span>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="100" 
+                  v-model.number="currentGroup.review.scores[dim.key]" 
+                  class="flex-1 mx-3 custom-range" 
+                  :style="{ '--range-color': currentGroup.themeColor }"
+                  :disabled="currentGroup.review.isSubmitted"
+                >
+                <span class="text-base font-mono font-bold w-8 text-right" :style="{ color: currentGroup.themeColor }">
+                  {{ currentGroup.review.scores[dim.key] }}
+                </span>
+              </div>
+            </div>
+
+            <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
+              <span class="text-sm font-medium text-textMuted">综合得分</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
+                  {{ calculateTotalScore(currentGroup) }}
+                </span>
+                <span class="text-lg text-gray-500 font-bold">/100</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2 flex-1">
+              <label class="text-sm font-bold text-gray-300 flex justify-between">
+                <span>小组互评意见</span>
+                <span class="text-xs font-normal text-gray-500">支持 Markdown</span>
+              </label>
+              <textarea 
+                v-model="currentGroup.review.comment" 
+                :disabled="currentGroup.review.isSubmitted"
+                class="w-full flex-1 min-h-[90px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 focus:outline-none transition-colors resize-none disabled:opacity-60 disabled:cursor-not-allowed" 
+                :style="{ focusBorderColor: currentGroup.themeColor }"
+                placeholder="请输入对该方案架构的优缺点评价、后续迭代建议等内容..."
+              ></textarea>
+            </div>
+
+            <button 
+              @click="submitReview" 
+              :disabled="currentGroup.review.isSubmitted"
+              class="w-full py-2.5 rounded-lg text-white font-bold text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mt-auto shrink-0"
+              :class="currentGroup.review.isSubmitted ? 'bg-gray-800 text-gray-500 cursor-not-allowed shadow-none border border-gray-700' : 'hover:brightness-110 active:scale-[0.98]'"
+              :style="{ backgroundColor: currentGroup.review.isSubmitted ? '' : currentGroup.themeColor }"
+            >
+              <svg v-if="!currentGroup.review.isSubmitted" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              <svg v-else class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              {{ currentGroup.review.isSubmitted ? '已提交互评' : '提交小组互评' }}
+            </button>
+
           </div>
         </div>
       </div>
@@ -198,43 +282,28 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-
-// 导入音频文件 (请确保路径正确)
-import audioLight from '../assets/audio/轻量级.mp3';
-import audioSideChannel from '../assets/audio/侧信道.mp3';
-import audioAntiReplay from '../assets/audio/抗重放.mp3';
-import audioPostQuantum from '../assets/audio/后量子算法.mp3';
-
-const getAudioFileName = (audio) => {
-  if (typeof audio === 'string') {
-    const fileName = audio.split('/').pop().replace(/\.mp3$/, '');
-    return decodeURIComponent(fileName);
-  } else if (audio && typeof audio === 'object') {
-    const url = audio.default || audio;
-    if (typeof url === 'string') {
-      const fileName = url.split('/').pop().replace(/\.mp3$/, '');
-      return decodeURIComponent(fileName);
-    }
-  }
-  if (audio === audioLight) return '轻量级';
-  if (audio === audioSideChannel) return '侧信道';
-  if (audio === audioAntiReplay) return '抗重放';
-  if (audio === audioPostQuantum) return '后量子算法';
-  return '';
-};
 
 const router = useRouter();
 const route = useRoute();
 
-// 修改：返回学生工作台
+// 返回学生方案上传页面
 const backToWorkspace = () => {
-  // router.push('/student/task-split');
-  router.back();
+  router.push('/student/scheme-upload');
 };
 
-const groups = [
+// 预设打分维度
+const dimensions = [
+  { key: 'security', label: '安全保密性' },
+  { key: 'integrity', label: '数据完整性' },
+  { key: 'usability', label: '系统可用性' },
+  // { key: 'cost', label: '硬件成本控制' },
+  { key: 'innovation', label: '方案创新性' }
+];
+
+// 初始化带有 review 数据的 groups
+const groups = reactive([
   {
     id: 1,
     name: '第一组',
@@ -244,27 +313,6 @@ const groups = [
     themeColor: '#3b82f6', 
     desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
     hardware: 'STM32L432',
-    music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: audioLight, lyrics: [
-      { text: " ", duration: 0 },  
-      { text: "轻量级", duration: 9500 },
-      { text: "我漫步在月光之下", duration: 5000 },
-      { text: "微风轻抚着我的脸颊", duration: 4500 },
-      { text: "宁静在心中慢慢流淌", duration: 5000 },
-      { text: "时光仿佛停止了步伐", duration: 4000 },
-      { text: "这宁静让我心醉", duration: 4600 },
-      { text: "让我忘记所有疲惫", duration: 7100 },
-      { text: "这宁静让我沉醉", duration: 5500 },
-      { text: "让我在这夜色中静美", duration: 12000 },
-      { text: "我沉醉在这夜色中心", duration: 9000 },
-      { text: "微风轻抚着我的脸颊", duration: 10000 },
-      { text: "宁静在心中缓缓流淌", duration: 9800 },
-      { text: "时光仿佛凝固了年华", duration: 6300 },
-      { text: "这宁静让我心醉", duration: 5000 },
-      { text: "让我忘记所有疲惫", duration: 5500 },
-      { text: "这宁静让我沉醉", duration: 4500 },
-      { text: "让我在这夜色中静美", duration: 5500 },
-      { text: "end~", duration: 15000 }
-    ] },
     archLayers: [
       { name: '应用层', desc: '飞行控制指令、航拍/定位数据输入输出', highlight: false },
       { name: '安全层', desc: '身份认证、数据加解密、密钥协商', highlight: true },
@@ -275,7 +323,13 @@ const groups = [
     algorithms: [
       { label: '轻量级数据加密', name: 'PRESENT 算法', desc: '64bit分组/80bit密钥，SPN结构31轮迭代。控制指令采用 ECB，影像数据采用 CBC 模式。' },
       { label: '双向身份认证', name: 'ECC (secp256r1)', desc: '无人机与终端基于 ECC 验证双方合法性，认证通过后动态协商生成一次一密的会话密钥。' }
-    ]
+    ],
+    // 教师评审数据
+    review: {
+      scores: { security: 85, integrity: 80, usability: 90, cost: 95, innovation: 75 },
+      comment: '',
+      isSubmitted: false
+    }
   },
   {
     id: 2,
@@ -286,19 +340,6 @@ const groups = [
     themeColor: '#ef4444', 
     desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
     hardware: 'STM32L432',
-    music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: audioSideChannel, lyrics: [
-      { text: " ", duration: 0 },  
-      { text: "侧信道", duration: 1200 },
-      { text: "挣脱了羁绊", duration: 3000 },
-      { text: "我在网络中跳跃", duration: 3300 },
-      { text: "你听那轻微的高频正在掩埋", duration: 3700 },
-      { text: "动荡的节拍在流淌", duration: 3300 },
-      { text: "我在虚拟世界探索远方", duration: 3500 },
-      { text: "那瞬间光芒在闪掉", duration: 3500 },
-      { text: "你是我在网络中的心跳", duration: 3500 },
-      { text: "穿越比特间起伏的信号", duration: 3500 },
-      { text: "感受这轻微的拥抱", duration: 3500 }
-    ] },
     archLayers: [
       { name: '安全核心层', desc: '通信加密、身份认证、侧信道防护（掩码+恒定时间）', highlight: true },
       { name: '通信接口层', desc: 'WiFi / 蓝牙数据收发、帧封装', highlight: false },
@@ -308,7 +349,12 @@ const groups = [
     algorithms: [
       { label: '侧信道防护加密', name: 'PRESENT + 掩码机制', desc: '将敏感数据与随机掩码异或以切断密钥关联，算法无分支跳转并随机插入空操作打乱功耗特征。' },
       { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
-    ]
+    ],
+    review: {
+      scores: { security: 95, integrity: 90, usability: 75, cost: 70, innovation: 85 },
+      comment: '',
+      isSubmitted: false
+    }
   },
   {
     id: 3,
@@ -319,27 +365,6 @@ const groups = [
     themeColor: '#f59e0b', 
     desc: '有效阻止攻击者截取、重复发送旧数据包干扰正常通信。引入滑动窗口计数器机制，收发双方维护严格同步计数，确保指令唯一有效。',
     hardware: 'STM32L432',
-    music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
-      { text: "", duration: 0 },
-      { text: "抗重放", duration: 8200 },
-      { text: "单行道上 时针在倒转", duration: 3950 },
-      { text: "指针划破 沉默的河岸", duration: 3650 },
-      { text: "数字在闪烁 倒数着遗憾", duration: 3900 },
-      { text: "却停不下 前进的船", duration: 3200 },
-      { text: "重复的风景 在倒退", duration: 3400 },
-      { text: "心跳却加速 如潮水", duration: 3950 },
-      { text: "把昨天装进 漂流瓶", duration: 3800 },
-      { text: "让未来在 掌心沸腾", duration: 20000 },
-      { text: "单行道上 黎明在追赶", duration: 3800 },
-      { text: "路灯把影子 切成两半", duration: 3800 },
-      { text: "呼吸在发烫 脉搏在震颤", duration: 3900 },
-      { text: "脚步丈量着 地平线", duration: 3800 },
-      { text: "年轮在胸口 刻下疤", duration: 3800 },
-      { text: "时光却催促着 发芽", duration: 3900 },
-      { text: "把叹息折成 纸飞机", duration: 3900 },
-      { text: "让远方在 云端呼吸", duration: 8300 },
-      { text: "end", duration: 29700 }
-    ] },
     archLayers: [
       { name: '安全层', desc: '数据加解密、身份校验、抗重放计数管理', highlight: true },
       { name: '通信层', desc: 'WiFi / 蓝牙数据收发、数据包封装', highlight: true },
@@ -349,7 +374,12 @@ const groups = [
     algorithms: [
       { label: '通信安全加密', name: 'PRESENT 算法', desc: '硬件实现简单、资源占用低，对控制指令、航拍与定位数据进行全程加密传输。' },
       { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
-    ]
+    ],
+    review: {
+      scores: { security: 85, integrity: 95, usability: 85, cost: 80, innovation: 75 },
+      comment: '',
+      isSubmitted: false
+    }
   },
   {
     id: 4,
@@ -360,9 +390,6 @@ const groups = [
     themeColor: '#8b5cf6', 
     desc: '面向未来量子计算环境，采用抗量子破解的轻量级后量子密码机制，摒弃传统易被攻破的方案，抵御未来的量子暴力破解威胁。',
     hardware: 'STM32L432',
-    music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: audioPostQuantum, lyrics: [
-      { text: "纯音乐。。。", duration: 30000 },
-    ] },
     archLayers: [
       { name: '安全层', desc: '后量子密钥协商、数据加解密、通信安全封装', highlight: true },
       { name: '通信层', desc: 'WiFi / 蓝牙无线数据收发、帧格式处理', highlight: true },
@@ -372,161 +399,146 @@ const groups = [
     algorithms: [
       { label: '密钥交换算法', name: 'CRYSTALS-Kyber', desc: '基于格基(Lattice)难题的轻量级后量子加密算法，不依赖传统ECC/RSA，抗量子攻击且运算速度快。' },
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
-    ]
-  }
-];
-
-// 从 localStorage 读取组信息
-const currentGroupId = ref(1);
-const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
-
-// === 核心修改：阻塞等待与轮询逻辑 ===
-const isEvaluated = ref(false);
-let pollingTimer = null;
-
-const fetchState = async () => {
-  try {
-    const res = await fetch('/api/state');
-    const state = await res.json();
-    if (state.ai_evaluated === 1) {
-      isEvaluated.value = true;
-      if (pollingTimer) clearInterval(pollingTimer);
+    ],
+    review: {
+      scores: { security: 98, integrity: 90, usability: 60, cost: 50, innovation: 95 },
+      comment: '',
+      isSubmitted: false
     }
-  } catch (error) {
-    // 静默处理，避免影响页面
   }
+]);
+
+// 状态管理
+const currentGroupId = ref(1);
+const studentGroupId = ref(null);
+const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
+const isStudentOwnGroup = computed(() => {
+  return studentGroupId.value && currentGroupId.value === studentGroupId.value;
+});
+
+// 分组切换逻辑
+const prevGroup = () => {
+  if (currentGroupId.value > 1) currentGroupId.value--;
+};
+const nextGroup = () => {
+  if (currentGroupId.value < 4) currentGroupId.value++;
+};
+
+// 计算综合得分
+const calculateTotalScore = (group) => {
+  if (!group || !group.review) return 0;
+  const s = group.review.scores;
+  return Math.round((s.security + s.integrity + s.usability + s.cost + s.innovation) / 5);
+};
+
+// 提交评审
+const submitReview = () => {
+  if (currentGroup.value.review.isSubmitted) return;
+  // 模拟提交网络请求
+  setTimeout(() => {
+    currentGroup.value.review.isSubmitted = true;
+    alert(`已成功录入 ${currentGroup.value.name} 的综合评审结果！`);
+  }, 300);
+};
+
+// 计算雷达图点坐标
+const getRadarPoints = (scores) => {
+  const centerX = 100;
+  const centerY = 100;
+  const maxRadius = 80;
+  
+  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
+  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
+  const points = [];
+  
+  dimensions.forEach((key, index) => {
+    const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
+    const value = (scores[key] || 0) / 100;
+    const radius = value * maxRadius;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+    points.push(`${x},${y}`);
+  });
+  
+  return points.join(' ');
 };
 
 onMounted(() => {
-  // 从 localStorage 读取组信息
+  // 从localStorage获取学生小组信息
   const storedInfo = localStorage.getItem('selectedGroupInfo');
   if (storedInfo) {
     const groupInfo = JSON.parse(storedInfo);
     if (groupInfo.groupId) {
-      currentGroupId.value = groupInfo.groupId;
+      studentGroupId.value = parseInt(groupInfo.groupId);
     }
   }
   
-  currentLyricIndex.value = 1; 
-  loadCurrentGroupAudio(); 
-  
-  if (audioElement.value) {
-    audioElement.value.addEventListener('ended', handleAudioEnded);
+  // 从路由参数读取初始组信息
+  if (route.query.groupId) {
+    const id = parseInt(route.query.groupId);
+    if (id >= 1 && id <= 4) currentGroupId.value = id;
   }
-
-  // 开启状态机轮询
-  fetchState();
-  pollingTimer = setInterval(fetchState, 1000);
-});
-
-const currentLyrics = computed(() => currentGroup.value?.music?.lyrics || []);
-const currentLyricIndex = ref(0);
-let lyricTimer = null;
-const isPlaying = ref(false);
-const audioElement = ref(null);
-
-const togglePlay = () => {
-  isPlaying.value = !isPlaying.value;
-  if (isPlaying.value) {
-    startLyricTimer();
-    playAudio();
-  } else {
-    stopLyricTimer();
-    pauseAudio();
-  }
-};
-
-const playAudio = () => {
-  if (audioElement.value) {
-    audioElement.value.play().catch(error => console.error('音频播放失败:', error));
-  }
-};
-
-const pauseAudio = () => {
-  if (audioElement.value) {
-    audioElement.value.pause();
-  }
-};
-
-const loadAudio = (audioUrl) => {
-  if (audioElement.value) {
-    audioElement.value.src = audioUrl;
-  }
-};
-
-const loadCurrentGroupAudio = () => {
-  if (currentGroup.value && currentGroup.value.music && currentGroup.value.music.audio) {
-    loadAudio(currentGroup.value.music.audio);
-  }
-};
-
-const startLyricTimer = () => {
-  if (!lyricTimer) {
-    const playNextLyric = () => {
-      const currentDuration = currentLyrics.value[currentLyricIndex.value].duration;
-      currentLyricIndex.value += 1;
-      if (currentLyricIndex.value >= currentLyrics.value.length) {
-        currentLyricIndex.value = 0;
-      }
-      lyricTimer = setTimeout(playNextLyric, currentDuration);
-    };
-    lyricTimer = setTimeout(playNextLyric, 0); 
-  }
-};
-
-const stopLyricTimer = () => {
-  if (lyricTimer) {
-    clearTimeout(lyricTimer);
-    lyricTimer = null;
-  }
-};
-
-const handleAudioEnded = () => {
-  isPlaying.value = false;
-  currentLyricIndex.value = 1; 
-  stopLyricTimer(); 
-};
-
-onUnmounted(() => {
-  if (lyricTimer) clearTimeout(lyricTimer);
-  if (audioElement.value) {
-    audioElement.value.removeEventListener('ended', handleAudioEnded);
-  }
-  if (pollingTimer) clearInterval(pollingTimer);
 });
 </script>
 
 <style scoped>
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
+/* 继承并微调颜色 */
+.bg-darkBg { background-color: #121417; }
+.bg-panelBg { background-color: #1c2126; }
+.bg-cardInnerBg { background-color: #232930; }
+.border-borderColor { border-color: #2d353e; }
+.text-textMain { color: #d1d5db; }
+.text-textMuted { color: #6b7280; }
 
-@keyframes spin-record {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-.vinyl-spin {
-  animation: spin-record 5s linear infinite; 
-  animation-play-state: paused;
-}
-.vinyl-playing {
-  animation-play-state: running;
-}
-
+/* 入场动画 */
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 .animate-fade-in-up {
   animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
+}
+
+/* 自定义滚动条 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* 自定义 Range 滑块样式，使其带有科技感 */
+.custom-range {
+  -webkit-appearance: none;
+  height: 6px;
+  background: #2d353e;
+  border-radius: 4px;
+  outline: none;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--range-color);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--range-color);
+  transition: transform 0.1s;
+}
+.custom-range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+.custom-range:disabled::-webkit-slider-thumb {
+  background: #6b7280;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 </style>

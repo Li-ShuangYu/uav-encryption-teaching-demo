@@ -9,7 +9,7 @@
         </div>
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
-            <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
+            <select v-model="selectedMenuItem" @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
                 <option v-for="item in menuItems" :key="item.value" :value="item.value">
                     {{ item.label }}
                 </option>
@@ -21,7 +21,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 2v4M8 2v4M3 10h18"></path></svg>
                 <span>{{ currentTime }}</span>
             </div>
-            <button class="bg-accentGreenDark/20 text-accentGreen border border-accentGreen px-3 py-1.5 rounded text-xs hover:bg-accentGreen/30 transition">
+            <button @click="refreshData" class="bg-accentGreenDark/20 text-accentGreen border border-accentGreen px-3 py-1.5 rounded text-xs hover:bg-accentGreen/30 transition">
                 刷新数据
             </button>
         </div>
@@ -40,6 +40,7 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const currentTime = ref('')
+const selectedMenuItem = ref('')
 
 // 路由与阶段映射
 const routeStageMap = {
@@ -89,7 +90,42 @@ onMounted(() => {
   timer = setInterval(() => {
     currentTime.value = formatDateTime()
   }, 1000)
+  
+  // 初始化选中的菜单项
+  updateSelectedMenuItem()
+  
+  // 监听路由变化
+  router.afterEach(() => {
+    updateSelectedMenuItem()
+  })
 })
+
+// 更新选中的菜单项
+const updateSelectedMenuItem = () => {
+  selectedMenuItem.value = route.path
+}
+
+// 刷新数据
+const refreshData = () => {
+  // 模拟刷新数据的逻辑
+  console.log('刷新数据中...')
+  // 这里可以添加实际的刷新逻辑，比如重新获取数据
+  
+  // 显示刷新提示
+  const refreshBtn = document.querySelector('button:contains("刷新数据")')
+  if (refreshBtn) {
+    const originalText = refreshBtn.textContent
+    refreshBtn.textContent = '刷新中...'
+    refreshBtn.disabled = true
+    
+    // 模拟刷新完成
+    setTimeout(() => {
+      refreshBtn.textContent = originalText
+      refreshBtn.disabled = false
+      console.log('数据刷新完成')
+    }, 1000)
+  }
+}
 
 onBeforeUnmount(() => {
   if (timer) {

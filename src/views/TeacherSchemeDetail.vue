@@ -118,7 +118,7 @@
       <div class="col-span-4 flex flex-col gap-3">
         <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
           
-          <div class="px-5 pt-4 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
+          <div class="px-4 pt-3 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
             <div class="text-base font-black flex items-center gap-2 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
               教师综合打分与评价
@@ -129,17 +129,17 @@
             </div>
           </div>
           
-          <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-5 gap-5">
+          <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
             
-            <div class="bg-darkBg rounded-lg border border-borderColor p-4 space-y-4">
+            <div class="bg-darkBg rounded-lg border border-borderColor p-3 space-y-3">
               <div v-for="dim in dimensions" :key="dim.key" class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-300 w-20">{{ dim.label }}</span>
+                <span class="text-sm font-medium text-gray-300 w-18">{{ dim.label }}</span>
                 <input 
                   type="range" 
                   min="0" 
                   max="100" 
                   v-model.number="currentGroup.review.scores[dim.key]" 
-                  class="flex-1 mx-4 custom-range" 
+                  class="flex-1 mx-3 custom-range" 
                   :style="{ '--range-color': currentGroup.themeColor }"
                   :disabled="currentGroup.review.isSubmitted"
                 >
@@ -152,7 +152,7 @@
             <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
               <span class="text-sm font-medium text-textMuted">系统计算综合得分</span>
               <div class="flex items-baseline gap-1">
-                <span class="text-4xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 20px ${currentGroup.themeColor}60` }">
+                <span class="text-3xl font-black transition-colors duration-500" :style="{ color: currentGroup.themeColor, textShadow: `0 0 15px ${currentGroup.themeColor}60` }">
                   {{ calculateTotalScore(currentGroup) }}
                 </span>
                 <span class="text-lg text-gray-500 font-bold">/100</span>
@@ -162,12 +162,12 @@
             <div class="flex flex-col gap-2 flex-1">
               <label class="text-sm font-bold text-gray-300 flex justify-between">
                 <span>评审指导意见</span>
-                <span class="text-xs font-normal text-gray-500">支持 Markdown 简写</span>
+                <span class="text-xs font-normal text-gray-500">支持 Markdown</span>
               </label>
               <textarea 
                 v-model="currentGroup.review.comment" 
                 :disabled="currentGroup.review.isSubmitted"
-                class="w-full flex-1 min-h-[100px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 focus:outline-none transition-colors resize-none disabled:opacity-60 disabled:cursor-not-allowed" 
+                class="w-full flex-1 min-h-[90px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 focus:outline-none transition-colors resize-none disabled:opacity-60 disabled:cursor-not-allowed" 
                 :style="{ focusBorderColor: currentGroup.themeColor }"
                 placeholder="请输入对该方案架构的优缺点评价、后续迭代建议等内容..."
               ></textarea>
@@ -176,7 +176,7 @@
             <button 
               @click="submitReview" 
               :disabled="currentGroup.review.isSubmitted"
-              class="w-full py-3 rounded-lg text-white font-bold text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mt-auto shrink-0"
+              class="w-full py-2.5 rounded-lg text-white font-bold text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 mt-auto shrink-0"
               :class="currentGroup.review.isSubmitted ? 'bg-gray-800 text-gray-500 cursor-not-allowed shadow-none border border-gray-700' : 'hover:brightness-110 active:scale-[0.98]'"
               :style="{ backgroundColor: currentGroup.review.isSubmitted ? '' : currentGroup.themeColor }"
             >
@@ -238,7 +238,7 @@ const groups = reactive([
     // 教师评审数据
     review: {
       scores: { security: 85, integrity: 80, usability: 90, cost: 95, innovation: 75 },
-      comment: '方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节。',
+      comment: '',
       isSubmitted: false
     }
   },
