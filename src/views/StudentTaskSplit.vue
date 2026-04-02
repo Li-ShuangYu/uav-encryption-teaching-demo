@@ -14,7 +14,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
             导出任务书
           </button>
-          <button @click="goToSchemeUpload" :class="['px-4 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2', getButtonColorClass()]">
+          <button @click="goToSchemeUpload" :class="['px-8 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2 animate-glow', getButtonColorClass()]">
             方案提交
           </button>
         </div>
@@ -30,21 +30,18 @@
             <div class="bg-cardInnerBg rounded-xl border p-6 relative overflow-hidden transition-all duration-300" :class="groupInfo ? getColorClass('border') : 'border-gray-700'">
               <div class="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none opacity-5" :class="groupInfo ? getColorClass('bg') : 'bg-gray-600'"></div>
               
-              <div class="flex justify-between items-start mb-6 relative z-10">
+              <div class="flex justify-between items-center mb-6 relative z-10">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl text-white flex items-center justify-center text-sm font-bold shadow-lg transition-colors duration-300" :class="groupInfo ? getColorClass('bg') : 'bg-gray-600'">
                     组 {{ groupInfo?.groupId || 1 }}
                   </div>
-                  <div>
-                    <h2 class="text-2xl font-bold text-white">{{ groupInfo?.groupName || '低功耗优化方向' }}</h2>
-                    <div class="flex items-center mt-1.5 gap-2">
-                      <span class="text-xs font-medium px-2 py-0.5 rounded border flex items-center transition-colors duration-300" :class="groupInfo ? getColorClass('tag') : 'border-gray-600 bg-gray-800 text-gray-400'">
-                        <span class="w-1.5 h-1.5 rounded-full mr-1.5 animate-pulse" :class="groupInfo ? getColorClass('dot') : 'bg-gray-500'"></span>
-                        任务已确认
-                      </span>
-                      <span class="text-xs text-textMuted">ID: {{ taskId }}</span>
-                    </div>
-                  </div>
+                  <h2 class="text-2xl font-bold text-white">{{ groupInfo?.groupName || '低功耗优化方向' }}</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-lg font-bold px-4 py-2 rounded-full flex items-center transition-colors duration-300 animate-breathe" :class="groupInfo ? getColorClass('tag') : 'border-gray-600 bg-gray-800 text-gray-400'">
+                    组 {{ groupInfo?.groupId || 1 }} 任务已确认
+                  </span>
+                  <span class="text-xs text-textMuted">ID: {{ taskId }}</span>
                 </div>
               </div>
 
@@ -427,5 +424,35 @@ const goToSchemeUpload = () => {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #4b5563; 
+}
+
+/* 自定义发光动画 */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.7), 0 0 60px rgba(59, 130, 246, 0.5);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* 呼吸光效动画 */
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
 }
 </style>

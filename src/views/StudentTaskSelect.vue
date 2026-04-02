@@ -16,7 +16,7 @@
       <header v-if="showContent" class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
         <div class="flex items-center gap-3">
           <div class="w-1 h-6 rounded-full" :class="selectedGroupId ? getColorClass('bg') : 'bg-gray-500'"></div>
-          <h1 class="text-xl font-bold text-white tracking-wide">方案设计-任务接收与选择</h1>
+          <h1 class="text-xl font-bold text-white tracking-wide">需求分析-任务接收与选择</h1>
         </div>
         <div class="flex items-center gap-4">
           <button 
