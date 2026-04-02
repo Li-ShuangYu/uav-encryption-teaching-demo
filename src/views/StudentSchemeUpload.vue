@@ -346,7 +346,7 @@ const handleUpload = async () => {
     const stateKey = `scheme_uploaded_g${groupId}`;
     
     // 发送真实的网络请求更新全局状态机
-    await fetch('http://localhost:3000/api/state/update', {
+    await fetch('/api/state/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ [stateKey]: 1 })

@@ -401,12 +401,12 @@ const handleSubmit = async () => {
     requestBody[stateKey] = 1;
     
     console.log('正在发送请求到后端:', {
-      url: 'http://localhost:3000/api/state/update',
+      url: '/api/state/update',
       stateKey: stateKey,
       requestBody: requestBody
     });
     
-    await fetch('http://localhost:3000/api/state/update', {
+    await fetch('/api/state/update', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
