@@ -131,7 +131,7 @@
                         <svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
                         AI助教分析
                       </span>
-                      <p class="text-textMuted text-[12px] leading-snug">建议采用SM4国密算法结合轻量级掩码防护技术，增强侧信道攻击抵御能力。</p>
+                      <p class="text-textMuted text-[12px] leading-snug">建议采用AES算法结合轻量级掩码防护技术，增强侧信道攻击抵御能力。</p>
                     </div>
                   </div>
                 </div>
@@ -163,7 +163,7 @@
                         <svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"></path></svg>
                         AI助教分析
                       </span>
-                      <p class="text-textMuted text-[12px] leading-snug">推荐使用SM4加密算法配合动态随机数抗重放认证机制，确保指令唯一性。</p>
+                      <p class="text-textMuted text-[12px] leading-snug">推荐使用AES加密算法配合动态随机数抗重放认证机制，确保指令唯一性。</p>
                     </div>
                   </div>
                 </div>

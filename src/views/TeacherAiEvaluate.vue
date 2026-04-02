@@ -156,7 +156,7 @@ const groups = reactive([
     id: 2, name: '第二组', color: '#ef4444', score: 78, progress: 0, isLoading: true, delay: 600,
     values: [85, 80, 40, 95, 60],
     conclusion: '采用侧信道防护方案，安全性理论值高，但非对称算法在终端性能消耗过大。',
-    suggestion: '必须改为混合加密体制（RSA+AES/SM4），避免高频通信性能瓶颈。'
+    suggestion: '必须改为混合加密体制（RSA+AES），避免高频通信性能瓶颈。'
   },
   { 
     id: 3, name: '第三组', color: '#f59e0b', score: 85, progress: 0, isLoading: true, delay: 900,

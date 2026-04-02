@@ -116,7 +116,7 @@
                 <p class="text-gray-400 text-[11.5px] leading-snug">已补充侧信道防护关键点，同步下发掩码防护技术参考资料及工程优化技巧。</p>
               </div>
               <div class="bg-[#16181d] p-2.5 rounded-lg border border-gray-800">
-                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>SM4国密算法 + 轻量级掩码防护技术</p>
+                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>AES算法 + 轻量级掩码防护技术</p>
                 <div class="flex items-center text-[11px] pt-2 border-t border-gray-800/60 text-gray-400">
                   <span class="bg-gray-800 px-1.5 py-0.5 rounded mr-2 shrink-0">3人分工</span>
                   <span class="truncate">理论型(理论设计) | 实践型(工程落地) | 组织型(AI交互)</span>
@@ -178,7 +178,7 @@
                 <p class="text-gray-400 text-[11.5px] leading-snug">逻辑校验无遗漏。已自动完善身份认证防非法接入细节，限定安全参数范围。</p>
               </div>
               <div class="bg-[#16181d] p-2.5 rounded-lg border border-gray-800">
-                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>SM4加密算法 + 动态随机数抗重放认证机制</p>
+                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>AES加密算法 + 动态随机数抗重放认证机制</p>
                 <div class="flex items-center text-[11px] pt-2 border-t border-gray-800/60 text-gray-400">
                   <span class="bg-gray-800 px-1.5 py-0.5 rounded mr-2 shrink-0">3人分工</span>
                   <span class="truncate">理论型(理论设计) | 实践型(工程落地) | 组织型(AI交互)</span>

@@ -244,20 +244,20 @@ const taskData = {
       ],
       tags: ['轻量级掩码', '恒定时间算法', '随机噪声注入']
     },
-    recommendPlan: 'SM4国密算法 + 轻量级掩码防护技术',
+    recommendPlan: 'AES算法 + 轻量级掩码防护技术',
     analysisPoints: [
       {
         title: '重点',
-        description: 'SM4算法结合轻量级掩码技术，每轮操作添加随机掩码隐藏中间状态，防止功耗分析攻击。'
+        description: 'AES算法结合轻量级掩码技术，每轮操作添加随机掩码隐藏中间状态，防止功耗分析攻击。'
       },
       {
         title: '难点',
         description: '实现恒定时间算法消除时序差异，避免分支预测泄露密钥信息，同时控制额外的计算开销。'
       }
     ],
-    algorithm: 'SM4',
+    algorithm: 'AES',
     roles: {
-      theory: '负责 SM4 算法的数学论证与密码学原理设计，输出理论框架。',
+      theory: '负责 AES 算法的数学论证与密码学原理设计，输出理论框架。',
       practice: '负责将理论设计转化为 C/C++ 代码，并在目标硬件上进行功耗压测。',
       organize: '负责把控项目进度，撰写交互文档，并利用 AI 辅助系统校验流程。'
     }
@@ -276,7 +276,7 @@ const taskData = {
       ],
       tags: ['滑动窗口机制', '动态随机数', '时间戳防伪']
     },
-    recommendPlan: 'SM4加密算法 + 动态随机数抗重放认证机制',
+    recommendPlan: 'AES加密算法 + 动态随机数抗重放认证机制',
     analysisPoints: [
       {
         title: '重点',
@@ -287,7 +287,7 @@ const taskData = {
         description: '建立收发双端的严密状态同步，处理网络中断后的快速恢复，避免认证失败导致的通信中断。'
       }
     ],
-    algorithm: 'SM4',
+    algorithm: 'AES',
     roles: {
       theory: '负责抗重放机制的数学论证与密码学原理设计，输出理论框架。',
       practice: '负责将理论设计转化为 C/C++ 代码，并在目标硬件上进行功能测试。',

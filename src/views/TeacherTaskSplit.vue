@@ -195,7 +195,7 @@
                 <p class="text-gray-400 text-[11.5px] leading-snug">已辅助排查物理信息泄露风险点，推送轻量级掩码与恒定时间代码参考，成功引导加固选型。</p>
               </div>
               <div class="bg-[#16181d] p-2.5 rounded-lg border border-gray-800">
-                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>SM4国密算法 + 轻量级掩码防护技术</p>
+                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>AES算法 + 轻量级掩码防护技术</p>
                 <div class="flex items-center text-[11px] pt-2 border-t border-gray-800/60 text-gray-400">
                   <span class="bg-gray-800 px-1.5 py-0.5 rounded mr-2 shrink-0">3人分工</span>
                   <span class="truncate">理论型(理论设计) | 实践型(工程落地) | 组织型(AI交互)</span>
@@ -277,7 +277,7 @@
                 <p class="text-gray-400 text-[11.5px] leading-snug">已辅助梳理同步校验逻辑细节，下发滑动窗口计数器与动态机制参考，确保防护方案有效无误触。</p>
               </div>
               <div class="bg-[#16181d] p-2.5 rounded-lg border border-gray-800">
-                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>SM4加密算法 + 动态随机数抗重放认证机制</p>
+                <p class="text-[12px] text-gray-300 font-medium mb-2"><span class="text-gray-500">预选方案：</span>AES加密算法 + 动态随机数抗重放认证机制</p>
                 <div class="flex items-center text-[11px] pt-2 border-t border-gray-800/60 text-gray-400">
                   <span class="bg-gray-800 px-1.5 py-0.5 rounded mr-2 shrink-0">3人分工</span>
                   <span class="truncate">理论型(理论设计) | 实践型(工程落地) | 组织型(AI交互)</span>

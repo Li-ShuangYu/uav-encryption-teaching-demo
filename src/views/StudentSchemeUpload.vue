@@ -234,7 +234,7 @@ const groups = reactive([
     aiScore: 86,
     aiLevel: '良好 (B+)',
     radarData: [85, 80, 95, 95, 80], 
-    aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>SM4+SM3 国密组合方案</span>，符合国家密码标准，安全性高，性能稳定。重点解决了国密算法在无人机环境中的应用问题。",
+    aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>AES+SHA-256 组合方案</span>，安全性高，性能稳定。重点解决了加密算法在无人机环境中的应用问题。",
     aiSuggestion: "建议进一步优化密钥管理流程，可在不增加系统复杂度的前提下提升动态安全性。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
