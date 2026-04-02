@@ -26,8 +26,24 @@
 
     <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
       <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
-      <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
-      <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
+      <h2 class="text-2xl font-bold text-white mb-6 tracking-wider">等待评分完成...</h2>
+      <div class="space-y-3 w-80">
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 AI 批改</span>
+          <span v-if="states.aiEvaluated" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 教师评分</span>
+          <span v-if="states.teacherScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 组间互评</span>
+          <span v-if="states.studentScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+      </div>
     </div>
 
     <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
@@ -195,7 +211,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts'; // 引入 echarts
 
@@ -308,20 +324,35 @@ const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.val
 
 // === 阻塞等待与轮询逻辑 ===
 const isEvaluated = ref(false);
+const states = reactive({
+  aiEvaluated: false,
+  teacherScored: false,
+  studentScored: false
+});
 let pollingTimer = null;
 
 const fetchState = async () => {
   try {
     const res = await fetch('/api/state');
     const state = await res.json();
-    if (state.ai_evaluated === 1) {
+    
+    // 同步三个指标的状态
+    states.aiEvaluated = state.ai_evaluated === 1;
+    states.teacherScored = state.teacher_scored_group === 1;
+    states.studentScored = state.student_scored_group === 1;
+
+    // 当三个指标都为 1 时才放行页面
+    if (states.aiEvaluated && states.teacherScored && states.studentScored) {
       isEvaluated.value = true;
       if (pollingTimer) clearInterval(pollingTimer);
       // 评估完成后初始化雷达图
       nextTick(() => { initRadarChart(); });
     }
   } catch (error) {
-    // 模拟接口直接通过
+    // 模拟接口直接通过（保持原错误处理的连贯性，防止阻断开发测试）
+    states.aiEvaluated = true;
+    states.teacherScored = true;
+    states.studentScored = true;
     isEvaluated.value = true;
     if (pollingTimer) clearInterval(pollingTimer);
     nextTick(() => { initRadarChart(); });
