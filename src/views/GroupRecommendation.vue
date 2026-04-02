@@ -87,7 +87,7 @@
         <div class="flex-1 flex flex-col rounded-[16px] border border-slate-700 overflow-hidden category-panel group relative" style="background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(20px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);">
           <div class="px-6 py-5 border-b border-slate-700 relative overflow-hidden shrink-0">
             <div class="absolute bottom-0 left-0 h-[3px] w-full bg-[#10B981]"></div>
-            <div class="text-[24px] font-extrabold text-[#10B981] flex items-center gap-[10px] mb-2">� 组 2</div>
+            <div class="text-[24px] font-extrabold text-[#10B981] flex items-center gap-[10px] mb-2">📋 组 2</div>
             <div class="text-[14px] text-slate-400 leading-relaxed font-medium">陈宇泽、许诗涵、赵景辰、张语桐</div>
             <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">4 人</div>
           </div>
