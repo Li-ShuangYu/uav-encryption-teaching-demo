@@ -21,7 +21,7 @@
             currentGroupIndex === 2 && 'bg-yellow-500',
             currentGroupIndex === 3 && 'bg-purple-500'
           ]"></div>
-          <h1 class="text-xl font-bold text-white tracking-wide">思考分析-需求提交</h1>
+          <h1 class="text-xl font-bold text-white tracking-wide">需求分析阶段：需求提交</h1>
         </div>
       <div class="flex items-center gap-4">
         

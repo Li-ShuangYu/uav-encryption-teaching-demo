@@ -53,7 +53,7 @@ const routeStageMap = {
 
 // 所有菜单项
 const allMenuItems = [
-  { value: '/student/task-receive', label: '需求分析阶段：任务接收与需求提交', order: 1 },
+  { value: '/student/task-receive', label: '需求分析阶段：需求提交', order: 1 },
   { value: '/student/task-select', label: '需求分析阶段：任务分配与确认', order: 2 },
   { value: '/student/task-split', label: '需求分析阶段：团队协作与分工', order: 3 },
   { value: '/student/scheme-upload', label: '方案设计阶段：方案上传与评估结果', order: 4 },

@@ -89,31 +89,31 @@ const routes = [
         path: 'task-receive',
         name: 'StudentTaskReceive',
         component: () => import('../views/StudentTaskReceive.vue'),
-        meta: { title: '屏 4：学习工作台 - 任务接收 + 需求提交页（合并 1 个页）' }
+        meta: { title: '学生工作台' }
       },
       {
         path: 'task-select',
         name: 'StudentTaskSelect',
         component: () => import('../views/StudentTaskSelect.vue'),
-        meta: { title: '任务分配与确认' }
+        meta: { title: '学生工作台' }
       },
       {
         path: 'task-split',
         name: 'StudentTaskSplit',
         component: () => import('../views/StudentTaskSplit.vue'),
-        meta: { title: '团队协作与分工' }
+        meta: { title: '学生工作台' }
       },
       {
         path: 'scheme-upload',
         name: 'StudentSchemeUpload',
         component: () => import('../views/StudentSchemeUpload.vue'),
-        meta: { title: '屏 7：学习工作台 - 方案上传 + 评估结果页（合并 1 个页）' }
+        meta: { title: '学生工作台' }
       },
       {
         path: 'scheme-detail',
         name: 'StudentSchemeDetail',
         component: () => import('../views/StudentSchemeDetail.vue'),
-        meta: { title: '方案详情与架构蓝图' }
+        meta: { title: '学生工作台' }
       }
     ]
   },

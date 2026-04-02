@@ -5,8 +5,8 @@
     <transition name="fade-in">
       <div v-if="showContent" class="flex justify-between items-center mb-6">
         <div>
-          <h1 class="text-2xl font-bold text-white tracking-wide">课题方向与能力图谱双向选择</h1>
-          <p class="text-gray-400 mt-1 text-sm">请根据你的性格特质与技术偏好，选择最适合你的密码学攻坚小队。</p>
+          <h1 class="text-2xl font-bold text-white tracking-wide">选择你的演示剧本</h1>
+          <p class="text-gray-400 mt-1 text-sm">请选择一个密码学攻坚方向，开始你的演示任务。</p>
           <div class="w-24 h-1 bg-gradient-to-r from-blue-500 via-red-500 to-purple-500 mt-2 rounded-full"></div>
         </div>
         <div class="flex items-center">
