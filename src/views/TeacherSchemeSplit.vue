@@ -117,7 +117,7 @@ const allGroupData = [
     name: '第一组',
     title: '低功耗优化方案',
     color: '#3b82f6',
-    fileName: '第一组_低功耗优化方案.docx',
+    fileName: '无人机present轻量级密码系统设计.docx',
     schemes: [
       { 
         name: '低功耗优化方案', 
@@ -134,7 +134,7 @@ const allGroupData = [
     name: '第二组',
     title: '侧信道防护方案',
     color: '#ef4444',
-    fileName: '第二组_侧信道防护方案.docx',
+    fileName: '侧信道是AES+一阶掩码组合方案.docx',
     schemes: [
       { 
         name: '侧信道防护方案', 
@@ -151,7 +151,7 @@ const allGroupData = [
     name: '第三组',
     title: '抗重放攻击方案',
     color: '#f59e0b',
-    fileName: '第三组_抗重放攻击方案.docx',
+    fileName: '通信安全+抗重放攻击组合设计.docx',
     schemes: [
       { 
         name: '抗重放攻击方案', 
@@ -168,7 +168,7 @@ const allGroupData = [
     name: '第四组',
     title: '后量子算法适配方案',
     color: '#8b5cf6',
-    fileName: '第四组_后量子算法适配方案.docx',
+    fileName: '基于后量子密码的无人机密码系统设计.docx',
     schemes: [
       { 
         name: '后量子算法适配方案', 

@@ -14,9 +14,9 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
             导出任务书
           </button>
-          <button @click="goToSchemeUpload" :class="['px-8 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2 animate-glow', getButtonColorClass()]">
-            方案提交
-          </button>
+          <button @click="goToSchemeUpload" :class="['px-8 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2 animate-glow', getButtonColorClass()]" :style="getButtonStyle()">
+                方案提交
+              </button>
         </div>
       </header>
     </transition>
@@ -252,7 +252,7 @@ const taskData = {
       },
       {
         title: '难点',
-        description: '实现恒定时间算法消除时序差异，避免分支预测泄露密钥信息，同时控制额外的计算开销。'
+        description: '实现算法消除时序差异，避免分支预测泄露密钥信息，同时控制额外的计算开销。'
       }
     ],
     algorithm: 'AES',
@@ -385,6 +385,33 @@ const getButtonColorClass = () => {
   return btnMap[borderClass] || 'bg-blue-600 hover:bg-blue-500 shadow-blue-600/30';
 };
 
+const getButtonStyle = () => {
+  if (!groupInfo.value?.colorTheme?.activeBorderClass) {
+    return {
+      '--glow-color': 'rgba(59, 130, 246, 0.5)',
+      '--glow-color-light': 'rgba(59, 130, 246, 0.3)',
+      '--glow-color-strong': 'rgba(59, 130, 246, 0.7)'
+    };
+  }
+  const borderClass = groupInfo.value.colorTheme.activeBorderClass;
+  const colorMap = {
+    'border-blue-500': { color: '59, 130, 246' },
+    'border-red-500': { color: '239, 68, 68' },
+    'border-amber-500': { color: '245, 158, 11' },
+    'border-purple-500': { color: '139, 92, 246' },
+    'border-green-500': { color: '16, 185, 129' },
+    'border-yellow-500': { color: '234, 179, 8' },
+    'border-cyan-500': { color: '8, 145, 178' },
+    'border-orange-500': { color: '249, 115, 22' }
+  };
+  const color = colorMap[borderClass]?.color || '59, 130, 246';
+  return {
+    '--glow-color': `rgba(${color}, 0.5)`,
+    '--glow-color-light': `rgba(${color}, 0.3)`,
+    '--glow-color-strong': `rgba(${color}, 0.7)`
+  };
+};
+
 const goToSchemeUpload = () => {
   router.push('/student/scheme-upload');
 };
@@ -429,10 +456,10 @@ const goToSchemeUpload = () => {
 /* 自定义发光动画 */
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color-light);
   }
   50% {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.7), 0 0 60px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 30px var(--glow-color-strong), 0 0 60px var(--glow-color);
   }
 }
 

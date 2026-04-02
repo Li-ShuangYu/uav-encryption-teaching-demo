@@ -262,13 +262,13 @@ const groups = [
     id: 3,
     name: '第三组',
     title: '通信安全 + 抗重放攻击',
-    subtitle: '强时效指令防劫持', 
+    subtitle: '抗重放核心防护体制', 
     codeId: 'SEC-NOREPLAY-03',
     themeColor: '#f59e0b', 
     hardware: 'STM32L432',
     scores: { ai: 89, teacher: 88, peer: 92, total: 89 },
-    evaluation: '滑动窗口完美阻断一切旧包重放攻击。', // 17字
-    optimization: '拟平滑优化轮换逻辑，升级布隆过滤。', // 17字
+    evaluation: '滑动窗口完美阻断一切旧包重放攻击。', 
+    optimization: '拟加时间戳双重校验，升级布隆过滤。',
     radarData: [89, 88, 92],
     music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
       { text: "", duration: 0 },

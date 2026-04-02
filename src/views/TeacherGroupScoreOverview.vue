@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <main else class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
+    <main v-else class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
       <div 
         v-for="(group, index) in groups" 
         :key="group.id"

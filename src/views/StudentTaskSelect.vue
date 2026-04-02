@@ -237,6 +237,7 @@ const hoveredGroup = ref(null);
 const selectedGroupId = ref(null);
 
 const savedColorTheme = ref(null);
+const currentGroupId = ref(null); // 当前用户所属的组ID
 let pollingTimer = null;
 
 // 轮询获取后端教师任务发布状态
@@ -259,6 +260,7 @@ onMounted(() => {
   if (storedInfo) {
     const groupInfo = JSON.parse(storedInfo);
     savedColorTheme.value = groupInfo.colorTheme;
+    currentGroupId.value = groupInfo.groupId; // 保存当前用户所属组ID
   }
   
   setTimeout(() => {
@@ -277,7 +279,11 @@ onUnmounted(() => {
 });
 
 const selectGroup = (groupId) => {
-  if(isReceiving.value) return; 
+  if(isReceiving.value) return;
+  // 防呆设计：只允许选择本组的任务
+  if (currentGroupId.value && groupId !== currentGroupId.value) {
+    return;
+  }
   selectedGroupId.value = groupId;
 };
 

@@ -88,34 +88,34 @@
       
       <div class="w-[32%] lg:w-[28%] rounded-xl p-3 xl:p-4 flex flex-col gap-3 min-h-0 shadow-md bg-cardInnerBg">
         <div class="flex items-center mb-1 flex-none">
-          <div class="w-1.5 h-4 bg-warningOrg mr-2 rounded-full"></div>
+          <div class="w-1.5 h-4 bg-accentGreen mr-2 rounded-full"></div>
           <h2 class="text-[16px] xl:text-[17px] font-bold text-white tracking-wide">【系统需求点梳理】</h2>
         </div>
         
         <div class="flex-1 flex flex-col gap-3 min-h-0">
-          <div class="flex-1 bg-panelBg border-l-4 border-warningOrg rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
-            <div class="text-warningOrg font-bold text-[14px] mb-1 flex-none">【需求点一】</div>
+          <div class="flex-1 bg-panelBg border-l-4 border-blue-500 rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
+            <div class="text-blue-400 font-bold text-[14px] mb-1 flex-none">【需求点一】</div>
             <div class="text-gray-200 text-[13px] xl:text-[14px] leading-snug font-medium flex-1 overflow-y-auto scrollbar-hide">
               高保密性要求。无人机飞控指令与传输数据需具备极强的抗窃听能力，加密机制需杜绝非法第三方破解与信息窃取。
             </div>
           </div>
 
-          <div class="flex-1 bg-panelBg border-l-4 border-infoBlue rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
-            <div class="text-infoBlue font-bold text-[14px] mb-1 flex-none">【需求点二】</div>
+          <div class="flex-1 bg-panelBg border-l-4 border-red-500 rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
+            <div class="text-red-400 font-bold text-[14px] mb-1 flex-none">【需求点二】</div>
             <div class="text-gray-200 text-[13px] xl:text-[14px] leading-snug font-medium flex-1 overflow-y-auto scrollbar-hide">
               高完整性要求。需建立数据校验机制，防止飞行坐标、控制指令在传输过程中被恶意篡改，保障无人机飞行安全。
             </div>
           </div>
 
-          <div class="flex-1 bg-panelBg border-l-4 border-accentGreen rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
-            <div class="text-accentGreen font-bold text-[14px] mb-1 flex-none">【需求点三】</div>
+          <div class="flex-1 bg-panelBg border-l-4 border-yellow-500 rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
+            <div class="text-yellow-400 font-bold text-[14px] mb-1 flex-none">【需求点三】</div>
             <div class="text-gray-200 text-[13px] xl:text-[14px] leading-snug font-medium flex-1 overflow-y-auto scrollbar-hide">
               低时延高可用要求。无人机高速移动场景下，加密握手与加解密处理时延需控制在毫秒级，保障指令实时响应。
             </div>
           </div>
 
-          <div class="flex-1 bg-panelBg border-l-4 border-dangerRed rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
-            <div class="text-dangerRed font-bold text-[14px] mb-1 flex-none">【需求点四】</div>
+          <div class="flex-1 bg-panelBg border-l-4 border-purple-500 rounded-r-lg p-3 flex flex-col min-h-0 shadow-sm transition hover:bg-opacity-80">
+            <div class="text-purple-400 font-bold text-[14px] mb-1 flex-none">【需求点四】</div>
             <div class="text-gray-200 text-[13px] xl:text-[14px] leading-snug font-medium flex-1 overflow-y-auto scrollbar-hide">
               低功耗适配要求。受限于无人机机载电池容量，加密机制需严格控制额外功耗，适配嵌入式设备算力约束。
             </div>
@@ -142,14 +142,14 @@
           </div>
           
           <div class="flex-1 grid grid-cols-2 gap-3 min-h-0">
-            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup1 ? 'border-accentGreen shadow-[0_0_10px_rgba(0,255,170,0.15)]' : 'border-gray-700'">
+            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup1 ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.15)]' : 'border-gray-700'">
               <div class="text-white font-bold text-[15px] xl:text-[16px] mb-2 flex items-center flex-none">
                 <transition name="fade">
-                  <span v-if="showGroup1" class="bg-accentGreen text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组1</span>
+                  <span v-if="showGroup1" class="bg-blue-500 text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组1</span>
                 </transition>
                 支线方向 1：低功耗优化
               </div>
-              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup1 ? 'border-accentGreen/30' : 'border-gray-700/30'">
+              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup1 ? 'border-blue-500/30' : 'border-gray-700/30'">
                 <textarea
                   v-model="task1Content"
                   class="w-full h-full bg-transparent text-gray-300 text-[14px] xl:text-[15px] leading-snug resize-none outline-none"
@@ -159,14 +159,14 @@
               </div>
             </div>
 
-            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup2 ? 'border-infoBlue shadow-[0_0_10px_rgba(0,163,255,0.15)]' : 'border-gray-700'">
+            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup2 ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.15)]' : 'border-gray-700'">
               <div class="text-white font-bold text-[15px] xl:text-[16px] mb-2 flex items-center flex-none">
                 <transition name="fade">
-                  <span v-if="showGroup2" class="bg-infoBlue text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组2</span>
+                  <span v-if="showGroup2" class="bg-red-500 text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组2</span>
                 </transition>
                 支线方向 2：侧信道防护
               </div>
-              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup2 ? 'border-infoBlue/30' : 'border-gray-700/30'">
+              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup2 ? 'border-red-500/30' : 'border-gray-700/30'">
                 <textarea
                   v-model="task2Content"
                   class="w-full h-full bg-transparent text-gray-300 text-[14px] xl:text-[15px] leading-snug resize-none outline-none"
@@ -176,14 +176,14 @@
               </div>
             </div>
 
-            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup3 ? 'border-warningOrg shadow-[0_0_10px_rgba(255,153,0,0.15)]' : 'border-gray-700'">
+            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup3 ? 'border-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.15)]' : 'border-gray-700'">
               <div class="text-white font-bold text-[15px] xl:text-[16px] mb-2 flex items-center flex-none">
                 <transition name="fade">
-                  <span v-if="showGroup3" class="bg-warningOrg text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组3</span>
+                  <span v-if="showGroup3" class="bg-yellow-500 text-black px-1.5 py-0.5 rounded text-[13px] mr-2">组3</span>
                 </transition>
                 支线方向 3：抗重放攻击
               </div>
-              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup3 ? 'border-warningOrg/30' : 'border-gray-700/30'">
+              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup3 ? 'border-yellow-500/30' : 'border-gray-700/30'">
                 <textarea
                   v-model="task3Content"
                   class="w-full h-full bg-transparent text-gray-300 text-[14px] xl:text-[15px] leading-snug resize-none outline-none"
@@ -193,14 +193,14 @@
               </div>
             </div>
 
-            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup4 ? 'border-purpleIcon shadow-[0_0_10px_rgba(187,134,252,0.15)]' : 'border-gray-700'">
+            <div class="bg-panelBg border rounded-lg p-3 transition-colors duration-500 flex flex-col min-h-0" :class="showGroup4 ? 'border-purple-500 shadow-[0_0_10px_rgba(139,92,246,0.15)]' : 'border-gray-700'">
               <div class="text-white font-bold text-[15px] xl:text-[16px] mb-2 flex items-center flex-none">
                 <transition name="fade">
-                  <span v-if="showGroup4" class="bg-purpleIcon text-white px-1.5 py-0.5 rounded text-[13px] mr-2">组4</span>
+                  <span v-if="showGroup4" class="bg-purple-500 text-white px-1.5 py-0.5 rounded text-[13px] mr-2">组4</span>
                 </transition>
                 支线方向 4：后量子算法适配
               </div>
-              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup4 ? 'border-purpleIcon/30' : 'border-gray-700/30'">
+              <div class="flex-1 bg-[#121417] border text-gray-300 text-[14px] xl:text-[15px] rounded-md p-2.5 overflow-y-auto scrollbar-hide leading-snug transition-colors duration-500 relative" :class="showGroup4 ? 'border-purple-500/30' : 'border-gray-700/30'">
                 <textarea
                   v-model="task4Content"
                   class="w-full h-full bg-transparent text-gray-300 text-[14px] xl:text-[15px] leading-snug resize-none outline-none"
@@ -215,16 +215,16 @@
         <div class="flex-none flex justify-center items-center mt-2">
           <button 
             @click="handlePublish" 
-            :disabled="isPublishing || step < 2"
+            :disabled="isPublishing || step < 2 || !allGroupsSelected"
             :class="[
               'relative overflow-hidden bg-accentCyan text-black font-bold text-[15px] xl:text-[16px] px-8 py-2.5 rounded-lg shadow-[0_0_15px_rgba(0,240,255,0.3)] tracking-widest transition transform border border-[#00f0ff] group',
-              (!isPublishing && step >= 2) ? 'hover:scale-105 hover:bg-[#00d0dd]' : 'opacity-60 cursor-not-allowed'
+              (!isPublishing && step >= 2 && allGroupsSelected) ? 'hover:scale-105 hover:bg-[#00d0dd]' : 'opacity-60 cursor-not-allowed'
             ]"
           >
             <div class="absolute left-0 top-0 bottom-0 bg-white/40 transition-all ease-linear" style="transition-duration: 2000ms;" :style="{ width: publishProgress + '%' }"></div>
             <span class="relative z-10 flex items-center justify-center">
               <svg v-if="!isPublishing" class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-              {{ isPublishing ? '任务发布中...' : '确认发布任务' }}
+              {{ isPublishing ? '任务发布中...' : (allGroupsSelected ? '确认发布任务' : '等待学生选组完成...') }}
             </span>
           </button>
         </div>
@@ -248,10 +248,10 @@
           <div>
             <div class="text-white font-bold text-[14px] mb-2">【支线任务分配】</div>
             <div class="grid grid-cols-2 gap-2">
-              <div class="bg-[#121417]/60 border border-accentGreen/30 rounded-lg p-2"><div class="text-accentGreen font-bold text-[13px] mb-1">组1：低功耗优化</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task1Content }}</div></div>
-              <div class="bg-[#121417]/60 border border-infoBlue/30 rounded-lg p-2"><div class="text-infoBlue font-bold text-[13px] mb-1">组2：侧信道防护</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task2Content }}</div></div>
-              <div class="bg-[#121417]/60 border border-warningOrg/30 rounded-lg p-2"><div class="text-warningOrg font-bold text-[13px] mb-1">组3：抗重放攻击</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task3Content }}</div></div>
-              <div class="bg-[#121417]/60 border border-purpleIcon/30 rounded-lg p-2"><div class="text-purpleIcon font-bold text-[13px] mb-1">组4：后量子算法适配</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task4Content }}</div></div>
+              <div class="bg-[#121417]/60 border border-blue-500/30 rounded-lg p-2"><div class="text-blue-400 font-bold text-[13px] mb-1">组1：低功耗优化</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task1Content }}</div></div>
+              <div class="bg-[#121417]/60 border border-red-500/30 rounded-lg p-2"><div class="text-red-400 font-bold text-[13px] mb-1">组2：侧信道防护</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task2Content }}</div></div>
+              <div class="bg-[#121417]/60 border border-yellow-500/30 rounded-lg p-2"><div class="text-yellow-400 font-bold text-[13px] mb-1">组3：抗重放攻击</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task3Content }}</div></div>
+              <div class="bg-[#121417]/60 border border-purple-500/30 rounded-lg p-2"><div class="text-purple-400 font-bold text-[13px] mb-1">组4：后量子算法适配</div><div class="text-gray-300 text-[12px] leading-relaxed line-clamp-3">{{ task4Content }}</div></div>
             </div>
           </div>
         </div>
@@ -267,7 +267,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -296,6 +296,11 @@ const showGroup1 = ref(false)
 const showGroup2 = ref(false)
 const showGroup3 = ref(false)
 const showGroup4 = ref(false)
+
+// 计算属性：判断是否所有组都已完成选组
+const allGroupsSelected = computed(() => {
+  return showGroup1.value && showGroup2.value && showGroup3.value && showGroup4.value
+})
 
 let pollingTimer = null
 

@@ -38,7 +38,12 @@
           </button>
           <button 
             @click="goToSchemeDetail"
-            class="bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white font-bold px-3 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+            :disabled="!currentGroup.state.isSubmitted || currentGroup.state.evalStatus !== 'finished'"
+            class="font-bold px-3 py-1.5 rounded-lg shadow flex items-center gap-2 text-sm transition-all"
+            :class="{
+              'bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white': currentGroup.state.isSubmitted && currentGroup.state.evalStatus === 'finished',
+              'bg-gray-700 border border-gray-600 text-gray-400 cursor-not-allowed': !currentGroup.state.isSubmitted || currentGroup.state.evalStatus !== 'finished'
+            }"
           >
             进入评分环节
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +239,7 @@ const groups = reactive([
     aiScore: 86,
     aiLevel: '良好 (B+)',
     radarData: [85, 80, 95, 95, 80], 
-    aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>AES+SHA-256 组合方案</span>，安全性高，性能稳定。重点解决了加密算法在无人机环境中的应用问题。",
+    aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>present轻量级加密算法</span>，安全性高，性能稳定。重点解决了加密算法在无人机环境中的应用问题。",
     aiSuggestion: "建议进一步优化密钥管理流程，可在不增加系统复杂度的前提下提升动态安全性。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
@@ -262,7 +267,7 @@ const groups = reactive([
     aiScore: 88,
     aiLevel: '良好 (A-)',
     radarData: [90, 95, 85, 85, 85],
-    aiConclusion: "本组采用 <span style='color:#f59e0b;font-weight:bold;'>轻量级流密码方案</span>，有效降低了系统功耗，同时保证了加密性能。身份认证逻辑严密，完整性校验机制十分完善。",
+    aiConclusion: "本组采用 <span style='color:#f59e0b;font-weight:bold;'>抗重放攻击方案</span>，有效降低了系统功耗，同时保证了加密性能。身份认证逻辑严密，完整性校验机制十分完善。",
     aiSuggestion: "流密码的密钥管理是关键，建议在仿真验证时引入更安全的密钥更新机制。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   },
@@ -276,8 +281,8 @@ const groups = reactive([
     aiScore: 93,
     aiLevel: '极优 (A+)',
     radarData: [95, 95, 75, 70, 98],
-    aiConclusion: "本组突破性采用 <span style='color:#8b5cf6;font-weight:bold;'>区块链分布式防护方案</span>，利用区块链技术实现分布式防护，提高系统的安全性和可靠性。创新性尤为突出，方案体系十分完整。",
-    aiSuggestion: "区块链技术带来了一定的系统复杂度，建议探索在关键节点中应用，以平衡安全性和性能。",
+    aiConclusion: "本组突破性采用 <span style='color:#8b5cf6;font-weight:bold;'>后量子密码防护方案</span>，利用抗量子算法全面抵御未来算力威胁，确保系统长效安全。创新性尤为突出，方案体系十分完整。",
+aiSuggestion: "后量子算法带来了较大的内存与计算开销，建议探索引入硬件加速机制，以平衡极高安全性与节点性能。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
   }
 ]);
@@ -402,6 +407,9 @@ const startEvaluation = () => {
 };
 
 const goToSchemeDetail = () => {
+  if (!currentGroup.value.state.isSubmitted || currentGroup.value.state.evalStatus !== 'finished') {
+    return;
+  }
   router.push('/student/scheme-detail');
 };
 
