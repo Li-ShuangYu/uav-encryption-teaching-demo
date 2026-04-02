@@ -397,8 +397,20 @@ const audioFiles = {
 
 const router = useRouter();
 
-const goToNextStage = () => {
+const goToNextStage = async () => {
   console.log('点击进入下一阶段按钮，准备跳转至方案分屏页');
+  
+  try {
+    await fetch('/api/state/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ teacher_go_scheme: 1 })
+    });
+    console.log('已更新 teacher_go_scheme 为 1');
+  } catch (error) {
+    console.error('更新状态失败:', error);
+  }
+  
   router.push('/teacher/scheme-split').catch(err => {
     console.error('路由跳转失败:', err);
   });

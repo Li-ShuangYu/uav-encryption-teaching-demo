@@ -11,12 +11,11 @@
 
     <header class="shrink-0 flex flex-col z-20 relative">
       <div class="h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md">
-        <div class="flex items-center gap-3">
-          <div class="w-1 h-6 rounded-full" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          <h1 class="text-xl font-bold text-white tracking-wide">方案设计-验证评估</h1>
-        </div>
-        
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-6 rounded-full" :style="{ backgroundColor: currentGroup.themeColor }"></div>
+            <h1 class="text-xl font-bold text-white tracking-wide">方案设计-验证评估</h1>
+          </div>
           <div 
             class="flex items-center gap-2 px-4 py-1.5 rounded-full border"
             :style="{ 
@@ -27,6 +26,9 @@
           >
             <span class="font-bold text-sm">{{ currentGroup.name }} - {{ currentGroupTitle }}</span>
           </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
           <button 
             @click="goToTaskSplit"
             class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-3 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"

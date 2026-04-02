@@ -199,13 +199,19 @@ const goToAiEvaluate = async () => {
 // 重置后端状态
 const resetBackendState = async () => {
   try {
-    await fetch('/api/state/reset', {
-      method: 'POST'
+    await fetch('/api/state/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        scheme_uploaded_g1: 0,
+        scheme_uploaded_g2: 0,
+        scheme_uploaded_g3: 0,
+        scheme_uploaded_g4: 0
+      })
     });
-    console.log('后端状态已重置为默认值');
+    console.log('方案上传状态已重置为 0');
   } catch (error) {
-    console.error('重置后端状态失败:', error);
-    // 即使重置失败，也继续执行后续逻辑
+    console.error('重置方案上传状态失败:', error);
   }
 };
 

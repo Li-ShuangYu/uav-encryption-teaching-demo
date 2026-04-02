@@ -1,6 +1,15 @@
 <template>
   <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden">
     
+    <transition name="toast">
+      <div v-if="showToast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded shadow-lg z-50 flex items-center gap-2 pointer-events-none">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="font-bold">等待教师进入方案设计阶段</span>
+      </div>
+    </transition>
+    
     <transition name="fade-in">
       <header v-if="showContent" class="shrink-0 h-16 border-b border-borderColor bg-panelBg flex items-center justify-between px-6 shadow-md z-10">
         <div class="flex items-center gap-3">
@@ -14,9 +23,29 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
             导出任务书
           </button>
-          <button @click="goToSchemeUpload" :class="['px-8 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2 animate-glow', getButtonColorClass()]" :style="getButtonStyle()">
-                方案提交
-              </button>
+          <div class="relative">
+            <button 
+              @click="goToSchemeUpload" 
+              :disabled="!canUpload"
+              @mouseenter="!canUpload && (showTooltip = true)"
+              @mouseleave="showTooltip = false"
+              :class="[
+                'px-8 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2',
+                canUpload ? 'animate-glow' : 'opacity-50 cursor-not-allowed',
+                getButtonColorClass()
+              ]" 
+              :style="getButtonStyle()"
+            >
+              进入方案上传页面
+            </button>
+            <div 
+              v-if="showTooltip && !canUpload"
+              class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-4 py-2 bg-gray-800 text-white text-base rounded-lg shadow-xl whitespace-nowrap z-50"
+            >
+              等待教师进入方案设计阶段
+              <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-800"></div>
+            </div>
+          </div>
         </div>
       </header>
     </transition>
@@ -189,12 +218,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const showContent = ref(false);
 const groupInfo = ref(null);
+const canUpload = ref(false);
+const showTooltip = ref(false);
+const showToast = ref(false);
+let pollingTimer = null;
 
 // 更新后的结构化任务数据
 const taskData = {
@@ -340,6 +373,16 @@ const colorMap = {
   'border-orange-500': { bg: 'bg-orange-600', border: 'border-orange-500', text: 'text-orange-400', accent: 'bg-orange-500', tag: 'border-orange-500/50 bg-orange-500/10 text-orange-400', dot: 'bg-orange-500', hoverBorder: 'hover:border-orange-500', icon: 'text-orange-400', iconBg: 'border-orange-700/50 bg-orange-900/40', recommendBg: 'bg-orange-900/20 border-orange-800/40', recommendText: 'text-orange-300/80', ping: 'bg-orange-400', status: 'bg-orange-500' }
 };
 
+const fetchState = async () => {
+  try {
+    const res = await fetch('/api/state');
+    const state = await res.json();
+    canUpload.value = state.teacher_go_scheme === 1;
+  } catch (error) {
+    console.error('获取状态失败:', error);
+  }
+};
+
 onMounted(() => {
   const storedInfo = localStorage.getItem('selectedGroupInfo');
   if (storedInfo) {
@@ -348,6 +391,15 @@ onMounted(() => {
   setTimeout(() => {
     showContent.value = true;
   }, 100);
+  
+  fetchState();
+  pollingTimer = setInterval(fetchState, 1000);
+});
+
+onUnmounted(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
 });
 
 const currentTask = computed(() => {
@@ -413,11 +465,26 @@ const getButtonStyle = () => {
 };
 
 const goToSchemeUpload = () => {
+  if (!canUpload.value) {
+    showToast.value = true;
+    setTimeout(() => { showToast.value = false; }, 3000);
+    return;
+  }
   router.push('/student/scheme-upload');
 };
 </script>
 
 <style scoped>
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.3s ease;
+}
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -20px);
+}
+
 .fade-in-enter-active,
 .fade-in-leave-active {
   transition: all 0.5s ease;
