@@ -432,7 +432,7 @@ const triggerAIReview = () => {
 
 // 跳转到任务发布页
 const navigateToTaskPublish = () => {
-  router.push('/teacher/task-split')
+  router.push('/teacher/task-publish')
 }
 </script>
 

@@ -6,102 +6,72 @@
     </div>
     
     <div class="flex flex-col sm:flex-row gap-6">
-      <button 
-        @click="showStudentGroupModal = true" 
-        class="w-64 h-40 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
-      >
-        <div class="w-16 h-16 rounded-full bg-blue-900/30 flex items-center justify-center mb-4 group-hover:bg-blue-900/50 transition">
-          <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
+      <div class="flex flex-col items-center">
+        <button 
+          @click="selectStudentGroup" 
+          :disabled="selectedGroupIndex === null"
+          :class="[
+            'w-96 h-64 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl transition flex flex-col items-center justify-center cursor-pointer group',
+            selectedGroupIndex !== null ? 'hover:border-accentGreen' : 'opacity-70 cursor-not-allowed'
+          ]"
+        >
+          <div class="w-24 h-24 rounded-full bg-blue-900/30 flex items-center justify-center mb-6 group-hover:bg-blue-900/50 transition">
+            <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-white group-hover:text-accentGreen transition">学生</h2>
+          <p class="text-gray-400 text-base mt-3">进入学习工作台</p>
+        </button>
+        
+        <!-- 组选择颜色点 -->
+        <div class="flex gap-4 mt-6">
+          <button 
+            v-for="(group, index) in groups" 
+            :key="index"
+            @click="selectedGroupIndex = index"
+            :class="[
+              'w-8 h-8 rounded-full transition-all duration-300 cursor-pointer',
+              selectedGroupIndex === index ? 'scale-125 ring-2 ring-white' : 'opacity-70 hover:opacity-100'
+            ]"
+            :style="{
+              backgroundColor: index === 0 ? '#3b82f6' : index === 1 ? '#ef4444' : index === 2 ? '#f59e0b' : '#a855f7',
+              boxShadow: selectedGroupIndex === index ? '0 0 12px rgba(' + (index === 0 ? '59, 130, 246' : index === 1 ? '239, 68, 68' : index === 2 ? '245, 158, 11' : '168, 85, 247') + ', 0.5)' : 'none'
+            }"
+            :title="'组' + (index + 1)"
+          ></button>
         </div>
-        <h2 class="text-xl font-bold text-white group-hover:text-accentGreen transition">学生</h2>
-        <p class="text-gray-400 text-sm mt-2">进入学习工作台</p>
-      </button>
+      </div>
       
       <button 
         @click="navigateToTeacher" 
-        class="w-64 h-40 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
+        class="w-96 h-64 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
       >
-        <div class="w-16 h-16 rounded-full bg-green-900/30 flex items-center justify-center mb-4 group-hover:bg-green-900/50 transition">
-          <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-24 h-24 rounded-full bg-green-900/30 flex items-center justify-center mb-6 group-hover:bg-green-900/50 transition">
+          <svg class="w-12 h-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
           </svg>
         </div>
-        <h2 class="text-xl font-bold text-white group-hover:text-accentGreen transition">教授</h2>
-        <p class="text-gray-400 text-sm mt-2">进入教师控制台</p>
+        <h2 class="text-2xl font-bold text-white group-hover:text-accentGreen transition">教授</h2>
+        <p class="text-gray-400 text-base mt-3">进入教师控制台</p>
       </button>
 
       <button 
         @click="navigateToAdmin" 
-        class="w-64 h-40 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
+        class="w-96 h-64 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
       >
-        <div class="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mb-4 group-hover:bg-purple-900/50 transition">
-          <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-24 h-24 rounded-full bg-purple-900/30 flex items-center justify-center mb-6 group-hover:bg-purple-900/50 transition">
+          <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
         </div>
-        <h2 class="text-xl font-bold text-white group-hover:text-accentGreen transition">管理员</h2>
-        <p class="text-gray-400 text-sm mt-2">进入管理控制台</p>
+        <h2 class="text-2xl font-bold text-white group-hover:text-accentGreen transition">管理员</h2>
+        <p class="text-gray-400 text-base mt-3">进入管理控制台</p>
       </button>
     </div>
 
-    <!-- 学生分组选择弹窗 -->
-    <div v-if="showStudentGroupModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div class="bg-[#181a20] rounded-xl p-6 max-w-2xl w-full">
-        <div class="text-center mb-6">
-          <h2 class="text-2xl font-bold text-white mb-2">选择你的演示剧本</h2>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4">
-          <button 
-            @click="selectGroup(0)"
-            class="bg-[#181a20] border border-blue-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] flex items-center justify-center"
-          >
-            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-blue-600">
-              组1
-            </div>
-          </button>
 
-          <button 
-            @click="selectGroup(1)"
-            class="bg-[#181a20] border border-red-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] flex items-center justify-center"
-          >
-            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-red-600">
-              组2
-            </div>
-          </button>
-
-          <button 
-            @click="selectGroup(2)"
-            class="bg-[#181a20] border border-amber-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] flex items-center justify-center"
-          >
-            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-amber-500">
-              组3
-            </div>
-          </button>
-
-          <button 
-            @click="selectGroup(3)"
-            class="bg-[#181a20] border border-purple-900/40 rounded-lg p-8 transition-all duration-300 cursor-pointer hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] flex items-center justify-center"
-          >
-            <div class="w-16 h-16 rounded-lg text-white flex items-center justify-center text-xl font-bold shadow-md bg-purple-600">
-              组4
-            </div>
-          </button>
-        </div>
-
-        <div class="mt-6 flex justify-center">
-          <button 
-            @click="showStudentGroupModal = false"
-            class="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
-          >
-            取消
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -110,7 +80,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const showStudentGroupModal = ref(false)
+const selectedGroupIndex = ref(null)
 
 // 四个组的数据配置
 const groups = [
@@ -172,16 +142,16 @@ const groups = [
   }
 ];
 
-// 选择组别
-const selectGroup = (index) => {
-  showStudentGroupModal.value = false;
+// 选择学生组别并跳转
+const selectStudentGroup = () => {
+  if (selectedGroupIndex.value === null) return;
   
   // 获取选中的组信息
-  const selectedGroup = groups[index];
+  const selectedGroup = groups[selectedGroupIndex.value];
   
   // 存储组别信息到localStorage
   const groupInfo = {
-    groupId: index + 1, // 组别编号（1-4）
+    groupId: selectedGroupIndex.value + 1, // 组别编号（1-4）
     groupName: selectedGroup.title, // 方向名称
     algorithm: selectedGroup.algorithm, // 算法名称
     persona: selectedGroup.persona, // 人物画像

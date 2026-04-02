@@ -185,9 +185,9 @@ const showContent = ref(false);
 // 从 localStorage 读取组信息
 const currentGroupIndex = ref(0);
 
-// 跳转到StudentHome页面
-const goToStudentHome = () => {
-  router.push('/student-home');
+// 跳转到StudentTaskSelect页面
+const goToStudentTaskSelect = () => {
+  router.push('/student/task-select');
 };
 
 onMounted(() => { 
@@ -355,9 +355,9 @@ const handleSubmit = async () => {
     currentGroup.value.isSubmitted = true;
     showToast.value = true;
     
-    // 2秒后跳转到 StudentHome 页面（选组页面）
+    // 2秒后跳转到 StudentTaskSelect 页面
     setTimeout(() => {
-      router.push('/student-home');
+      router.push('/student/task-select');
     }, 2000);
   }, 1500);
 };
