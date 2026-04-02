@@ -46,15 +46,12 @@
       >
         
         <div 
-          class="w-full h-full flex cursor-pointer group-hover border-2"
-          @click="goToSchemeDetail(group)"
+          class="w-full h-full flex border-2"
           :style="{ 
-            borderColor: hoveredGroup === group.id ? group.color : 'transparent',
+            borderColor: group.color,
             transition: 'all 0.3s ease',
             borderRadius: '8px'
           }"
-          @mouseenter="hoveredGroup = group.id"
-          @mouseleave="hoveredGroup = null"
         >
           
           <div 
@@ -67,41 +64,41 @@
             
             <div class="shrink-0 flex items-center gap-2 mb-2">
               <span 
-                class="text-xs px-2 py-1 rounded font-bold"
+                class="text-sm px-2 py-1 rounded font-bold"
                 :style="{ backgroundColor: group.color + '30', color: group.color }"
               >
                 {{ group.name }}
               </span> 
-              <span class="text-sm font-bold text-white tracking-wide">综合评估报告</span>
+              <span class="text-base font-bold text-white tracking-wide">综合评估报告</span>
             </div>
 
             <div class="shrink-0 mb-2 pl-1 flex items-baseline gap-3">
-              <span class="text-textMuted text-sm font-bold">综合总评分</span>
+              <span class="text-gray-300 text-base font-bold">综合总评分</span>
               <div class="flex items-baseline gap-1">
                 <span 
-                  class="text-4xl font-black tracking-tighter" 
-                  :style="{ color: group.color, textShadow: `0 0 15px ${group.color}44` }"
+                  class="text-5xl font-black tracking-tighter score-glow" 
+                  :style="{ color: group.color, '--glow-color': group.color }"
                 >
                   {{ group.totalScore }}
                 </span>
-                <span class="text-textMuted text-sm font-medium">/ 100</span>
+                <span class="text-gray-400 text-base font-medium">/ 100</span>
               </div>
             </div>
 
             <div class="flex flex-col gap-2 mt-auto">
-              <div class="flex items-center justify-between bg-cardInnerBg/40 border-l-2 p-1.5 px-3 rounded-r" :style="{ borderColor: group.color }">
-                <div class="text-[13px] font-bold text-textMuted">AI 智能评分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
-                <div class="text-[14px] font-bold" :style="{ color: group.color }">{{ group.scores[0] }} 分</div>
+              <div class="flex items-center justify-between bg-cardInnerBg/40 border-l-2 p-2 px-3 rounded-r" :style="{ borderColor: group.color }">
+                <div class="text-sm font-bold text-gray-300">AI 智能评分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
+                <div class="text-base font-bold" :style="{ color: group.color }">{{ group.scores[0] }} 分</div>
               </div>
 
-              <div class="flex items-center justify-between bg-cardInnerBg/30 border-l-2 border-textMuted p-1.5 px-3 rounded-r">
-                <div class="text-[13px] font-bold text-textMuted">教师专家评分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
-                <div class="text-[14px] font-bold text-textMain">{{ group.scores[1] }} 分</div>
+              <div class="flex items-center justify-between bg-cardInnerBg/30 border-l-2 border-textMuted p-2 px-3 rounded-r">
+                <div class="text-sm font-bold text-gray-300">教师专家评分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
+                <div class="text-base font-bold text-textMain">{{ group.scores[1] }} 分</div>
               </div>
 
-              <div class="flex items-center justify-between bg-cardInnerBg/20 border-l-2 border-textMuted p-1.5 px-3 rounded-r">
-                <div class="text-[13px] font-bold text-textMuted">组间互评得分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
-                <div class="text-[14px] font-bold text-textMain">{{ group.scores[2] }} 分</div>
+              <div class="flex items-center justify-between bg-cardInnerBg/20 border-l-2 border-textMuted p-2 px-3 rounded-r">
+                <div class="text-sm font-bold text-gray-300">组间互评得分 <span class="text-xs font-normal opacity-70 ml-1">(33.3%)</span></div>
+                <div class="text-base font-bold text-textMain">{{ group.scores[2] }} 分</div>
               </div>
             </div>
           </div>
@@ -113,7 +110,11 @@
               transition: 'all 0.3s ease'
             }"
           >
-            <div :id="`chart-${group.id}`" class="w-full h-full"></div>
+            <div 
+              :id="`chart-${group.id}`" 
+              class="w-full h-full chart-breathe"
+              :style="{ '--chart-color': group.color }"
+            ></div>
           </div>
 
         </div>
@@ -128,7 +129,6 @@ import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
 
 const router = useRouter();
-const hoveredGroup = ref(null);
 
 // 阻塞等待状态
 const isReady = ref(false);
@@ -141,17 +141,6 @@ let pollingTimer = null;
 
 const backToSchemeSplit = () => {
   router.push('/teacher/scheme-split');
-};
-
-const goToSchemeDetail = (group) => {
-  router.push({
-    path: '/teacher/scheme-detail',
-    query: {
-      groupId: group.id,
-      groupName: group.name,
-      groupColor: group.color
-    }
-  });
 };
 
 // 分数顺序: [AI评分, 教师评分, 组间互评]
@@ -176,9 +165,9 @@ const groups = reactive([
 
 const chartInstances = [];
 const indicators = [
-  { name: 'AI 评分', max: 100 },
-  { name: '教师评分', max: 100 },
-  { name: '组间互评', max: 100 }
+  { name: 'AI 评分', max: 120 },
+  { name: '教师评分', max: 120 },
+  { name: '组间互评', max: 120 }
 ];
 
 const initChart = (group) => {
@@ -283,5 +272,79 @@ onBeforeUnmount(() => {
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
+}
+
+/* 总分发光动画 - 改小改淡 */
+.score-glow {
+  animation: scoreGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes scoreGlow {
+  0%, 100% {
+    text-shadow: 0 0 8px var(--glow-color);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color);
+    opacity: 0.95;
+  }
+}
+
+/* 雷达图呼吸发光效果 - 从中间往外发散 */
+.chart-breathe {
+  animation: chartBreathe 3s ease-in-out infinite;
+  position: relative;
+}
+
+/* 从中间往外发散的光圈 */
+.chart-breathe::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: radarGlow 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes chartBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.95;
+  }
+}
+
+@keyframes radarGlow {
+  0% {
+    width: 0;
+    height: 0;
+    box-shadow: 0 0 0 transparent;
+    opacity: 1;
+  }
+  50% {
+    width: 60%;
+    height: 60%;
+    box-shadow: 
+      0 0 40px color-mix(in srgb, var(--chart-color) 50%, transparent),
+      0 0 80px color-mix(in srgb, var(--chart-color) 30%, transparent),
+      inset 0 0 30px color-mix(in srgb, var(--chart-color) 25%, transparent);
+    opacity: 0.5;
+  }
+  100% {
+    width: 100%;
+    height: 100%;
+    box-shadow: 
+      0 0 60px color-mix(in srgb, var(--chart-color) 20%, transparent),
+      0 0 100px color-mix(in srgb, var(--chart-color) 10%, transparent);
+    opacity: 0;
+  }
 }
 </style>
