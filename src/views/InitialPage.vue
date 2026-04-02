@@ -179,7 +179,7 @@ const selectStudentGroup = () => {
 
 const navigateToTeacher = () => {
   // 直接跳转，不存储localStorage
-  router.push('/group-recommendation');
+  router.push('/teacher/demand-summary');
 };
 
 const navigateToAdmin = () => {
