@@ -8,9 +8,6 @@
           <span class="text-2xl font-black transition-all" :style="{ color: currentGroup.themeColor }">
             {{ currentGroup.name }} - {{ currentGroup.title }}
           </span>
-          <span class="ml-4 px-2 py-0.5 border border-gray-600 rounded bg-gray-800 text-xs text-gray-400 font-mono tracking-widest">
-            [ 开发者模式 ]
-          </span>
         </div>
       </div>
       <button 
@@ -24,14 +21,14 @@
       </button>
     </header>
 
-    <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
+    <!-- <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
       <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
       <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
       <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
-    </div>
+    </div> -->
 
-    <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
-      
+    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <!-- <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden"> -->
       <div class="col-span-3 flex flex-col gap-3">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
           <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
@@ -46,20 +43,20 @@
           
           <div class="grid grid-cols-2 gap-3 relative z-10 mb-2">
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[11px] font-bold text-textMuted mb-1">AI打分</span>
+              <span class="text-[14px] font-bold text-white mb-1">AI打分</span>
               <span class="text-2xl font-black" :style="{ color: currentGroup.themeColor }">{{ currentGroup.scores.ai }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[11px] font-bold text-textMuted mb-1">教师评分</span>
+              <span class="text-[14px] font-bold text-white mb-1">教师评分</span>
               <span class="text-2xl font-black text-white">{{ currentGroup.scores.teacher }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[11px] font-bold text-textMuted mb-1">小组互评</span>
+              <span class="text-[14px] font-bold text-white mb-1">小组互评</span>
               <span class="text-2xl font-black text-white">{{ currentGroup.scores.peer }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center relative overflow-hidden">
               <div class="absolute inset-0 opacity-10" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-              <span class="text-[11px] font-bold text-white z-10 mb-1">综合得分</span>
+              <span class="text-[14px] font-bold text-white z-10 mb-1">综合得分</span>
               <span class="text-3xl font-black z-10" :style="{ color: currentGroup.themeColor, textShadow: '0 0 10px ' + currentGroup.themeColor + '40' }">{{ currentGroup.scores.total }}</span>
             </div>
           </div>
@@ -73,19 +70,19 @@
           
           <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 relative z-10">
             <div class="bg-darkBg p-3 rounded-lg border border-borderColor border-l-4 transition-all duration-500" :style="{ borderLeftColor: currentGroup.themeColor }">
-              <div class="text-xs font-bold text-white mb-2 flex items-center gap-1">
-                <svg class="w-3 h-3 text-textMuted" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+              <div class="text-sm font-bold text-white mb-2 flex items-center gap-1">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
                 方案综合评价
               </div>
-              <p class="text-[12px] text-textMuted leading-relaxed text-justify">{{ currentGroup.evaluation }}</p>
+              <p class="text-base text-white leading-relaxed text-justify">{{ currentGroup.evaluation }}</p>
             </div>
             
             <div class="bg-darkBg p-3 rounded-lg border border-borderColor border-l-4 transition-all duration-500" :style="{ borderLeftColor: currentGroup.themeColor + '80' }">
-              <div class="text-xs font-bold text-white mb-2 flex items-center gap-1">
-                <svg class="w-3 h-3 text-textMuted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              <div class="text-sm font-bold text-white mb-2 flex items-center gap-1">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 未来优化方向
               </div>
-              <p class="text-[12px] text-textMuted leading-relaxed text-justify">{{ currentGroup.optimization }}</p>
+              <p class="text-base text-white leading-relaxed text-justify">{{ currentGroup.optimization }}</p>
             </div>
           </div>
         </div>
@@ -94,11 +91,16 @@
       <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;">
         <div class="text-base font-black text-white mb-2 flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          系统架构指标雷达图
+          综合得分雷达图
         </div>
-        <div class="text-xs text-textMuted mb-4 ml-4">密盾智学平台多维安全效能评估体系</div>
+        <div class="text-base text-white mb-4 ml-4">密盾智学平台多维安全效能评估体系</div>
         
         <div class="flex-1 w-full relative min-h-0" ref="radarChartRef"></div>
+        
+        <div class="mt-4 text-center">
+          <div class="text-sm font-bold text-white mb-1">综合总分</div>
+          <div class="text-4xl font-black" :style="{ color: currentGroup.themeColor, textShadow: '0 0 10px ' + currentGroup.themeColor + '40' }">{{ currentGroup.scores.total }}</div>
+        </div>
       </div>
 
       <div class="col-span-4 flex flex-col gap-3">
@@ -175,7 +177,7 @@
             </div>
           </div>
 
-          <audio ref="audioElement" class="hidden" preload="metadata"></audio>
+          <audio ref="audioElement" class="hidden" preload="auto"></audio>
 
           <div 
             class="absolute w-[400px] h-[400px] rounded-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)] border-[8px] border-gray-900 flex items-center justify-center vinyl-spin z-0" 
@@ -239,8 +241,8 @@ const groups = [
     codeId: 'SEC-LOWPOWER-01',
     themeColor: '#3b82f6', 
     scores: { ai: 92, teacher: 90, peer: 88, total: 91 },
-    evaluation: '算法实现8ms极低时延与45mW功耗，适配硬约束。',
-    optimization: '拟引入时间戳、硬件加速与密钥自恢复强化系统。',
+    evaluation: '8ms时延45mW功耗，适配硬件。',
+    optimization: '引入时间戳，硬件加速，自恢复。',
     
     radarData: [85, 95, 75, 98, 90], // 安全性, 轻量化, 抗攻击, 低功耗, 时效性
     music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: audioLight, lyrics: [
@@ -258,8 +260,8 @@ const groups = [
     codeId: 'SEC-SIDECHNL-02',
     themeColor: '#ef4444', 
     scores: { ai: 95, teacher: 94, peer: 90, total: 94 },
-    evaluation: '该方案通过了模拟差分功耗分析（DPA）测试，一阶掩码与恒定时间代码有效抹平了功耗与时序波动，成功掩盖了密钥特征泄露，物理安全性显著提升。',
-    optimization: '1. 优化掩码操作的随机数生成效率，减少35%的运算时间延长；2. 引入指令乱序执行机制（Shuffling）；3. 考虑升级为布尔掩码与算术掩码混合的二阶防护体制。',
+    evaluation: '通过DPA测试，掩码掩盖密钥泄露。',
+    optimization: '优化随机数生成，引入乱序执行。',
     radarData: [98, 70, 95, 60, 65],
     music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: audioSideChannel, lyrics: [
       { text: " ", duration: 0 },  
@@ -276,8 +278,8 @@ const groups = [
     codeId: 'SEC-NOREPLAY-03',
     themeColor: '#f59e0b', 
     scores: { ai: 89, teacher: 88, peer: 92, total: 89 },
-    evaluation: '滑动窗口计数器机制实现完整，有效阻断了100%的旧数据包重放尝试。收发双端状态机同步逻辑清晰，容错窗口大小设置合理（Window Size=64），兼顾了安全性和无线环境抗干扰能力。',
-    optimization: '1. 优化计数器溢出后的密钥轮换机制，实现平滑握手；2. 将计数器升级为布隆过滤器（Bloom Filter）缓存机制，应对海量并发验证；3. 加强计数器存储在Flash中的防掉电损坏处理。',
+    evaluation: '滑动窗口阻断100%重放攻击。',
+    optimization: '优化密钥轮换，升级布隆过滤器。',
     radarData: [88, 85, 92, 80, 85],
     music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
       { text: "", duration: 0 },
@@ -294,8 +296,8 @@ const groups = [
     codeId: 'SEC-PQUANTUM-04',
     themeColor: '#8b5cf6', 
     scores: { ai: 96, teacher: 98, peer: 95, total: 97 },
-    evaluation: '该方案极具前瞻性，成功将基于格密码的CRYSTALS-Kyber算法移植至嵌入式环境。其安全性具备抗Shor算法破解能力，公钥体积和密文封装开销通过优化被压制在可接受范围。',
-    optimization: '1. 实施就地计算（In-place Computing）以降低密钥协商时的内存峰值；2. 采用硬件NTT加速指令集提升后量子签名验证速度；3. 探讨与传统ECC算法的混合密钥交换（Hybrid KEM）过渡方案。',
+    evaluation: '移植Kyber算法，抗Shor破解。',
+    optimization: '就地计算降内存，NTT加速验证。',
     radarData: [100, 60, 95, 55, 60],
     music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: audioPostQuantum, lyrics: [
       { text: "纯音乐。。。", duration: 30000 },
@@ -333,87 +335,104 @@ const radarChartRef = ref(null);
 let chartInstance = null;
 
 const initRadarChart = () => {
-  if (!radarChartRef.value) return;
-  
-  if (chartInstance) {
-    chartInstance.dispose();
-  }
-  
-  chartInstance = echarts.init(radarChartRef.value);
-  const color = currentGroup.value.themeColor;
-  
-  const option = {
-    backgroundColor: 'transparent',
-    tooltip: {
-      trigger: 'item',
-      backgroundColor: 'rgba(31, 41, 55, 0.9)',
-      borderColor: color,
-      textStyle: { color: '#fff', fontSize: 12 }
-    },
-    radar: {
-      indicator: [
-        { name: '安全性\nSecurity', max: 100 },
-        { name: '轻量化\nLightweight', max: 100 },
-        { name: '抗攻击\nAnti-Attack', max: 100 },
-        { name: '低功耗\nLow Power', max: 100 },
-        { name: '时效性\nLatency', max: 100 }
-      ],
-      radius: '55%',
-      center: ['50%', '50%'],
-      splitNumber: 4,
-      axisName: {
-        color: '#9ca3af',
-        fontSize: 11,
-        fontWeight: 'bold',
-        lineHeight: 14
+    if (!radarChartRef.value) return;
+    
+    if (chartInstance) {
+      chartInstance.dispose();
+    }
+    
+    chartInstance = echarts.init(radarChartRef.value);
+    const color = currentGroup.value.themeColor;
+    
+    const option = {
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(31, 41, 55, 0.9)',
+        borderColor: color,
+        textStyle: { color: '#fff', fontSize: 12 }
       },
-      splitLine: {
-        lineStyle: {
-          color: ['#374151', '#374151', '#374151', '#374151'].map(c => c + '80')
-        }
-      },
-      splitArea: {
-        areaStyle: {
-          color: ['rgba(31, 41, 55, 0.3)', 'rgba(31, 41, 55, 0.1)']
-        }
-      },
-      axisLine: {
-        lineStyle: {
-          color: '#4b5563'
-        }
-      }
-    },
-    series: [
-      {
-        name: '架构综合评估',
-        type: 'radar',
-        data: [
-          {
-            value: currentGroup.value.radarData,
-            name: currentGroup.value.codeId,
-            itemStyle: {
-              color: color,
-              borderColor: '#fff',
-              borderWidth: 1
-            },
-            areaStyle: {
-              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
-                { offset: 0, color: color + '33' },
-                { offset: 1, color: color + '80' }
-              ])
-            },
-            lineStyle: {
-              width: 2,
-              color: color
-            }
+      radar: {
+        indicator: [
+          { name: 'AI打分', max: 100 },
+          { name: '教师评分', max: 100 },
+          { name: '小组互评', max: 100 }
+        ],
+        radius: '55%',
+        shape: 'polygon',
+        center: ['50%', '50%'],
+        splitNumber: 4,
+        axisName: {
+          color: '#ffffff',
+          fontSize: 16,
+          fontWeight: 'bold',
+          lineHeight: 18,
+          textShadowColor: '#000',
+          textShadowBlur: 5,
+          textShadowOffsetX: 1,
+          textShadowOffsetY: 1
+        },
+        splitLine: {
+          lineStyle: {
+            color: ['#374151', '#374151', '#374151', '#374151'].map(c => c + '80')
           }
-        ]
-      }
-    ]
+        },
+        splitArea: {
+          areaStyle: {
+            color: ['rgba(31, 41, 55, 0.3)', 'rgba(31, 41, 55, 0.1)']
+          }
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#4b5563'
+          }
+        }
+      },
+      series: [
+        {
+          name: '综合得分评估',
+          type: 'radar',
+          data: [
+            {
+              value: [currentGroup.value.scores.ai, currentGroup.value.scores.teacher, currentGroup.value.scores.peer],
+              name: currentGroup.value.codeId,
+              itemStyle: {
+                color: color,
+                borderColor: '#fff',
+                borderWidth: 1
+              },
+              areaStyle: {
+                color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                  { offset: 0, color: color + '33' },
+                  { offset: 1, color: color + '80' }
+                ])
+              },
+              lineStyle: {
+                width: 2,
+                color: color
+              },
+              label: {
+                show: true,
+                formatter: function(params) {
+                  return params.value + '%';
+                },
+                color: '#ffffff',
+                fontSize: 16,
+                fontWeight: 'bold',
+                position: 'right',
+                textShadowColor: '#000',
+                textShadowBlur: 5,
+                textShadowOffsetX: 1,
+                textShadowOffsetY: 1
+              }
+            }
+          ]
+        }
+      ]
+    };
+    
+    chartInstance.setOption(option);
   };
-  
-  chartInstance.setOption(option);
-};
 
 // 监听组变化时重绘雷达图
 watch(currentGroupId, () => {
@@ -439,7 +458,6 @@ onMounted(() => {
   }
   
   currentLyricIndex.value = 1; 
-  loadCurrentGroupAudio(); 
   
   if (audioElement.value) {
     audioElement.value.addEventListener('ended', handleAudioEnded);
@@ -449,6 +467,11 @@ onMounted(() => {
   pollingTimer = setInterval(fetchState, 1000);
   
   window.addEventListener('resize', handleResize);
+  
+  // 等待DOM更新后再加载音频
+  nextTick(() => {
+    loadCurrentGroupAudio();
+  });
 });
 
 // === 音乐与歌词逻辑 ===
@@ -484,12 +507,15 @@ const pauseAudio = () => {
 const loadAudio = (audioUrl) => {
   if (audioElement.value) {
     audioElement.value.src = audioUrl;
+    console.log('音频已加载:', audioUrl);
   }
 };
 
 const loadCurrentGroupAudio = () => {
   if (currentGroup.value && currentGroup.value.music && currentGroup.value.music.audio) {
     loadAudio(currentGroup.value.music.audio);
+  } else {
+    console.log('无法加载音频:', currentGroup.value);
   }
 };
 
