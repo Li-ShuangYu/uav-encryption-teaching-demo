@@ -6,6 +6,10 @@ const routes = [
   // ================= 初始页面 =================
   {
     path: '/',
+    redirect: '/initial'
+  },
+  {
+    path: '/initial',
     name: 'InitialPage',
     component: () => import('../views/InitialPage.vue'),
     meta: { title: '初始页面' }

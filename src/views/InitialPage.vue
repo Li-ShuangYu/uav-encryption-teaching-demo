@@ -7,7 +7,7 @@
     
     <div class="flex flex-col sm:flex-row gap-6">
       <button 
-        @click="navigateToStudent" 
+        @click="showStudentGroupModal = true" 
         class="w-64 h-40 bg-cardInnerBg border border-borderColor rounded-xl shadow-xl hover:border-accentGreen transition flex flex-col items-center justify-center cursor-pointer group"
       >
         <div class="w-16 h-16 rounded-full bg-blue-900/30 flex items-center justify-center mb-4 group-hover:bg-blue-900/50 transition">
@@ -46,40 +46,208 @@
         <p class="text-gray-400 text-sm mt-2">进入管理控制台</p>
       </button>
     </div>
+
+    <!-- 学生分组选择弹窗 -->
+    <div v-if="showStudentGroupModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div class="bg-[#181a20] rounded-xl p-6 max-w-2xl w-full">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-white mb-2">选择你的演示剧本</h2>
+          <p class="text-gray-400">请选择一个密码学攻坚方向</p>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <button 
+            @click="selectGroup(0)"
+            class="bg-[#181a20] border border-blue-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]"
+          >
+            <div class="flex items-center space-x-2 mb-3">
+              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-blue-600">
+                组1
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">低功耗优化方向</h3>
+                <p class="text-sm text-blue-400">PRESENT 轻量级密码算法</p>
+              </div>
+            </div>
+            <div class="w-full h-px bg-gray-800/80 my-2"></div>
+            <p class="text-sm text-gray-400">目标导向极强，懂得Trade-off（取舍）。别人追求花哨，你追求“刚刚好”和“性价比”。</p>
+          </button>
+
+          <button 
+            @click="selectGroup(1)"
+            class="bg-[#181a20] border border-red-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+          >
+            <div class="flex items-center space-x-2 mb-3">
+              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-red-600">
+                组2
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">侧信道防护方向</h3>
+                <p class="text-sm text-red-400">SM4 + 掩码与恒定时间防线</p>
+              </div>
+            </div>
+            <div class="w-full h-px bg-gray-800/80 my-2"></div>
+            <p class="text-sm text-gray-400">习惯性保持防御姿态，做事滴水不漏。不仅关注正面逻辑，更关注“物理暗处”泄露的把柄。</p>
+          </button>
+
+          <button 
+            @click="selectGroup(2)"
+            class="bg-[#181a20] border border-amber-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]"
+          >
+            <div class="flex items-center space-x-2 mb-3">
+              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-amber-500">
+                组3
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">抗重放攻击方向</h3>
+                <p class="text-sm text-amber-400">SM4 + 动态随机数校验协议</p>
+              </div>
+            </div>
+            <div class="w-full h-px bg-gray-800/80 my-2"></div>
+            <p class="text-sm text-gray-400">对“炒冷饭”和“旧账”深恶痛绝，极其看重时效性。做事一码归一码，有着严格的校验机制和底线。</p>
+          </button>
+
+          <button 
+            @click="selectGroup(3)"
+            class="bg-[#181a20] border border-purple-900/40 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+          >
+            <div class="flex items-center space-x-2 mb-3">
+              <div class="w-8 h-8 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-md bg-purple-600">
+                组4
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white">后量子算法适配方向</h3>
+                <p class="text-sm text-purple-400">Kyber 密钥封装防降维打击</p>
+              </div>
+            </div>
+            <div class="w-full h-px bg-gray-800/80 my-2"></div>
+            <p class="text-sm text-gray-400">绝对的长期主义者，对颠覆性新技术充满好奇。具有宏观战略眼光，敢于做第一个吃螃蟹的人。</p>
+          </button>
+        </div>
+
+        <div class="mt-6 flex justify-center">
+          <button 
+            @click="showStudentGroupModal = false"
+            class="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
+          >
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { ref, useRouter } from 'vue-router'
 
 const router = useRouter()
+const showStudentGroupModal = ref(false)
 
-const navigateToStudent = () => {
-  localStorage.removeItem('selectedGroupInfo')
-  router.push('/student/task-receive')
+// 四个组的数据配置
+const groups = [
+  {
+    title: '低功耗优化方向',
+    algorithm: 'PRESENT 轻量级密码算法',
+    persona: '极致的“精算师”与“极简主义者”',
+    traits: ['极其自律', '务实导向', '算力断舍离'],
+    style: '目标导向极强，懂得Trade-off（取舍）。别人追求花哨，你追求“刚刚好”和“性价比”。遇到问题第一反应永远是：“能不能再砍掉些冗余？”',
+    borderClass: 'border-blue-900/40',
+    activeBorderClass: 'border-blue-500',
+    bgHighlightClass: 'bg-gradient-to-br from-blue-600 to-transparent',
+    badgeBgClass: 'bg-blue-600',
+    textClass: 'text-blue-400',
+    tagClass: 'bg-blue-500 text-blue-300 border-blue-800/50',
+    shadowClass: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]'
+  },
+  {
+    title: '侧信道防护方向',
+    algorithm: 'SM4 + 掩码与恒定时间防线',
+    persona: '敏锐的“心理弈者”与“细节控”',
+    traits: ['心思缜密', '极度敏锐', '防御型思维'],
+    style: '习惯性保持防御姿态，做事滴水不漏。不仅关注正面逻辑，更关注“物理暗处”泄露的把柄。情绪稳定，深藏不露。',
+    borderClass: 'border-red-900/40',
+    activeBorderClass: 'border-red-500',
+    bgHighlightClass: 'bg-gradient-to-br from-red-600 to-transparent',
+    badgeBgClass: 'bg-red-600',
+    textClass: 'text-red-400',
+    tagClass: 'bg-red-500 text-red-300 border-red-800/50',
+    shadowClass: 'shadow-[0_0_20px_rgba(239,68,68,0.15)]'
+  },
+  {
+    title: '抗重放攻击方向',
+    algorithm: 'SM4 + 动态随机数校验协议',
+    persona: '严谨的“秩序守卫者”与“史官”',
+    traits: ['精神洁癖', '原则性强', '活在当下'],
+    style: '对“炒冷饭”和“旧账”深恶痛绝，极其看重时效性。做事一码归一码，有着严格的校验机制和底线，绝不轻易让人钻空子。',
+    borderClass: 'border-amber-900/40',
+    activeBorderClass: 'border-amber-500',
+    bgHighlightClass: 'bg-gradient-to-br from-amber-600 to-transparent',
+    badgeBgClass: 'bg-amber-500',
+    textClass: 'text-amber-400',
+    tagClass: 'bg-amber-500 text-amber-300 border-amber-800/50',
+    shadowClass: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]'
+  },
+  {
+    title: '后量子算法适配方向',
+    algorithm: 'Kyber 密钥封装防降维打击',
+    persona: '前卫的“未来先锋”与“破壁人”',
+    traits: ['危机意识', '高瞻远瞩', '拥抱变化'],
+    style: '绝对的长期主义者，对颠覆性新技术充满好奇。具有宏观战略眼光，敢于做第一个吃螃蟹的人，哪怕被认为“杞人忧天”。',
+    borderClass: 'border-purple-900/40',
+    activeBorderClass: 'border-purple-500',
+    bgHighlightClass: 'bg-gradient-to-br from-purple-600 to-transparent',
+    badgeBgClass: 'bg-purple-600',
+    textClass: 'text-purple-400',
+    tagClass: 'bg-purple-500 text-purple-300 border-purple-800/50',
+    shadowClass: 'shadow-[0_0_20px_rgba(168,85,247,0.15)]'
+  }
+];
+
+// 选择组别
+const selectGroup = (index) => {
+  showStudentGroupModal.value = false;
+  
+  // 获取选中的组信息
+  const selectedGroup = groups[index];
+  
+  // 存储组别信息到localStorage
+  const groupInfo = {
+    groupId: index + 1, // 组别编号（1-4）
+    groupName: selectedGroup.title, // 方向名称
+    algorithm: selectedGroup.algorithm, // 算法名称
+    persona: selectedGroup.persona, // 人物画像
+    traits: selectedGroup.traits, // 特质标签
+    style: selectedGroup.style, // 做事风格
+    colorTheme: {
+      borderClass: selectedGroup.borderClass,
+      activeBorderClass: selectedGroup.activeBorderClass,
+      bgHighlightClass: selectedGroup.bgHighlightClass,
+      badgeBgClass: selectedGroup.badgeBgClass,
+      textClass: selectedGroup.textClass,
+      tagClass: selectedGroup.tagClass,
+      shadowClass: selectedGroup.shadowClass
+    },
+    selectTime: new Date().toISOString() // 选择时间
+  };
+  
+  // 使用localStorage存储
+  localStorage.setItem('selectedGroupInfo', JSON.stringify(groupInfo));
+  console.log('组别信息已保存到localStorage:', groupInfo);
+  
+  // 跳转到学生任务接收页面
+  router.push('/student/task-receive');
 };
 
 const navigateToTeacher = () => {
-  // 上传教师身份信息到localStorage
-  const teacherInfo = {
-    role: 'teacher',
-    name: '教师',
-    selectTime: new Date().toISOString()
-  }
-  localStorage.setItem('selectedGroupInfo', JSON.stringify(teacherInfo))
-  router.push('/group-recommendation')
-}
+  // 直接跳转，不存储localStorage
+  router.push('/group-recommendation');
+};
 
 const navigateToAdmin = () => {
-  // 上传管理员身份信息到localStorage
-  const adminInfo = {
-    role: 'admin',
-    name: '管理员',
-    selectTime: new Date().toISOString()
-  }
-  localStorage.setItem('selectedGroupInfo', JSON.stringify(adminInfo))
-  router.push('/admin')
-}
+  // 直接跳转，不存储localStorage
+  router.push('/admin');
+};
 </script>
 
 <style scoped>
