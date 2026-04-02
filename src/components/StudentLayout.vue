@@ -65,7 +65,8 @@ const routeStageMap = {
   '/student/task-select': { stage: '需求分析阶段', order: 2 },
   '/student/task-split': { stage: '需求分析阶段', order: 3 },
   '/student/scheme-upload': { stage: '方案设计阶段', order: 4 },
-  '/student/scheme-detail': { stage: '方案设计阶段', order: 5 }
+  '/student/scheme-detail': { stage: '方案设计阶段', order: 5 },
+  '/student/my-score-result': { stage: '方案设计阶段', order: 6 }
 }
 
 // 所有菜单项
@@ -74,7 +75,8 @@ const allMenuItems = [
   { value: '/student/task-select', label: '需求分析阶段：任务分配与确认', order: 2 },
   { value: '/student/task-split', label: '需求分析阶段：团队协作与分工', order: 3 },
   { value: '/student/scheme-upload', label: '方案设计阶段：方案上传与评估结果', order: 4 },
-  { value: '/student/scheme-detail', label: '方案设计阶段：方案详情与架构蓝图', order: 5 }
+  { value: '/student/scheme-detail', label: '方案设计阶段：方案详情与架构蓝图', order: 5 },
+  { value: '/student/my-score-result', label: '方案设计阶段：评分结果与综合评价', order: 6 }
 ]
 
 // 当前阶段
