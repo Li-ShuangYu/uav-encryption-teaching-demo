@@ -33,46 +33,47 @@
     <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
       
       <div class="col-span-3 flex flex-col gap-3">
-        <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
-          <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          <div class="flex justify-between items-center mb-2 relative z-10">
-            <span class="text-xs px-2 py-0.5 rounded font-black transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor + '33', color: currentGroup.themeColor, border: '1px solid ' + currentGroup.themeColor + '66' }">
-              方案代号
-            </span>
-            <span class="text-textMuted text-xs font-bold font-mono">{{ currentGroup.codeId }}</span>
-          </div>
-          <h2 class="text-2xl font-black text-white relative z-10 mb-2">{{ currentGroup.subtitle }}</h2>
-          <p class="text-sm font-medium text-textMuted leading-tight overflow-hidden relative z-10 mb-4">{{ currentGroup.desc }}</p>
-          
-          <div class="pt-2 border-t border-borderColor/50 flex justify-between items-end relative z-10 mb-4">
-            <div class="text-xs font-bold text-textMuted">目标适配硬件</div>
-            <div class="text-xl font-black italic transition-colors duration-500" :style="{ color: currentGroup.themeColor }">{{ currentGroup.hardware }}</div>
-          </div>
-
-          <div class="mt-auto grid grid-cols-2 gap-2 relative z-10">
-            <button class="py-1.5 bg-[#1f2937] hover:bg-[#374151] border border-gray-600 rounded text-xs text-gray-300 font-bold transition-colors flex items-center justify-center gap-1">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-              API接口文档
-            </button>
-            <button class="py-1.5 bg-[#1f2937] hover:bg-[#374151] border border-gray-600 rounded text-xs text-gray-300 font-bold transition-colors flex items-center justify-center gap-1">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-              下载基础工程
-            </button>
-          </div>
-        </div>
-
         <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up shadow-lg" style="animation-delay: 0.2s;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
           <div class="text-xs font-black mb-3 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-            开发需实现的核心算法
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+            评分详情
           </div>
-          <div class="flex-1 flex flex-col justify-between gap-2">
-            <div v-for="(algo, index) in currentGroup.algorithms" :key="index" class="bg-darkBg p-2.5 rounded-lg border border-borderColor border-l-4 transition-all duration-500 flex flex-col justify-center h-full" :style="{ borderLeftColor: index === 0 ? currentGroup.themeColor : (currentGroup.themeColor + '80') }">
-              <div class="flex justify-between items-end mb-1">
-                <span class="text-[10px] font-bold text-textMuted">{{ algo.label }}</span>
-                <span class="text-sm font-black transition-colors duration-500" :style="{ color: index === 0 ? currentGroup.themeColor : '#e5e7eb' }">{{ algo.name }}</span>
+          <div class="flex-1 flex flex-col justify-between gap-4">
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor flex flex-col">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-textMuted">AI评分</span>
+                <span class="text-xl font-black text-accentGreen">{{ currentGroup.scores.ai }}</span>
               </div>
-              <div class="text-[11px] text-textMain leading-tight font-medium">{{ algo.desc }}</div>
+              <div class="w-full bg-gray-700 rounded-full h-1.5">
+                <div class="bg-accentGreen h-1.5 rounded-full transition-all duration-1000 ease-out" :style="{ width: currentGroup.scores.ai + '%' }"></div>
+              </div>
+            </div>
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor flex flex-col">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-textMuted">教师评分</span>
+                <span class="text-xl font-black text-blue-500">{{ currentGroup.scores.teacher }}</span>
+              </div>
+              <div class="w-full bg-gray-700 rounded-full h-1.5">
+                <div class="bg-blue-500 h-1.5 rounded-full transition-all duration-1000 ease-out" :style="{ width: currentGroup.scores.teacher + '%' }"></div>
+              </div>
+            </div>
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor flex flex-col">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-textMuted">小组互评</span>
+                <span class="text-xl font-black text-purple-500">{{ currentGroup.scores.group }}</span>
+              </div>
+              <div class="w-full bg-gray-700 rounded-full h-1.5">
+                <div class="bg-purple-500 h-1.5 rounded-full transition-all duration-1000 ease-out" :style="{ width: currentGroup.scores.group + '%' }"></div>
+              </div>
+            </div>
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor flex flex-col">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-textMuted">综合得分</span>
+                <span class="text-xl font-black" :style="{ color: currentGroup.themeColor }">{{ currentGroup.scores.total }}</span>
+              </div>
+              <div class="w-full bg-gray-700 rounded-full h-1.5">
+                <div class="h-1.5 rounded-full transition-all duration-1000 ease-out" :style="{ width: currentGroup.scores.total + '%', backgroundColor: currentGroup.themeColor }"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -81,114 +82,27 @@
       <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;">
         <div class="text-base font-black text-white mb-4 flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          系统架构与数据流转参考
+          小组评分雷达图
         </div>
-        <div class="flex-1 flex flex-col justify-between mb-4 relative py-1">
-          <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-borderColor -translate-x-1/2 z-0 rounded-full"></div>
-          <div v-for="(layer, index) in currentGroup.archLayers" :key="index" class="relative z-10 w-[85%] mx-auto bg-cardInnerBg border rounded-lg py-2.5 px-4 flex items-center justify-between transition-all duration-500 hover:scale-[1.02]" :style="{ borderColor: layer.highlight ? currentGroup.themeColor : '#374151', backgroundColor: layer.highlight ? '#1f2937' : '' }">
-            <div class="text-xs font-black transition-colors duration-500" :style="{ color: layer.highlight ? currentGroup.themeColor : '#9ca3af' }">{{ layer.name }}</div>
-            <div class="text-xs font-bold text-textMain text-right w-2/3 leading-snug">{{ layer.desc }}</div>
-          </div>
-        </div>
-        <div class="shrink-0 bg-darkBg/80 rounded-lg p-3 border border-borderColor">
-          <div class="text-[11px] font-black text-textMuted mb-2 uppercase tracking-widest flex justify-between items-center">
-            <span>Security Flow / 时序图节点</span>
-            <span class="text-[#3b82f6] hover:underline cursor-pointer">查看详细UML图</span>
-          </div>
-          <div class="flex items-center justify-between text-xs font-black font-mono transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-            <template v-for="(step, index) in currentGroup.flow" :key="index">
-              <span>{{ step }}</span>
-              <span v-if="index < currentGroup.flow.length - 1" class="text-textMuted opacity-50">➔</span>
-            </template>
-          </div>
+        <div class="flex-1 flex items-center justify-center">
+          <div id="radar-chart" class="w-full h-full"></div>
         </div>
       </div>
 
       <div class="col-span-4 flex flex-col gap-3">
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
-          
-          <div class="px-5 pt-5 shrink-0 relative z-20 flex justify-between items-start">
-            <div>
-              <div class="text-sm font-black mb-1 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
-                项目专属队歌
-              </div>
-              <div class="text-lg text-white font-black tracking-widest">{{ getAudioFileName(currentGroup.music.audio) }}</div>
-            </div>
-            
-            <div class="text-right max-w-[55%]">
-              <div class="text-[11px] font-black transition-colors duration-500 mb-0.5" :style="{ color: currentGroup.themeColor }">STYLE / 风格解码</div>
-              <div class="font-bold text-white text-sm leading-tight truncate">{{ currentGroup.music.tags }}</div>
-              <div class="text-[10px] mt-1 text-textMuted truncate">{{ currentGroup.music.type }}</div>
-            </div>
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
+          <div class="text-xs font-black mb-3 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            综合评价与优化建议
           </div>
-          
-          <div class="relative w-full flex-1 overflow-hidden z-10 flex items-center justify-center">
-            <div class="absolute top-1/4 w-[85%] pointer-events-none transition-transform duration-500 ease-in-out"
-                 :style="{ transform: `translateY(calc(-${(currentLyricIndex - 1) * 2.5 + 1.25}rem))` }">
-              <div 
-                    v-for="(lyric, index) in currentLyrics" 
-                    :key="index"
-                    class="h-10 flex items-center justify-center text-center transition-all duration-500 ease-out truncate"
-                    :class="[
-                      index < (currentLyricIndex - 1) - 2 ? 'opacity-0 scale-90' : '', 
-                      index === (currentLyricIndex - 1) - 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', 
-                      index === (currentLyricIndex - 1) - 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', 
-                      index === currentLyricIndex - 1 ? 'font-black text-lg scale-110 opacity-100' : '', 
-                      index === (currentLyricIndex - 1) + 1 ? 'text-sm font-medium text-textMuted opacity-60 scale-100' : '', 
-                      index === (currentLyricIndex - 1) + 2 ? 'text-xs font-medium text-textMuted opacity-20 scale-95' : '', 
-                      index > (currentLyricIndex - 1) + 2 ? 'opacity-0 scale-90' : '' 
-                    ]"
-                    :style="{ color: index === currentLyricIndex - 1 ? currentGroup.themeColor : '' }"
-                  >
-                    {{ lyric.text }}
-                  </div>
+          <div class="flex-1 flex flex-col gap-4">
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor">
+              <div class="text-xs font-bold text-textMuted mb-2">三方综合评价</div>
+              <div class="text-sm text-textMain leading-tight font-medium">{{ currentGroup.evaluation.summary }}</div>
             </div>
-          </div>
-
-          <div 
-            class="absolute z-30 cursor-pointer transition-transform duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)] drop-shadow-2xl hover:scale-105"
-            :style="{
-              left: 'calc(50% - 210px)',
-              bottom: '220px',
-              transform: `scaleX(-1) ${isPlaying ? 'rotate(34deg)' : 'rotate(10deg)'}`,
-              transformOrigin: '16px 16px'
-            }"
-            @click="togglePlay"
-            title="点击播放/暂停"
-          >
-            <div class="relative w-8 h-8">
-              <div class="absolute inset-0 bg-black/40 rounded-full scale-125 blur-[3px] translate-y-1"></div>
-              <div class="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 rounded-full border border-gray-300 shadow-md"></div>
-              <div class="absolute inset-[5px] bg-gradient-to-tr from-gray-700 to-gray-900 rounded-full shadow-inner flex items-center justify-center border border-gray-600">
-                <div class="w-1.5 h-1.5 bg-gradient-to-br from-white to-gray-400 rounded-full shadow-sm"></div>
-              </div>
-            </div>
-            <div class="absolute top-[16px] left-[12px] w-2 h-[95px] bg-gradient-to-r from-gray-300 via-white to-gray-300 shadow-sm border-x border-gray-200/50"></div>
-            <div class="absolute top-[110px] left-[12px] w-2 origin-top -rotate-[30deg]">
-              <div class="absolute -top-[4px] left-0 w-2 h-2 bg-gradient-to-br from-white to-gray-300 rounded-full shadow-sm"></div>
-              <div class="w-full h-[75px] bg-gradient-to-r from-gray-300 via-white to-gray-300 shadow-sm border-x border-gray-200/50"></div>
-              <div class="absolute top-[71px] left-1/2 -translate-x-1/2 flex flex-col items-center">
-                <div class="w-3.5 h-2.5 bg-gradient-to-b from-gray-400 to-gray-500 rounded-t-sm shadow-inner"></div>
-                <div class="w-8 h-[42px] bg-gradient-to-b from-gray-50 to-gray-200 rounded-[4px] shadow-lg flex justify-center gap-1.5 pt-3 pb-2 border-t border-b-2 border-x border-gray-100 border-b-gray-400">
-                  <div class="w-[2.5px] h-full bg-gray-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] rounded-full"></div>
-                  <div class="w-[2.5px] h-full bg-gray-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] rounded-full"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <audio ref="audioElement" class="hidden" preload="metadata"></audio>
-
-          <div 
-            class="absolute w-[400px] h-[400px] rounded-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)] border-[8px] border-gray-900 flex items-center justify-center vinyl-spin z-0" 
-            :class="{ 'vinyl-playing': isPlaying }"
-            style="left: calc(50% - 200px); bottom: -180px;"
-          >
-            <div class="absolute inset-0 rounded-full" style="background: repeating-radial-gradient(#1f2937 0, #1f2937 5px, #111827 6px, #111827 8px);"></div>
-            <div class="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-white/10 to-transparent pointer-events-none"></div>
-            <div class="relative w-20 h-20 rounded-full shadow-inner flex items-center justify-center transition-colors duration-500 z-10" :style="{ backgroundColor: currentGroup.themeColor }">
-              <div class="w-4 h-4 rounded-full bg-darkBg border border-black/50 shadow-inner"></div>
+            <div class="bg-darkBg p-3 rounded-lg border border-borderColor">
+              <div class="text-xs font-bold text-textMuted mb-2">未来优化建议</div>
+              <div class="text-sm text-textMain leading-tight font-medium">{{ currentGroup.evaluation.suggestions }}</div>
             </div>
           </div>
         </div>
@@ -200,6 +114,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import * as echarts from 'echarts';
 
 // 导入音频文件 (请确保路径正确)
 import audioLight from '../assets/audio/轻量级.mp3';
@@ -234,6 +149,98 @@ const backToWorkspace = () => {
   router.back();
 };
 
+let chartInstance = null;
+
+const initRadarChart = () => {
+  const chartDom = document.getElementById('radar-chart');
+  if (!chartDom) return;
+  
+  if (chartInstance) {
+    chartInstance.dispose();
+  }
+  
+  chartInstance = echarts.init(chartDom);
+  
+  const group = currentGroup.value;
+  
+  const option = {
+    radar: {
+      indicator: [
+        { name: '安全性', max: 100 },
+        { name: '性能', max: 100 },
+        { name: '可靠性', max: 100 },
+        { name: '创新性', max: 100 },
+        { name: '工程可行性', max: 100 }
+      ],
+      radius: '70%',
+      splitNumber: 4,
+      axisName: { color: '#d1d5db', fontSize: 12 },
+      splitLine: { lineStyle: { color: ['#2d353e'] } },
+      splitArea: { show: false },
+      axisLine: { lineStyle: { color: '#2d353e' } }
+    },
+    series: [
+      {
+        type: 'radar',
+        data: [
+          {
+            value: [85, 90, 88, 92, 86],
+            name: 'AI评分',
+            itemStyle: { color: '#23b586' },
+            areaStyle: { 
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { color: '#23b586', offset: 0, opacity: 0.1 },
+                { color: '#23b586', offset: 1, opacity: 0.4 }
+              ])
+            },
+            lineStyle: { width: 3, color: '#23b586' },
+            symbolSize: 6
+          },
+          {
+            value: [88, 85, 90, 88, 92],
+            name: '教师评分',
+            itemStyle: { color: '#3b82f6' },
+            areaStyle: { 
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { color: '#3b82f6', offset: 0, opacity: 0.1 },
+                { color: '#3b82f6', offset: 1, opacity: 0.4 }
+              ])
+            },
+            lineStyle: { width: 3, color: '#3b82f6' },
+            symbolSize: 6
+          },
+          {
+            value: [82, 88, 85, 90, 82],
+            name: '小组评分',
+            itemStyle: { color: '#a855f7' },
+            areaStyle: { 
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { color: '#a855f7', offset: 0, opacity: 0.1 },
+                { color: '#a855f7', offset: 1, opacity: 0.4 }
+              ])
+            },
+            lineStyle: { width: 3, color: '#a855f7' },
+            symbolSize: 6
+          }
+        ]
+      }
+    ],
+    legend: {
+      data: ['AI评分', '教师评分', '小组评分'],
+      textStyle: { color: '#d1d5db' },
+      top: 10
+    }
+  };
+  
+  chartInstance.setOption(option);
+};
+
+const handleResize = () => {
+  if (chartInstance) {
+    chartInstance.resize();
+  }
+};
+
 const groups = [
   {
     id: 1,
@@ -244,6 +251,16 @@ const groups = [
     themeColor: '#3b82f6', 
     desc: '专注民用小型无人机通信安全，采用 PRESENT 与 ECC 组合，实现数据加密传输与双向认证，满足加解密时延≤10ms与功耗≤50mW的极致轻量需求。',
     hardware: 'STM32L432',
+    scores: {
+      ai: 85,
+      teacher: 88,
+      group: 82,
+      total: 85
+    },
+    evaluation: {
+      summary: '该方案在轻量级设计方面表现突出，成功平衡了安全性与功耗需求。AI评估认为方案创新性强，教师评价认可其工程可行性，小组互评也给出了较高分数。综合来看，这是一个非常成熟的轻量级加密方案。',
+      suggestions: '建议进一步优化密钥管理流程，可考虑引入轻量级密钥更新机制，同时在硬件选型上探索更低功耗的芯片方案，以进一步提升系统性能。'
+    },
     music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: audioLight, lyrics: [
       { text: " ", duration: 0 },  
       { text: "轻量级", duration: 9500 },
@@ -286,6 +303,16 @@ const groups = [
     themeColor: '#ef4444', 
     desc: '聚焦通信安全与侧信道防护，引入一阶掩码与恒定时间代码实现，阻断功耗、时序等物理信息泄露，抵御差分功耗分析（DPA）攻击。',
     hardware: 'STM32L432',
+    scores: {
+      ai: 90,
+      teacher: 92,
+      group: 88,
+      total: 90
+    },
+    evaluation: {
+      summary: '该方案在侧信道防护方面表现卓越，通过一阶掩码和恒定时间代码实现，有效抵御了物理攻击。AI和教师评价都给予了高度认可，小组互评也反映了方案的技术深度。',
+      suggestions: '建议在保持安全性的同时，优化算法实现以减少性能开销，可考虑针对不同硬件平台进行专门优化，以提升方案的通用性。'
+    },
     music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: audioSideChannel, lyrics: [
       { text: " ", duration: 0 },  
       { text: "侧信道", duration: 1200 },
@@ -417,6 +444,16 @@ onMounted(() => {
   // 开启状态机轮询
   fetchState();
   pollingTimer = setInterval(fetchState, 1000);
+  
+  // 初始化雷达图
+  if (isEvaluated.value) {
+    setTimeout(() => {
+      initRadarChart();
+    }, 500);
+  }
+  
+  // 添加窗口 resize 事件监听
+  window.addEventListener('resize', handleResize);
 });
 
 const currentLyrics = computed(() => currentGroup.value?.music?.lyrics || []);
@@ -493,6 +530,12 @@ onUnmounted(() => {
     audioElement.value.removeEventListener('ended', handleAudioEnded);
   }
   if (pollingTimer) clearInterval(pollingTimer);
+  // 清理雷达图实例
+  if (chartInstance) {
+    chartInstance.dispose();
+  }
+  // 移除窗口 resize 事件监听
+  window.removeEventListener('resize', handleResize);
 });
 </script>
 
