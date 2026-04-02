@@ -11,14 +11,30 @@
         </div>
       </div>
     </header>
-<div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
+
+    <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
       <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
-      <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
-      <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
+      <h2 class="text-2xl font-bold text-white mb-6 tracking-wider">等待评估完成...</h2>
+      <div class="space-y-3 w-80">
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 AI 批改</span>
+          <span v-if="states.aiEvaluated" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 教师评分</span>
+          <span v-if="states.teacherScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b7280]">正在等待 组间互评</span>
+          <span v-if="states.studentScored" class="text-green-400 font-bold">✓</span>
+          <span v-else class="text-gray-500">⏳</span>
+        </div>
+      </div>
     </div>
 
     <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
-    <!-- <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden"> -->
       
       <div class="col-span-3 flex flex-col gap-3">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
@@ -185,7 +201,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts';
 
@@ -215,7 +231,6 @@ const getAudioFileName = (audio) => {
 const router = useRouter();
 const route = useRoute();
 
-// 严控字数：代号≤10字，内容严格≤18字，内容更丰富
 const groups = [
   {
     id: 1,
@@ -226,8 +241,8 @@ const groups = [
     themeColor: '#3b82f6', 
     hardware: 'STM32L432',
     scores: { ai: 92, teacher: 90, peer: 88, total: 91 },
-    evaluation: '8ms极低时延，完美适配轻量级硬件。', // 17字
-    optimization: '拟引入时间戳与硬件加速，强化防线。', // 17字
+    evaluation: '8ms极低时延，完美适配轻量级硬件。', 
+    optimization: '拟引入时间戳与硬件加速，强化防线。', 
     radarData: [92, 90, 88], 
     music: { tags: '清脆活泼、电子拨弦、快节奏', type: '映射轻量级、低时延特征', audio: audioLight, lyrics: [
       { text: " ", duration: 0 },  
@@ -247,8 +262,8 @@ const groups = [
     themeColor: '#ef4444', 
     hardware: 'STM32L432',
     scores: { ai: 95, teacher: 94, peer: 90, total: 94 },
-    evaluation: '掩码机制有效掩盖物理层密钥泄露。', // 16字
-    optimization: '拟优化随机数，进一步引入乱序执行。', // 17字
+    evaluation: '掩码机制有效掩盖物理层密钥泄露。', 
+    optimization: '拟优化随机数，进一步引入乱序执行。', 
     radarData: [95, 94, 90],
     music: { tags: '多层叠加、沉稳厚重、低频轰鸣', type: '映射掩码防护、高运算冗余特征', audio: audioSideChannel, lyrics: [
       { text: " ", duration: 0 },  
@@ -267,8 +282,8 @@ const groups = [
     themeColor: '#f59e0b', 
     hardware: 'STM32L432',
     scores: { ai: 89, teacher: 88, peer: 92, total: 89 },
-    evaluation: '滑动窗口完美阻断一切旧包重放攻击。', // 17字
-    optimization: '拟平滑优化轮换逻辑，升级布隆过滤。', // 17字
+    evaluation: '滑动窗口完美阻断一切旧包重放攻击。', 
+    optimization: '拟平滑优化轮换逻辑，升级布隆过滤。', 
     radarData: [89, 88, 92],
     music: { tags: '节奏恒定、机械感强、精准节拍', type: '映射时间戳严格对齐、序列号递增特征', audio: audioAntiReplay, lyrics: [
       { text: "", duration: 0 },
@@ -286,8 +301,8 @@ const groups = [
     themeColor: '#8b5cf6', 
     hardware: 'STM32L432',
     scores: { ai: 96, teacher: 98, peer: 95, total: 97 },
-    evaluation: '成功移植Kyber，强效抵御量子破解。', // 17字
-    optimization: '拟实施就地计算，引入NTT硬件加速。', // 17字
+    evaluation: '成功移植Kyber，强效抵御量子破解。', 
+    optimization: '拟实施就地计算，引入NTT硬件加速。', 
     radarData: [96, 98, 95],
     music: { tags: '未来感、复杂合成器、广阔空间', type: '映射庞大矩阵运算、大公钥体积特征', audio: audioPostQuantum, lyrics: [
       { text: "纯音乐。。。", duration: 30000 },
@@ -298,9 +313,16 @@ const groups = [
 const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
+// 引入 states 变量来分别控制具体的勾选状态
+const states = reactive({
+  aiEvaluated: false,
+  teacherScored: false,
+  studentScored: false
+});
 const isEvaluated = ref(false);
 const radarChartRef = ref(null);
 let chartInstance = null;
+let pollingTimer = null;
 
 const initRadarChart = () => {
   if (!radarChartRef.value) return;
@@ -320,7 +342,6 @@ const initRadarChart = () => {
       ],
       radius: '60%', 
       center: ['50%', '50%'],
-      // 字体大、白、亮，去除了发光阴影以符合要求
       axisName: { 
         color: '#ffffff', 
         fontSize: 18, 
@@ -337,7 +358,6 @@ const initRadarChart = () => {
         value: currentGroup.value.radarData,
         itemStyle: { color: '#ffffff' }, 
         areaStyle: { color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [{ offset: 0, color: color + '55' }, { offset: 1, color: color + 'AA' }]) },
-        // 图形边缘的发光保留，以维持图表质感，仅去除了文字的发光
         lineStyle: { width: 4, color: color, shadowBlur: 15, shadowColor: color },
         label: {
             show: true,
@@ -355,8 +375,41 @@ const initRadarChart = () => {
 const handleResize = () => { if (chartInstance) chartInstance.resize(); };
 
 watch(currentGroupId, () => {
-  nextTick(() => initRadarChart());
+  if (isEvaluated.value) {
+    nextTick(() => initRadarChart());
+  }
 });
+
+const fetchState = async () => {
+  try {
+    const res = await fetch('/api/state');
+    const state = await res.json();
+    
+    // 更新打钩状态
+    states.aiEvaluated = state.ai_evaluated === 1;
+    states.teacherScored = state.teacher_scored_group === 1;
+    states.studentScored = state.student_scored_group === 1;
+    
+    // 三者皆为1，代表评估完成
+    if (states.aiEvaluated && states.teacherScored && states.studentScored) {
+      isEvaluated.value = true;
+      if (pollingTimer) {
+        clearInterval(pollingTimer);
+        pollingTimer = null;
+      }
+      
+      nextTick(() => {
+        initRadarChart();
+        if (audioElement.value) {
+          audioElement.value.addEventListener('ended', handleAudioEnded);
+        }
+        loadCurrentGroupAudio();
+      });
+    }
+  } catch (error) {
+    // 接口错误静默处理
+  }
+};
 
 onMounted(() => {
   const storedInfo = localStorage.getItem('selectedGroupInfo');
@@ -368,17 +421,11 @@ onMounted(() => {
   }
   
   currentLyricIndex.value = 1; 
-  loadCurrentGroupAudio(); 
-  
-  if (audioElement.value) {
-    audioElement.value.addEventListener('ended', handleAudioEnded);
-  }
 
   window.addEventListener('resize', handleResize);
 
-  nextTick(() => {
-    initRadarChart();
-  });
+  fetchState(); 
+  pollingTimer = setInterval(fetchState, 1000); 
 });
 
 const currentLyrics = computed(() => currentGroup.value?.music?.lyrics || []);
@@ -450,6 +497,9 @@ const handleAudioEnded = () => {
 };
 
 onUnmounted(() => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+  }
   if (lyricTimer) clearTimeout(lyricTimer);
   if (audioElement.value) {
     audioElement.value.removeEventListener('ended', handleAudioEnded);
