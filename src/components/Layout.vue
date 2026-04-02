@@ -16,11 +16,7 @@
                 </option>
             </select>
 
-            <!-- <button @click="isModalOpen = true" class="bg-accentGreen hover:bg-accentGreenDark text-white px-5 py-1.5 rounded text-sm font-bold shadow-[0_0_12px_rgba(35,181,134,0.4)] transition flex items-center space-x-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>发布任务</span>
-            </button> -->
-            
+
             <div class="h-4 w-px bg-accentGreen/30 mx-2"></div>
 
             <div class="flex items-center space-x-2">
@@ -54,7 +50,7 @@
       </div>
     </transition>
 
-    <div v-show="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 backdrop-blur-sm transition-opacity">
+    <!-- <div v-show="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 backdrop-blur-sm transition-opacity">
         <div class="bg-panelBg border border-accentGreen rounded-xl w-[550px] shadow-2xl flex flex-col overflow-hidden">
             <div class="px-6 py-4 border-b border-borderColor flex justify-between items-center bg-cardInnerBg">
                 <h3 class="text-lg font-bold text-white flex items-center">
@@ -102,7 +98,7 @@
                 <button @click="isModalOpen = false" class="px-4 py-2 rounded text-sm text-white bg-accentGreen hover:bg-accentGreenDark font-bold shadow-lg transition">立即发布并推给学生</button>
             </div>
         </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

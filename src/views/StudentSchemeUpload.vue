@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden" @click="showDropdown = false">
+  <div class="h-screen flex flex-col bg-darkBg text-textMain font-sans overflow-hidden">
     <transition name="toast">
       <div v-if="uiState.showToast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-accentGreen text-white px-6 py-3 rounded shadow-lg z-50 flex items-center gap-2 pointer-events-none">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -16,34 +16,26 @@
           <h1 class="text-xl font-bold text-white tracking-wide">方案设计-验证评估</h1>
         </div>
         
-        <div class="relative">
+        <div class="flex items-center gap-3">
           <div 
-            @click.stop="showDropdown = !showDropdown"
-            class="flex items-center gap-2 px-4 py-1.5 rounded-full border cursor-pointer hover:opacity-80 transition-opacity"
+            class="flex items-center gap-2 px-4 py-1.5 rounded-full border"
             :style="{ 
               backgroundColor: currentGroup.themeColor + '1A', 
               borderColor: currentGroup.themeColor + '4D', 
               color: currentGroup.themeColor 
             }"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            <span class="font-bold text-sm">{{ currentGroup.name }} (操作终端)</span>
-            </div>
-          
-          <transition name="fade">
-            <div v-if="showDropdown" class="absolute right-0 top-full mt-2 w-48 bg-panelBg border border-borderColor rounded-lg shadow-xl overflow-hidden">
-              <div 
-                v-for="g in groups" 
-                :key="g.id" 
-                @click.stop="switchGroup(g.id)"
-                class="px-4 py-3 hover:bg-cardInnerBg cursor-pointer border-b border-borderColor/50 last:border-0 flex items-center gap-2 transition-colors"
-                :class="currentGroupId === g.id ? 'bg-cardInnerBg' : ''"
-              >
-                <div class="w-2 h-2 rounded-full" :style="{ backgroundColor: g.themeColor }"></div>
-                <span class="text-sm font-medium" :style="{ color: currentGroupId === g.id ? g.themeColor : '#d1d5db' }">{{ g.name }}</span>
-              </div>
-            </div>
-          </transition>
+            <span class="font-bold text-sm">{{ currentGroup.name }} - {{ currentGroupTitle }}</span>
+          </div>
+          <button 
+            @click="goToTaskSplit"
+            class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-3 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+            返回任务详情
+          </button>
         </div>
       </div>
       
@@ -64,7 +56,8 @@
 
     <main class="flex-1 p-6 grid grid-cols-2 gap-6 bg-darkBg h-full overflow-hidden z-10">
       
-      <div class="bg-panelBg border border-borderColor rounded-lg flex flex-col shadow-lg overflow-hidden relative transition-colors" :style="{ borderTopWidth: '4px', borderTopColor: currentGroup.themeColor }">
+      <transition name="fade-in-up">
+        <div v-if="showContent" class="bg-panelBg border border-borderColor rounded-lg flex flex-col shadow-lg overflow-hidden relative transition-colors" :style="{ borderTopWidth: '4px', borderTopColor: currentGroup.themeColor }">
         <div class="px-5 py-4 border-b border-borderColor bg-cardInnerBg flex justify-between items-center">
           <h2 class="font-bold text-white text-lg flex items-center gap-2">
             <svg class="w-5 h-5" :style="{ color: currentGroup.themeColor }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
@@ -127,9 +120,11 @@
             </template>
           </button>
         </div>
-      </div>
+        </div>
+      </transition>
 
-      <div class="bg-panelBg border border-borderColor rounded-lg flex flex-col shadow-lg overflow-hidden relative transition-colors" :style="{ borderTopWidth: '4px', borderTopColor: '#23b586' }">
+      <transition name="fade-in-up">
+        <div v-if="showContent" class="bg-panelBg border border-borderColor rounded-lg flex flex-col shadow-lg overflow-hidden relative transition-colors" style="animation-delay: 0.2s;" :style="{ borderTopWidth: '4px', borderTopColor: '#23b586' }">
         <div class="px-5 py-4 border-b border-borderColor bg-cardInnerBg flex justify-between items-center z-10">
           <h2 class="font-bold text-white text-lg flex items-center gap-2">
             <svg class="w-5 h-5 text-accentGreen" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -204,7 +199,8 @@
             </div>
           </div>
         </transition>
-      </div>
+        </div>
+      </transition>
     </main>
   </div>
 </template>
@@ -216,28 +212,26 @@ import * as echarts from 'echarts';
 
 const router = useRouter();
 
-// ==== 状态管理与数据源 ====
-const showDropdown = ref(false);
+const showContent = ref(false); 
 const currentGroupId = ref('g1');
-const fileInput = ref(null); // 文件选择框引用
-let chartInstance = null; // 图表实例
+const fileInput = ref(null); 
+let chartInstance = null; 
 
 const uiState = reactive({
   showToast: false
 });
 
-// 严格按照脚本还原四个小组的核心数据配置
 const groups = reactive([
   {
     id: 'g1',
     name: '第一组',
-    themeColor: '#3b82f6', // 蓝
+    themeColor: '#3b82f6', 
     tags: ['防窃听(高保密)', '防篡改(高完整)', '国密标准'],
     fileName: '',
     fileSize: '',
     aiScore: 86,
     aiLevel: '良好 (B+)',
-    radarData: [85, 80, 95, 95, 80], // 保密、完整、可用、成本、创新
+    radarData: [85, 80, 95, 95, 80], 
     aiConclusion: "本组采用 <span style='color:#3b82f6;font-weight:bold;'>SM4+SM3 国密组合方案</span>，符合国家密码标准，安全性高，性能稳定。重点解决了国密算法在无人机环境中的应用问题。",
     aiSuggestion: "建议进一步优化密钥管理流程，可在不增加系统复杂度的前提下提升动态安全性。",
     state: { isUploading: false, isSubmitted: false, evalStatus: 'waiting', evalProgress: 0, hasFile: false }
@@ -245,7 +239,7 @@ const groups = reactive([
   {
     id: 'g2',
     name: '第二组',
-    themeColor: '#ef4444', // 红
+    themeColor: '#ef4444', 
     tags: ['防窃听(高保密)', '防篡改(高完整)', '非对称加密'],
     fileName: '',
     fileSize: '',
@@ -259,7 +253,7 @@ const groups = reactive([
   {
     id: 'g3',
     name: '第三组',
-    themeColor: '#f59e0b', // 黄
+    themeColor: '#f59e0b', 
     tags: ['防窃听(高保密)', '防篡改(高完整)', '低功耗'],
     fileName: '',
     fileSize: '',
@@ -273,7 +267,7 @@ const groups = reactive([
   {
     id: 'g4',
     name: '第四组',
-    themeColor: '#8b5cf6', // 紫
+    themeColor: '#8b5cf6', 
     tags: ['防窃听(高保密)', '防篡改(高完整)', '分布式防护'],
     fileName: '',
     fileSize: '',
@@ -286,51 +280,50 @@ const groups = reactive([
   }
 ]);
 
-const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
-
-// 从 localStorage 读取组信息
-onMounted(() => {
-  const storedInfo = localStorage.getItem('selectedGroupInfo');
-  console.log('StudentSchemeUpload - 从localStorage读取:', storedInfo);
-  if (storedInfo) {
-    const groupInfo = JSON.parse(storedInfo);
-    if (groupInfo.groupId) {
-      // 将数字ID转换为 'g1', 'g2', 'g3', 'g4' 格式
-      currentGroupId.value = 'g' + groupInfo.groupId;
-      console.log('StudentSchemeUpload - 设置currentGroupId为:', currentGroupId.value);
-    }
-  }
+// 修复 1：增加计算属性的安全回退，避免白屏
+const currentGroup = computed(() => {
+  return groups.find(g => g.id === currentGroupId.value) || groups[0];
 });
 
+const currentGroupTitle = computed(() => {
+  const storedInfo = localStorage.getItem('selectedGroupInfo');
+  if (storedInfo) {
+    try {
+      const groupInfo = JSON.parse(storedInfo);
+      return groupInfo.groupName || '';
+    } catch (e) {}
+  }
+  return '';
+});
 
-// ==== 核心交互逻辑 ====
-
-// 切换小组
-const switchGroup = (id) => {
-  showDropdown.value = false;
-  if (currentGroupId.value === id) return;
-  
-  currentGroupId.value = id;
-  
-  // 切换后，如果该组已经是完成评价状态，需要重新渲染 ECharts
-  nextTick(() => {
-    if (chartInstance) {
-      chartInstance.dispose();
-      chartInstance = null;
+onMounted(() => {
+  const storedInfo = localStorage.getItem('selectedGroupInfo');
+  if (storedInfo) {
+    try {
+      const groupInfo = JSON.parse(storedInfo);
+      if (groupInfo.groupId) {
+        // 修复 2：安全地拼接 groupId，防止出现 "gg1" 的情况
+        let gId = String(groupInfo.groupId);
+        if (!gId.startsWith('g')) {
+          gId = 'g' + gId;
+        }
+        currentGroupId.value = gId;
+      }
+    } catch(e) {
+      console.error('JSON Parse error', e);
     }
-    if (currentGroup.value.state.evalStatus === 'finished') {
-      initRadarChart();
-    }
-  });
-};
+  }
+  
+  setTimeout(() => {
+    showContent.value = true;
+  }, 100);
+});
 
-// ✅ 修改1：触发文件上传弹窗
 const triggerFileUpload = () => {
   if (currentGroup.value.state.isSubmitted) return;
   fileInput.value.click();
 };
 
-// ✅ 修改1：文件选择后处理（回显实际上传的文件名和大小）
 const handleFileSelect = (event) => {
   const file = event.target.files[0];
   if (file) {
@@ -340,7 +333,6 @@ const handleFileSelect = (event) => {
   }
 };
 
-// 格式化文件大小
 const formatFileSize = (bytes) => {
   if (bytes === 0) return '0 B';
   const k = 1024;
@@ -349,68 +341,56 @@ const formatFileSize = (bytes) => {
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 };
 
-// 提交方案文件并触发后端状态更新
 const handleUpload = async () => {
   const group = currentGroup.value;
   group.state.isUploading = true;
   
   try {
-    // 获取文件输入框中的文件
-    const fileInput = document.querySelector('input[type="file"]');
-    const file = fileInput.files[0];
+    // 修复 3：使用 Vue 的 ref 取代 querySelector，防止变量重复声明报错
+    const file = fileInput.value?.files[0];
     
     if (file) {
-      // 创建 FormData 对象用于文件上传
       const formData = new FormData();
       formData.append('file', file);
       formData.append('groupId', currentGroupId.value);
       
-      // 发送文件上传请求
       await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
     }
     
-    // 核心修改：提取组号 (如从 'g1' 提取出 '1')，构建后端对应的字段名
     const groupId = currentGroupId.value.replace('g', ''); 
     const stateKey = `scheme_uploaded_g${groupId}`;
     
-    // 发送真实的网络请求更新全局状态机
     await fetch('/api/state/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ [stateKey]: 1 })
     });
   } catch (error) {
-    console.error('推送状态至教师端失败:', error);
-    // 失败依然走下面的UI流程，保证演示不出大错
+    console.error('推送状态失败:', error);
   }
   
-  // 保持原有UI动画展示延迟逻辑
   setTimeout(() => {
     group.state.isUploading = false;
     group.state.isSubmitted = true;
     
-    // 显示全局 Toast
     uiState.showToast = true;
     setTimeout(() => { uiState.showToast = false; }, 3000);
   }, 800);
 };
 
-// 触发 AI 评估
 const startEvaluation = () => {
   const group = currentGroup.value;
   if (!group.state.isSubmitted || group.state.evalStatus !== 'waiting') return;
   
   group.state.evalStatus = 'loading';
   
-  // 触发进度条动画
   nextTick(() => {
     setTimeout(() => { group.state.evalProgress = 100; }, 50);
   });
 
-  // 2秒后推演结束，展示雷达图
   setTimeout(() => {
     group.state.evalStatus = 'finished';
     nextTick(() => {
@@ -419,12 +399,14 @@ const startEvaluation = () => {
   }, 2050);
 };
 
-// 跳转到方案详情页面
 const goToSchemeDetail = () => {
   router.push('/student/scheme-detail');
 };
 
-// ==== ECharts 图表渲染 ====
+const goToTaskSplit = () => {
+  router.push('/student/task-split');
+};
+
 const initRadarChart = () => {
   const domId = `radar-chart-${currentGroupId.value}`;
   const chartDom = document.getElementById(domId);
@@ -469,7 +451,6 @@ const initRadarChart = () => {
   chartInstance.setOption(option);
 };
 
-// 处理窗口缩放
 const handleResize = () => {
   if (chartInstance) chartInstance.resize();
 };
@@ -485,7 +466,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 继承并微调颜色 */
 .bg-darkBg { background-color: #121417; }
 .bg-panelBg { background-color: #1c2126; }
 .bg-cardInnerBg { background-color: #232930; }
@@ -496,24 +476,32 @@ onBeforeUnmount(() => {
 .text-textMain { color: #d1d5db; }
 .text-textMuted { color: #6b7280; }
 
-/* 扫描线动画 */
 .scan-line {
   width: 100%; height: 2px;
   position: absolute; animation: scan 1.5s linear infinite; opacity: 0.6;
 }
 @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-/* 上传框悬浮 */
 .upload-box { transition: all 0.3s ease; }
 .upload-box:hover { border-color: #4b5563; background-color: rgba(255, 255, 255, 0.02); }
 
-/* 下拉菜单淡入淡出 */
 .fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-10px); }
 
-/* Toast 动画 */
 .toast-enter-active { transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
 .toast-leave-active { transition: all 0.3s ease-in; }
 .toast-enter-from { transform: translate(-50%, -20px); opacity: 0; }
 .toast-leave-to { transform: translate(-50%, -20px); opacity: 0; }
+
+.fade-in-up-enter-active {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-in-up-leave-active {
+  transition: all 0.3s ease;
+}
+.fade-in-up-enter-from,
+.fade-in-up-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>

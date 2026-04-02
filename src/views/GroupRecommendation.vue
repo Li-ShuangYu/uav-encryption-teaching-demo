@@ -65,7 +65,7 @@
             <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长文献查阅、需求分析、逻辑重构与系统方案的理论推演。</div>
             <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? theoryStudents.length : 0 }} 人</div>
           </div>
-          <div class="w-full h-[220px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
+          <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="theoryChartRef" class="w-full h-full"></div>
           </div>
           <div class="flex-1 p-6 overflow-y-auto flex content-start flex-wrap gap-[14px] custom-scrollbar relative">
@@ -91,7 +91,7 @@
             <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长平台仿真操作、代码逻辑编写、流程图绘制及漏洞排查。</div>
             <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? practiceStudents.length : 0 }} 人</div>
           </div>
-          <div class="w-full h-[220px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
+          <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="practiceChartRef" class="w-full h-full"></div>
           </div>
           <div class="flex-1 p-6 overflow-y-auto flex content-start flex-wrap gap-[14px] custom-scrollbar relative">
@@ -117,7 +117,7 @@
             <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长组内分工协调、进度把控、成果提报及与 AI 工具的高效交互。</div>
             <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? orgStudents.length : 0 }} 人</div>
           </div>
-          <div class="w-full h-[220px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
+          <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="orgChartRef" class="w-full h-full"></div>
           </div>
           <div class="flex-1 p-6 overflow-y-auto flex content-start flex-wrap gap-[14px] custom-scrollbar relative">
@@ -139,7 +139,7 @@
       </main>
 
       <!-- 底部按钮 -->
-      <div class="flex justify-center mt-6 z-10">
+      <div class="flex justify-center z-10">
         <!-- AI评估按钮 -->
         <button 
           v-if="!isEvaluated && !isEvaluating" 

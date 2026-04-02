@@ -209,7 +209,7 @@ const dimensions = [
   { key: 'security', label: '安全保密性' },
   { key: 'integrity', label: '数据完整性' },
   { key: 'usability', label: '系统可用性' },
-  // { key: 'cost', label: '硬件成本控制' },
+  { key: 'cost', label: '硬件成本控制' },
   { key: 'innovation', label: '方案创新性' }
 ];
 
