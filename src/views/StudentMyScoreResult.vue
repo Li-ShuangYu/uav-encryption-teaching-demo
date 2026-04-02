@@ -43,20 +43,20 @@
           
           <div class="grid grid-cols-2 gap-3 relative z-10 mb-2">
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[14px] font-bold text-white mb-1">AI打分</span>
+              <span class="text-[11px] font-bold text-textMuted mb-1">AI打分</span>
               <span class="text-2xl font-black" :style="{ color: currentGroup.themeColor }">{{ currentGroup.scores.ai }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[14px] font-bold text-white mb-1">教师评分</span>
+              <span class="text-[11px] font-bold text-textMuted mb-1">教师评分</span>
               <span class="text-2xl font-black text-white">{{ currentGroup.scores.teacher }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center">
-              <span class="text-[14px] font-bold text-white mb-1">小组互评</span>
+              <span class="text-[11px] font-bold text-textMuted mb-1">小组互评</span>
               <span class="text-2xl font-black text-white">{{ currentGroup.scores.peer }}</span>
             </div>
             <div class="bg-darkBg border border-borderColor rounded-lg p-3 flex flex-col items-center justify-center relative overflow-hidden">
               <div class="absolute inset-0 opacity-10" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-              <span class="text-[14px] font-bold text-white z-10 mb-1">综合得分</span>
+              <span class="text-[11px] font-bold text-white z-10 mb-1">综合得分</span>
               <span class="text-3xl font-black z-10" :style="{ color: currentGroup.themeColor, textShadow: '0 0 10px ' + currentGroup.themeColor + '40' }">{{ currentGroup.scores.total }}</span>
             </div>
           </div>
@@ -70,19 +70,19 @@
           
           <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar flex flex-col gap-4 relative z-10">
             <div class="bg-darkBg p-3 rounded-lg border border-borderColor border-l-4 transition-all duration-500" :style="{ borderLeftColor: currentGroup.themeColor }">
-              <div class="text-sm font-bold text-white mb-2 flex items-center gap-1">
-                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+              <div class="text-xs font-bold text-white mb-2 flex items-center gap-1">
+                <svg class="w-3 h-3 text-textMuted" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
                 方案综合评价
               </div>
-              <p class="text-base text-white leading-relaxed text-justify">{{ currentGroup.evaluation }}</p>
+              <p class="text-[12px] text-textMuted leading-relaxed text-justify">{{ currentGroup.evaluation }}</p>
             </div>
             
             <div class="bg-darkBg p-3 rounded-lg border border-borderColor border-l-4 transition-all duration-500" :style="{ borderLeftColor: currentGroup.themeColor + '80' }">
-              <div class="text-sm font-bold text-white mb-2 flex items-center gap-1">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              <div class="text-xs font-bold text-white mb-2 flex items-center gap-1">
+                <svg class="w-3 h-3 text-textMuted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 未来优化方向
               </div>
-              <p class="text-base text-white leading-relaxed text-justify">{{ currentGroup.optimization }}</p>
+              <p class="text-[12px] text-textMuted leading-relaxed text-justify">{{ currentGroup.optimization }}</p>
             </div>
           </div>
         </div>
@@ -91,16 +91,11 @@
       <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;">
         <div class="text-base font-black text-white mb-2 flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          综合得分雷达图
+          系统架构指标雷达图
         </div>
-        <div class="text-base text-white mb-4 ml-4">密盾智学平台多维安全效能评估体系</div>
+        <div class="text-xs text-textMuted mb-4 ml-4">密盾智学平台多维安全效能评估体系</div>
         
         <div class="flex-1 w-full relative min-h-0" ref="radarChartRef"></div>
-        
-        <div class="mt-4 text-center">
-          <div class="text-sm font-bold text-white mb-1">综合总分</div>
-          <div class="text-4xl font-black" :style="{ color: currentGroup.themeColor, textShadow: '0 0 10px ' + currentGroup.themeColor + '40' }">{{ currentGroup.scores.total }}</div>
-        </div>
       </div>
 
       <div class="col-span-4 flex flex-col gap-3">
@@ -335,104 +330,106 @@ const radarChartRef = ref(null);
 let chartInstance = null;
 
 const initRadarChart = () => {
-    if (!radarChartRef.value) return;
-    
-    if (chartInstance) {
-      chartInstance.dispose();
-    }
-    
-    chartInstance = echarts.init(radarChartRef.value);
-    const color = currentGroup.value.themeColor;
-    
-    const option = {
-      backgroundColor: 'transparent',
-      tooltip: {
-        trigger: 'item',
-        backgroundColor: 'rgba(31, 41, 55, 0.9)',
-        borderColor: color,
-        textStyle: { color: '#fff', fontSize: 12 }
+  if (!radarChartRef.value) return;
+  
+  if (chartInstance) {
+    chartInstance.dispose();
+  }
+  
+  chartInstance = echarts.init(radarChartRef.value);
+  const color = currentGroup.value.themeColor;
+  
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'rgba(31, 41, 55, 0.9)',
+      borderColor: color,
+      textStyle: { color: '#fff', fontSize: 12 }
+    },
+    radar: {
+      indicator: [
+        { name: '安全性\nSecurity', max: 100 },
+        { name: '轻量化\nLightweight', max: 100 },
+        { name: '抗攻击\nAnti-Attack', max: 100 },
+        { name: '低功耗\nLow Power', max: 100 },
+        { name: '时效性\nLatency', max: 100 }
+      ],
+      radius: '55%',
+      shape: 'polygon',
+      center: ['50%', '50%'],
+      splitNumber: 4,
+      axisName: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        lineHeight: 18,
+        textShadowColor: '#000',
+        textShadowBlur: 5,
+        textShadowOffsetX: 1,
+        textShadowOffsetY: 1
       },
-      radar: {
-        indicator: [
-          { name: 'AI打分', max: 100 },
-          { name: '教师评分', max: 100 },
-          { name: '小组互评', max: 100 }
-        ],
-        radius: '55%',
-        shape: 'polygon',
-        center: ['50%', '50%'],
-        splitNumber: 4,
-        axisName: {
-          color: '#ffffff',
-          fontSize: 16,
-          fontWeight: 'bold',
-          lineHeight: 18,
-          textShadowColor: '#000',
-          textShadowBlur: 5,
-          textShadowOffsetX: 1,
-          textShadowOffsetY: 1
-        },
-        splitLine: {
-          lineStyle: {
-            color: ['#374151', '#374151', '#374151', '#374151'].map(c => c + '80')
-          }
-        },
-        splitArea: {
-          areaStyle: {
-            color: ['rgba(31, 41, 55, 0.3)', 'rgba(31, 41, 55, 0.1)']
-          }
-        },
-        axisLine: {
-          lineStyle: {
-            color: '#4b5563'
-          }
+      splitLine: {
+        lineStyle: {
+          color: ['#374151', '#374151', '#374151', '#374151'].map(c => c + '80')
         }
       },
-      series: [
-        {
-          name: '综合得分评估',
-          type: 'radar',
-          data: [
-            {
-              value: [currentGroup.value.scores.ai, currentGroup.value.scores.teacher, currentGroup.value.scores.peer],
-              name: currentGroup.value.codeId,
-              itemStyle: {
-                color: color,
-                borderColor: '#fff',
-                borderWidth: 1
+      splitArea: {
+        areaStyle: {
+          color: ['rgba(31, 41, 55, 0.3)', 'rgba(31, 41, 55, 0.1)']
+        }
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#4b5563'
+        }
+      }
+    },
+    series: [
+      {
+        name: '架构综合评估',
+        type: 'radar',
+        data: [
+          {
+            value: currentGroup.value.radarData,
+            name: currentGroup.value.codeId,
+            itemStyle: {
+              color: color,
+              borderColor: '#fff',
+              borderWidth: 1
+            },
+            areaStyle: {
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { offset: 0, color: color + '33' },
+                { offset: 1, color: color + '80' }
+              ])
+            },
+            lineStyle: {
+              width: 2,
+              color: color
+            },
+            label: {
+              show: true,
+              formatter: function(params) {
+                return params.value + '%';
               },
-              areaStyle: {
-                color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
-                  { offset: 0, color: color + '33' },
-                  { offset: 1, color: color + '80' }
-                ])
-              },
-              lineStyle: {
-                width: 2,
-                color: color
-              },
-              label: {
-                show: true,
-                formatter: function(params) {
-                  return params.value + '%';
-                },
-                color: '#ffffff',
-                fontSize: 16,
-                fontWeight: 'bold',
-                position: 'right',
-                textShadowColor: '#000',
-                textShadowBlur: 5,
-                textShadowOffsetX: 1,
-                textShadowOffsetY: 1
-              }
+              color: '#ffffff',
+              fontSize: 16,
+              fontWeight: 'bold',
+              position: 'right',
+              textShadowColor: '#000',
+              textShadowBlur: 5,
+              textShadowOffsetX: 1,
+              textShadowOffsetY: 1
             }
-          ]
-        }
-      ]
-    };
-    
-    chartInstance.setOption(option);
+          }
+        ]
+      }
+    ]
   };
+  
+  chartInstance.setOption(option);
+};
 
 // 监听组变化时重绘雷达图
 watch(currentGroupId, () => {

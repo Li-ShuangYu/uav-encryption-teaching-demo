@@ -61,9 +61,9 @@
         <div class="flex-1 flex flex-col rounded-[16px] border border-slate-700 overflow-hidden category-panel group relative" style="background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(20px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);">
           <div class="px-6 py-5 border-b border-slate-700 relative overflow-hidden shrink-0">
             <div class="absolute bottom-0 left-0 h-[3px] w-full bg-[#3B82F6]"></div>
-            <div class="text-[24px] font-extrabold text-[#3B82F6] flex items-center gap-[10px] mb-2">🧠 理论解析型</div>
-            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长文献查阅、需求分析、逻辑重构与系统方案的理论推演。</div>
-            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? theoryStudents.length : 0 }} 人</div>
+            <div class="text-[24px] font-extrabold text-[#3B82F6] flex items-center gap-[10px] mb-2">📋 组 1</div>
+            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">林浩轩、李若曦、刘承宇、黄雨桐</div>
+            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">4 人</div>
           </div>
           <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="theoryChartRef" class="w-full h-full"></div>
@@ -87,9 +87,9 @@
         <div class="flex-1 flex flex-col rounded-[16px] border border-slate-700 overflow-hidden category-panel group relative" style="background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(20px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);">
           <div class="px-6 py-5 border-b border-slate-700 relative overflow-hidden shrink-0">
             <div class="absolute bottom-0 left-0 h-[3px] w-full bg-[#10B981]"></div>
-            <div class="text-[24px] font-extrabold text-[#10B981] flex items-center gap-[10px] mb-2">🛠️ 实践攻坚型</div>
-            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长平台仿真操作、代码逻辑编写、流程图绘制及漏洞排查。</div>
-            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? practiceStudents.length : 0 }} 人</div>
+            <div class="text-[24px] font-extrabold text-[#10B981] flex items-center gap-[10px] mb-2">� 组 2</div>
+            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">陈宇泽、许诗涵、赵景辰、张语桐</div>
+            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">4 人</div>
           </div>
           <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="practiceChartRef" class="w-full h-full"></div>
@@ -113,9 +113,9 @@
         <div class="flex-1 flex flex-col rounded-[16px] border border-slate-700 overflow-hidden category-panel group relative" style="background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(20px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);">
           <div class="px-6 py-5 border-b border-slate-700 relative overflow-hidden shrink-0">
             <div class="absolute bottom-0 left-0 h-[3px] w-full bg-[#8B5CF6]"></div>
-            <div class="text-[24px] font-extrabold text-[#8B5CF6] flex items-center gap-[10px] mb-2">🎯 组织统筹型</div>
-            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">擅长组内分工协调、进度把控、成果提报及与 AI 工具的高效交互。</div>
-            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">储备 {{ isEvaluated ? orgStudents.length : 0 }} 人</div>
+            <div class="text-[24px] font-extrabold text-[#8B5CF6] flex items-center gap-[10px] mb-2">📋 组 3</div>
+            <div class="text-[14px] text-slate-400 leading-relaxed font-medium">王嘉树、苏欣妍、周子恒、邓佳宁</div>
+            <div class="absolute top-6 right-6 text-[14px] font-bold text-slate-300 bg-slate-800 border border-slate-600 px-3 py-1 rounded-full shadow-inner">4 人</div>
           </div>
           <div class="w-full h-[216px] shrink-0 border-b border-slate-800/50 bg-slate-900/30">
             <div ref="orgChartRef" class="w-full h-full"></div>
@@ -204,18 +204,18 @@ let charts = [];
 
 // ================= 数据源 =================
 const theoryStudents = ref([
-  { name: '张晓明', score: '内化95' }, { name: '李华', score: '内化94' },
-  { name: '王建国', score: '逻辑92' }, { name: '陈思远', score: '内化90' }
+  { name: '林浩轩', score: '内化95' }, { name: '李若曦', score: '内化94' },
+  { name: '刘承宇', score: '逻辑92' }, { name: '黄雨桐', score: '内化90' }
 ]);
 
 const practiceStudents = ref([
-  { name: '陈梓轩', score: '实践98' }, { name: '林俊宇', score: '实践95' },
-  { name: '何宇航', score: '攻坚94' }, { name: '高明', score: '操作92' }
+  { name: '陈宇泽', score: '实践98' }, { name: '许诗涵', score: '实践95' },
+  { name: '赵景辰', score: '攻坚94' }, { name: '张语桐', score: '操作92' }
 ]);
 
 const orgStudents = ref([
-  { name: '张三丰', score: '统筹97' }, { name: '黄蓉', score: '协同96' },
-  { name: '郭靖', score: '履约94' }, { name: '杨过', score: '统筹92' }
+  { name: '王嘉树', score: '统筹97' }, { name: '苏欣妍', score: '协同96' },
+  { name: '周子恒', score: '履约94' }, { name: '邓佳宁', score: '统筹92' }
 ]);
 
 // ================= 核心业务交互 =================
