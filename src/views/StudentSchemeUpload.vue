@@ -99,8 +99,8 @@
               <svg class="w-16 h-16 mb-3 group-hover:scale-110 transition-transform" :style="{ color: currentGroup.themeColor }" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
               </svg>
-              <span class="text-white font-medium text-lg">{{ currentGroup.fileName }}</span>
-              <span class="text-textMuted text-sm mt-1">大小: {{ currentGroup.fileSize }} · 格式: Word</span>
+              <span class="text-white font-medium text-lg">{{ currentGroup.fileName || '已选择文件' }}</span>
+              <span class="text-textMuted text-sm mt-1">大小: {{ currentGroup.fileSize || '未知' }} · 格式: Word</span>
             </div>
 
             <div class="absolute bottom-4 text-xs px-3 py-1 rounded-full" :style="{ backgroundColor: currentGroup.themeColor + '1A', color: currentGroup.themeColor }">
@@ -233,8 +233,8 @@ const groups = reactive([
     name: '第一组',
     themeColor: '#3b82f6', // 蓝
     tags: ['防窃听(高保密)', '防篡改(高完整)', '国密标准'],
-    fileName: '第一组_SM4+SM3国密组合方案.docx',
-    fileSize: '2.4 MB',
+    fileName: '',
+    fileSize: '',
     aiScore: 86,
     aiLevel: '良好 (B+)',
     radarData: [85, 80, 95, 95, 80], // 保密、完整、可用、成本、创新
@@ -247,8 +247,8 @@ const groups = reactive([
     name: '第二组',
     themeColor: '#ef4444', // 红
     tags: ['防窃听(高保密)', '防篡改(高完整)', '非对称加密'],
-    fileName: '第二组_侧信道防护方案.docx',
-    fileSize: '3.1 MB',
+    fileName: '',
+    fileSize: '',
     aiScore: 90,
     aiLevel: '优秀 (A)',
     radarData: [95, 90, 80, 80, 90],
@@ -261,8 +261,8 @@ const groups = reactive([
     name: '第三组',
     themeColor: '#f59e0b', // 黄
     tags: ['防窃听(高保密)', '防篡改(高完整)', '低功耗'],
-    fileName: '第三组_轻量级流密码方案.docx',
-    fileSize: '2.8 MB',
+    fileName: '',
+    fileSize: '',
     aiScore: 88,
     aiLevel: '良好 (A-)',
     radarData: [90, 95, 85, 85, 85],
@@ -275,8 +275,8 @@ const groups = reactive([
     name: '第四组',
     themeColor: '#8b5cf6', // 紫
     tags: ['防窃听(高保密)', '防篡改(高完整)', '分布式防护'],
-    fileName: '第四组_区块链分布式防护方案.docx',
-    fileSize: '4.2 MB',
+    fileName: '',
+    fileSize: '',
     aiScore: 93,
     aiLevel: '极优 (A+)',
     radarData: [95, 95, 75, 70, 98],
@@ -330,9 +330,23 @@ const triggerFileUpload = () => {
   fileInput.value.click();
 };
 
-// ✅ 修改1：文件选择后处理（无论选什么，都显示预设Word内容）
-const handleFileSelect = () => {
-  currentGroup.value.state.hasFile = true;
+// ✅ 修改1：文件选择后处理（回显实际上传的文件名和大小）
+const handleFileSelect = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    currentGroup.value.state.hasFile = true;
+    currentGroup.value.fileName = file.name;
+    currentGroup.value.fileSize = formatFileSize(file.size);
+  }
+};
+
+// 格式化文件大小
+const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 };
 
 // 提交方案文件并触发后端状态更新
@@ -341,6 +355,23 @@ const handleUpload = async () => {
   group.state.isUploading = true;
   
   try {
+    // 获取文件输入框中的文件
+    const fileInput = document.querySelector('input[type="file"]');
+    const file = fileInput.files[0];
+    
+    if (file) {
+      // 创建 FormData 对象用于文件上传
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('groupId', currentGroupId.value);
+      
+      // 发送文件上传请求
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+    }
+    
     // 核心修改：提取组号 (如从 'g1' 提取出 '1')，构建后端对应的字段名
     const groupId = currentGroupId.value.replace('g', ''); 
     const stateKey = `scheme_uploaded_g${groupId}`;
