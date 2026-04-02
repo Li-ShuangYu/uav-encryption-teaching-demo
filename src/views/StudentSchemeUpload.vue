@@ -36,6 +36,15 @@
             </svg>
             返回任务详情
           </button>
+          <button 
+            @click="goToSchemeDetail"
+            class="bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white font-bold px-3 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+          >
+            进入评分环节
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
       
@@ -134,7 +143,7 @@
             v-if="currentGroup.state.evalStatus === 'waiting'"
             @click="startEvaluation" 
             class="text-xs px-3 py-1.5 rounded border transition-colors font-medium"
-            :class="currentGroup.state.isSubmitted ? 'bg-gray-800 text-gray-300 border-gray-600 hover:bg-gray-700' : 'bg-darkBg text-gray-600 border-gray-800 cursor-not-allowed'"
+            :class="currentGroup.state.isSubmitted ? 'bg-accentGreen border-accentGreen text-white hover:bg-accentGreen/80' : 'bg-darkBg text-gray-600 border-gray-800 cursor-not-allowed'"
             :disabled="!currentGroup.state.isSubmitted"
           >
             接收评估
@@ -145,13 +154,6 @@
             class="text-xs px-3 py-1.5 rounded border transition-colors font-medium bg-darkBg text-gray-500 border-gray-700 cursor-not-allowed"
           >
             推演中...
-          </button>
-          <button 
-            v-else
-            @click="goToSchemeDetail"
-            class="text-xs px-3 py-1.5 rounded border transition-colors font-medium bg-accentGreen/20 text-accentGreen border-accentGreen/50 hover:bg-accentGreen/30"
-          >
-            查看详情
           </button>
         </div>
 
