@@ -16,7 +16,7 @@
       </button>
     </header>
 
-    <!-- <div v-if="!isReady" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
+    <div v-if="!isReady" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
       <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" style="border-top-color: #23b586"></div>
       <h2 class="text-2xl font-bold text-white mb-6 tracking-wider">等待评分完成...</h2>
       <div class="space-y-3 w-80">
@@ -36,9 +36,9 @@
           <span v-else class="text-gray-500">⏳</span>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <main class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
+    <main else class="flex-1 p-4 grid grid-cols-2 grid-rows-2 gap-4 bg-darkBg overflow-hidden">
       <div 
         v-for="(group, index) in groups" 
         :key="group.id"

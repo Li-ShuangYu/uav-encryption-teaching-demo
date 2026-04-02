@@ -134,7 +134,7 @@ const allMenuItems = [
   { value: '/teacher/scheme-split', label: '方案设计阶段：4组方案分屏', order: 5 },
   { value: '/teacher/ai-evaluate', label: '方案设计阶段：AI评估', order: 6 },
   { value: '/teacher/scheme-detail', label: '方案设计阶段：方案详情', order: 7 },
-  { value: '/teacher/simulation', label: '仿真推演阶段：仿真性能', order: 8 },
+  // { value: '/teacher/simulation', label: '仿真推演阶段：仿真性能', order: 8 },
   { value: '/teacher/group-score-overview', label: '方案设计阶段：小组评分概览', order: 9 }
 ]
 
