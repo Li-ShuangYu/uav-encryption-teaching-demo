@@ -29,21 +29,36 @@
           </div>
 
         </div>
+        <button @click="generateReview" :disabled="isGenerating" class="text-accentCyan hover:text-white transition-all transform hover:rotate-180 duration-500 disabled:opacity-50 disabled:cursor-not-allowed ml-4" title="生成评审指导意见">
+          <svg class="w-5 h-5 drop-shadow-[0_0_5px_rgba(0,240,255,0.6)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        </button>
       </div>
-      <button 
-        @click="backToWorkspace"
-        class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-        </svg>
-        返回方案AI评估页
-      </button>
+      <div class="flex items-center gap-3">
+        <button 
+          @click="backToWorkspace"
+          class="bg-cardInnerBg border border-borderColor hover:bg-borderColor text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+          返回方案AI评估页
+        </button>
+        <button 
+          @click="completeEvaluation"
+          :disabled="!allReviewsSubmitted"
+          class="bg-accentGreen border border-accentGreen hover:bg-accentGreen/80 text-white font-bold px-4 py-1.5 rounded-lg shadow transition-colors flex items-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          互评打分完成
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden" v-if="showContent">
       
-      <div class="col-span-3 flex flex-col gap-3">
+      <div class="col-span-3 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
           <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-10 transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
           <div class="flex justify-between items-center mb-2 relative z-10">
@@ -89,7 +104,7 @@
         </div>
       </div>
 
-      <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;">
+      <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
         <div class="text-base font-black text-white mb-4 flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
           系统架构与数据流转参考
@@ -115,7 +130,7 @@
         </div>
       </div>
 
-      <div class="col-span-4 flex flex-col gap-3">
+      <div class="col-span-4 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
         <!-- 学生查看自己小组时显示AI评价 -->
         <div v-if="isStudentOwnGroup" class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
           
@@ -133,22 +148,21 @@
             
             <!-- 雷达图 -->
             <div class="bg-darkBg rounded-lg border border-borderColor p-4">
-              <div class="text-sm font-bold text-gray-300 mb-3">方案能力雷达图</div>
-              <div class="w-full h-[200px] flex items-center justify-center">
+              <div class="w-full h-[180px] flex items-center justify-center">
                 <div class="w-full h-full relative">
-                  <!-- 简化版雷达图 -->
+                  <!-- 雷达图 -->
                   <svg class="w-full h-full" viewBox="0 0 200 200">
                     <!-- 网格 -->
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="60" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="40" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="20" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="56.25" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="37.5" fill="none" stroke="#2d353e" stroke-width="1" />
+                    <circle cx="100" cy="100" r="18.75" fill="none" stroke="#2d353e" stroke-width="1" />
                     
                     <!-- 轴线 -->
-                    <line x1="100" y1="20" x2="100" y2="180" stroke="#2d353e" stroke-width="1" />
-                    <line x1="20" y1="100" x2="180" y2="100" stroke="#2d353e" stroke-width="1" />
-                    <line x1="46.5" y1="46.5" x2="153.5" y2="153.5" stroke="#2d353e" stroke-width="1" />
-                    <line x1="153.5" y1="46.5" x2="46.5" y2="153.5" stroke="#2d353e" stroke-width="1" />
+                    <line x1="100" y1="25" x2="100" y2="175" stroke="#2d353e" stroke-width="1" />
+                    <line x1="25" y1="100" x2="175" y2="100" stroke="#2d353e" stroke-width="1" />
+                    <line x1="47.5" y1="47.5" x2="152.5" y2="152.5" stroke="#2d353e" stroke-width="1" />
+                    <line x1="152.5" y1="47.5" x2="47.5" y2="152.5" stroke="#2d353e" stroke-width="1" />
                     
                     <!-- 数据区域 -->
                     <polygon 
@@ -157,6 +171,20 @@
                       stroke="#3b82f6" 
                       stroke-width="2" 
                     />
+                    
+                    <!-- 指标标签和数值 -->
+                    <text x="100" y="15" text-anchor="middle" class="text-sm fill-gray-400">安全保密性</text>
+                    <text x="100" y="190" text-anchor="middle" class="text-sm fill-gray-400">系统可用性</text>
+                    <text x="15" y="105" text-anchor="start" class="text-sm fill-gray-400">数据完整性</text>
+                    <text x="185" y="105" text-anchor="end" class="text-sm fill-gray-400">硬件成本</text>
+                    <text x="45" y="35" text-anchor="start" class="text-sm fill-gray-400">方案创新性</text>
+                    
+                    <!-- 数值标签 -->
+                    <text :x="getRadarPointX('security', currentGroup.review.scores)" :y="getRadarPointY('security', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.security }}</text>
+                    <text :x="getRadarPointX('integrity', currentGroup.review.scores)" :y="getRadarPointY('integrity', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.integrity }}</text>
+                    <text :x="getRadarPointX('usability', currentGroup.review.scores)" :y="getRadarPointY('usability', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.usability }}</text>
+                    <text :x="getRadarPointX('cost', currentGroup.review.scores)" :y="getRadarPointY('cost', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.cost }}</text>
+                    <text :x="getRadarPointX('innovation', currentGroup.review.scores)" :y="getRadarPointY('innovation', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.innovation }}</text>
                   </svg>
                 </div>
               </div>
@@ -177,7 +205,7 @@
                 <span>AI 智能评价</span>
                 <span class="text-xs font-normal text-gray-500">系统自动分析</span>
               </label>
-              <div class="w-full flex-1 min-h-[90px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 disabled:opacity-60">
+              <div class="w-full flex-1 min-h-[80px] bg-[#1a1d24] border border-gray-700 rounded-lg p-3 text-sm text-gray-200 disabled:opacity-60">
                 <div v-if="currentGroupId === 1">
                   <p class="mb-2"><span class="text-green-400 font-bold">✓ 优势：</span>方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。</p>
                   <p class="mb-2"><span class="text-yellow-400 font-bold">⚠ 改进空间：</span>建议关注硬件随机数生成器的实现细节，以提高系统安全性。</p>
@@ -411,17 +439,56 @@ const groups = reactive([
 // 状态管理
 const currentGroupId = ref(1);
 const studentGroupId = ref(null);
+const isGenerating = ref(false);
+const showContent = ref(false);
+const showAnimation = ref(false);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 const isStudentOwnGroup = computed(() => {
   return studentGroupId.value && currentGroupId.value === studentGroupId.value;
 });
 
+// 检查是否所有其他组的评审都已提交
+const allReviewsSubmitted = computed(() => {
+  return groups.every(group => {
+    // 跳过学生自己的小组
+    if (group.id === studentGroupId.value) {
+      return true;
+    }
+    return group.review.isSubmitted;
+  });
+});
+
+// 完成互评打分
+const completeEvaluation = () => {
+  if (!allReviewsSubmitted.value) return;
+  
+  // 模拟完成互评的逻辑
+  setTimeout(() => {
+    alert('互评打分已完成！');
+    // 可以添加跳转到其他页面的逻辑
+  }, 300);
+};
+
 // 分组切换逻辑
 const prevGroup = () => {
-  if (currentGroupId.value > 1) currentGroupId.value--;
+  if (currentGroupId.value > 1) {
+    // 触发切换动画
+    showAnimation.value = true;
+    setTimeout(() => {
+      currentGroupId.value--;
+      showAnimation.value = false;
+    }, 300);
+  }
 };
 const nextGroup = () => {
-  if (currentGroupId.value < 4) currentGroupId.value++;
+  if (currentGroupId.value < 4) {
+    // 触发切换动画
+    showAnimation.value = true;
+    setTimeout(() => {
+      currentGroupId.value++;
+      showAnimation.value = false;
+    }, 300);
+  }
 };
 
 // 计算综合得分
@@ -441,11 +508,46 @@ const submitReview = () => {
   }, 300);
 };
 
+// 生成评审指导意见
+const generateReview = async () => {
+  if (isGenerating.value) return;
+  
+  isGenerating.value = true;
+  
+  // 为当前小组生成评审指导意见
+  const reviewComments = {
+    1: '该方案在低功耗限制下做出了很好的权衡。PRESENT算法的硬件实现资源极小，非常符合要求。建议后续关注硬件随机数生成器的实现细节，以提高系统安全性。',
+    2: '侧信道防护措施设计全面，掩码机制和恒定时间实现能够有效抵御DPA攻击。防护措施可能会增加系统复杂度和功耗，需要在安全性和性能之间找到平衡。',
+    3: '抗重放攻击机制设计合理，滑动窗口计数器能够有效防止指令劫持。需要确保计数器同步机制的可靠性，避免因同步失败导致的通信问题。',
+    4: '采用后量子算法，具有前瞻性，能够抵御未来量子计算的威胁。后量子算法的计算复杂度较高，可能会对系统性能产生影响，建议在硬件平台上进行优化以提升性能。'
+  };
+  
+  const currentGroup = groups.find(g => g.id === currentGroupId.value);
+  if (currentGroup && reviewComments[currentGroup.id]) {
+    const comment = reviewComments[currentGroup.id];
+    currentGroup.review.comment = ''; // 清空原有内容
+    
+    // 逐字输入动画
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index < comment.length) {
+        currentGroup.review.comment += comment.charAt(index);
+        index++;
+      } else {
+        clearInterval(typingInterval);
+        isGenerating.value = false;
+      }
+    }, 50); // 每50毫秒输入一个字符
+  } else {
+    isGenerating.value = false;
+  }
+};
+
 // 计算雷达图点坐标
 const getRadarPoints = (scores) => {
   const centerX = 100;
   const centerY = 100;
-  const maxRadius = 80;
+  const maxRadius = 75;
   
   // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
   const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
@@ -463,6 +565,40 @@ const getRadarPoints = (scores) => {
   return points.join(' ');
 };
 
+// 计算雷达图单个点的X坐标
+const getRadarPointX = (key, scores) => {
+  const centerX = 100;
+  const maxRadius = 75;
+  
+  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
+  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
+  const index = dimensions.indexOf(key);
+  
+  if (index === -1) return centerX;
+  
+  const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
+  const value = (scores[key] || 0) / 100;
+  const radius = value * maxRadius;
+  return centerX + Math.cos(angle) * radius;
+};
+
+// 计算雷达图单个点的Y坐标
+const getRadarPointY = (key, scores) => {
+  const centerY = 100;
+  const maxRadius = 75;
+  
+  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
+  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
+  const index = dimensions.indexOf(key);
+  
+  if (index === -1) return centerY;
+  
+  const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
+  const value = (scores[key] || 0) / 100;
+  const radius = value * maxRadius;
+  return centerY + Math.sin(angle) * radius;
+};
+
 onMounted(() => {
   // 从localStorage获取学生小组信息
   const storedInfo = localStorage.getItem('selectedGroupInfo');
@@ -470,6 +606,8 @@ onMounted(() => {
     const groupInfo = JSON.parse(storedInfo);
     if (groupInfo.groupId) {
       studentGroupId.value = parseInt(groupInfo.groupId);
+      // 如果有小组信息，默认显示该小组
+      currentGroupId.value = studentGroupId.value;
     }
   }
   
@@ -478,6 +616,11 @@ onMounted(() => {
     const id = parseInt(route.query.groupId);
     if (id >= 1 && id <= 4) currentGroupId.value = id;
   }
+  
+  // 入场动画
+  setTimeout(() => {
+    showContent.value = true;
+  }, 100);
 });
 </script>
 
