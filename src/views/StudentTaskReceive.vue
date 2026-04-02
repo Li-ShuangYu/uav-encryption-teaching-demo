@@ -47,21 +47,6 @@
           ]">{{ currentGroup.name }}</span>
         </div>
         
-        <span 
-          :class="[
-            'text-xs px-3 py-1.5 rounded border font-bold flex items-center gap-1.5 transition-all duration-500',
-            currentGroup.isSubmitted ? 'bg-accentGreen/20 text-accentGreen border-accentGreen/50' : 'bg-warningYellow/20 text-warningYellow border-warningYellow/50'
-          ]"
-        >
-          <span v-if="!currentGroup.isSubmitted" class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-warningYellow opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-warningYellow"></span>
-          </span>
-          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          {{ currentGroup.isSubmitted ? '需求已分类提交' : 'AI需求分类待确认' }}
-        </span>
       </div>
     </header>
     </transition>
