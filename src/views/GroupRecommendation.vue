@@ -51,15 +51,6 @@
             <div class="w-2 h-8 bg-blue-500 rounded-full"></div>
             优势能力分层 —— 协作分组建议
           </h1>
-          
-          <button 
-            v-if="!isEvaluated && !isEvaluating" 
-            @click="startAIEvaluation" 
-            class="relative group overflow-hidden px-5 py-2.5 bg-slate-800/80 border border-[#3B82F6]/60 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.25)] hover:shadow-[0_0_25px_rgba(59,130,246,0.6)] hover:border-[#38BDF8] transition-all duration-300 cursor-pointer flex items-center gap-2"
-          >
-            <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-[#3B82F6]/20 to-[#8B5CF6]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="relative text-[#60A5FA] group-hover:text-white transition-colors font-bold tracking-widest text-[14px] whitespace-nowrap">✨ AI评估学生并分组</span>
-          </button>
         </div>
 
         <div class="text-[16px] font-semibold text-slate-400">基于系统多维数据画像，为您推荐的三类角色储备池</div>
@@ -146,12 +137,39 @@
         </div>
 
       </main>
+
+      <!-- 底部按钮 -->
+      <div class="flex justify-center mt-6 z-10">
+        <!-- AI评估按钮 -->
+        <button 
+          v-if="!isEvaluated && !isEvaluating" 
+          @click="startAIEvaluation" 
+          class="relative group overflow-hidden px-8 py-3.5 bg-slate-800/80 border border-[#3B82F6]/60 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.25)] hover:shadow-[0_0_25px_rgba(59,130,246,0.6)] hover:border-[#38BDF8] transition-all duration-300 cursor-pointer flex items-center gap-3"
+        >
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-[#3B82F6]/20 to-[#8B5CF6]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <span class="relative text-[#60A5FA] group-hover:text-white transition-colors font-bold tracking-widest text-[16px] whitespace-nowrap">✨ AI评估学生并分组</span>
+        </button>
+
+        <!-- 进入需求分析阶段按钮 -->
+        <button 
+          v-else-if="isEvaluated && !isEvaluating" 
+          @click="router.push('/teacher/demand-summary')" 
+          class="relative group overflow-hidden px-8 py-3.5 bg-slate-800/80 border border-[#10B981]/60 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.25)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:border-[#10B981] transition-all duration-300 cursor-pointer flex items-center gap-3"
+        >
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-[#10B981]/20 to-[#34D399]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <span class="relative text-[#34D399] group-hover:text-white transition-colors font-bold tracking-widest text-[16px] whitespace-nowrap">进入需求分析阶段</span>
+          <svg class="w-5 h-5 text-[#34D399] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 import * as echarts from 'echarts';
 
 // ================= 状态控制 =================
@@ -159,6 +177,7 @@ const isEvaluated = ref(false);
 const isEvaluating = ref(false);
 const progress = ref(0);
 const currentText = ref('');
+const router = useRouter();
 
 // 基于提供的权威指标提炼的评估流本文本
 const evaluationTexts = [
@@ -186,27 +205,17 @@ let charts = [];
 // ================= 数据源 =================
 const theoryStudents = ref([
   { name: '张晓明', score: '内化95' }, { name: '李华', score: '内化94' },
-  { name: '王建国', score: '逻辑92' }, { name: '陈思远', score: '内化90' },
-  { name: '赵梦琪', score: '解析89' }, { name: '刘星宇', score: '逻辑88' },
-  { name: '孙佳琪', score: '内化88' }, { name: '周杰', score: '解析85' },
-  { name: '吴浩然', score: '解析84' }, { name: '郑爽', score: '内化82' }
+  { name: '王建国', score: '逻辑92' }, { name: '陈思远', score: '内化90' }
 ]);
 
 const practiceStudents = ref([
   { name: '陈梓轩', score: '实践98' }, { name: '林俊宇', score: '实践95' },
-  { name: '何宇航', score: '攻坚94' }, { name: '高明', score: '操作92' },
-  { name: '马云飞', score: '实践90' }, { name: '罗文', score: '攻坚89' },
-  { name: '宋建', score: '实践88' }, { name: '许诺', score: '操作87' },
-  { name: '邓超', score: '攻坚86' }, { name: '萧炎', score: '实践85' },
-  { name: '冯宝宝', score: '操作84' }, { name: '叶凡', score: '攻坚82' }
+  { name: '何宇航', score: '攻坚94' }, { name: '高明', score: '操作92' }
 ]);
 
 const orgStudents = ref([
   { name: '张三丰', score: '统筹97' }, { name: '黄蓉', score: '协同96' },
-  { name: '郭靖', score: '履约94' }, { name: '杨过', score: '统筹92' },
-  { name: '小龙女', score: '协同90' }, { name: '楚留香', score: '规划89' },
-  { name: '陆小凤', score: '协同88' }, { name: '花满楼', score: '统筹85' },
-  { name: '李寻欢', score: '规划84' }, { name: '阿飞', score: '履约82' }
+  { name: '郭靖', score: '履约94' }, { name: '杨过', score: '统筹92' }
 ]);
 
 // ================= 核心业务交互 =================

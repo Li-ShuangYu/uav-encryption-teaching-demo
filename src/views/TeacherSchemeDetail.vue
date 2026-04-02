@@ -4,12 +4,12 @@
       <div class="flex items-center gap-3">
         <div class="w-1.5 h-6 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
         <div class="flex items-center">
-          <span class="text-2xl font-black text-white tracking-wide mr-2">我的架构蓝图：</span>
+          <span class="text-2xl font-black text-white tracking-wide mr-2">方案架构蓝图：</span>
           <span class="text-2xl font-black transition-all" :style="{ color: currentGroup.themeColor }">
             {{ currentGroup.name }} - {{ currentGroup.title }}
           </span>
           <span class="ml-4 px-2 py-0.5 border border-gray-600 rounded bg-gray-800 text-xs text-gray-400 font-mono tracking-widest">
-            [ 开发者模式 ]
+            [ 教师评审模式 ]
           </span>
         </div>
       </div>
@@ -20,17 +20,12 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
         </svg>
-        返回我的工作台
+        返回方案AI评估页
       </button>
     </header>
 
-    <div v-if="!isEvaluated" class="flex-1 flex flex-col items-center justify-center z-10 bg-darkBg">
-      <div class="w-16 h-16 border-4 border-[#2d353e] rounded-full animate-spin mb-6" :style="{ borderTopColor: currentGroup.themeColor }"></div>
-      <h2 class="text-2xl font-bold text-white mb-3 tracking-wider">等待教师AI评估中...</h2>
-      <p class="text-[#6b7280]">正在同步教师端下发的详细评审报告与数据架构</p>
-    </div>
-
-    <main v-else class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
+    <!-- 教师或管理员身份直接显示内容，不需要等待评估 -->
+    <main class="flex-1 p-3 grid grid-cols-12 gap-3 bg-darkBg min-h-0 overflow-hidden">
       
       <div class="col-span-3 flex flex-col gap-3">
         <div class="bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.1s;">
@@ -228,10 +223,9 @@ const getAudioFileName = (audio) => {
 const router = useRouter();
 const route = useRoute();
 
-// 修改：返回学生工作台
+// 返回方案AI评估页
 const backToWorkspace = () => {
-  // router.push('/student/task-split');
-  router.back();
+  router.push('/teacher/ai-evaluate');
 };
 
 const groups = [
@@ -376,34 +370,27 @@ const groups = [
   }
 ];
 
-// 从 localStorage 读取组信息
+// 从路由参数或 localStorage 读取组信息
 const currentGroupId = ref(1);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 
-// === 核心修改：阻塞等待与轮询逻辑 ===
-const isEvaluated = ref(false);
-let pollingTimer = null;
-
-const fetchState = async () => {
-  try {
-    const res = await fetch('/api/state');
-    const state = await res.json();
-    if (state.ai_evaluated === 1) {
-      isEvaluated.value = true;
-      if (pollingTimer) clearInterval(pollingTimer);
-    }
-  } catch (error) {
-    // 静默处理，避免影响页面
-  }
-};
-
 onMounted(() => {
-  // 从 localStorage 读取组信息
-  const storedInfo = localStorage.getItem('selectedGroupInfo');
-  if (storedInfo) {
-    const groupInfo = JSON.parse(storedInfo);
-    if (groupInfo.groupId) {
-      currentGroupId.value = groupInfo.groupId;
+  // 从路由参数读取组信息
+  if (route.params.groupId) {
+    currentGroupId.value = parseInt(route.params.groupId);
+  } else {
+    // 从 localStorage 读取组信息
+    const storedInfo = localStorage.getItem('selectedGroupInfo');
+    if (storedInfo) {
+      const groupInfo = JSON.parse(storedInfo);
+      // 检查是否是教师或管理员身份
+      if (groupInfo.role === 'teacher' || groupInfo.role === 'admin') {
+        // 教师或管理员默认显示第一组
+        currentGroupId.value = 1;
+      } else if (groupInfo.groupId) {
+        // 学生身份，使用实际的groupId
+        currentGroupId.value = parseInt(groupInfo.groupId);
+      }
     }
   }
   
@@ -413,10 +400,6 @@ onMounted(() => {
   if (audioElement.value) {
     audioElement.value.addEventListener('ended', handleAudioEnded);
   }
-
-  // 开启状态机轮询
-  fetchState();
-  pollingTimer = setInterval(fetchState, 1000);
 });
 
 const currentLyrics = computed(() => currentGroup.value?.music?.lyrics || []);
@@ -492,7 +475,6 @@ onUnmounted(() => {
   if (audioElement.value) {
     audioElement.value.removeEventListener('ended', handleAudioEnded);
   }
-  if (pollingTimer) clearInterval(pollingTimer);
 });
 </script>
 

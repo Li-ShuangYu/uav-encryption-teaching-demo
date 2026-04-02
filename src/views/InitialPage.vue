@@ -55,14 +55,29 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const navigateToStudent = () => {
+  localStorage.removeItem('selectedGroupInfo')
   router.push('/student-home')
 }
 
 const navigateToTeacher = () => {
-  router.push('/teacher/demand-summary')
+  // 上传教师身份信息到localStorage
+  const teacherInfo = {
+    role: 'teacher',
+    name: '教师',
+    selectTime: new Date().toISOString()
+  }
+  localStorage.setItem('selectedGroupInfo', JSON.stringify(teacherInfo))
+  router.push('/group-recommendation')
 }
 
 const navigateToAdmin = () => {
+  // 上传管理员身份信息到localStorage
+  const adminInfo = {
+    role: 'admin',
+    name: '管理员',
+    selectTime: new Date().toISOString()
+  }
+  localStorage.setItem('selectedGroupInfo', JSON.stringify(adminInfo))
   router.push('/admin')
 }
 </script>
