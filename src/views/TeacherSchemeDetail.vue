@@ -386,7 +386,7 @@ let pollingTimer = null;
 
 const fetchState = async () => {
   try {
-    const res = await fetch('/api/state');
+    const res = await fetch('http://localhost:3000/api/state');
     const state = await res.json();
     if (state.ai_evaluated === 1) {
       isEvaluated.value = true;

@@ -14,7 +14,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
             导出任务书
           </button>
-          <button @click="() => { console.log('按钮被点击了!'); goToSchemeUpload(); }" :class="['px-4 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2 cursor-pointer', getButtonColorClass()]">
+          <button @click="goToSchemeUpload" :class="['px-4 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors flex items-center gap-2', getButtonColorClass()]">
             方案提交
           </button>
         </div>
@@ -301,17 +301,7 @@ const getButtonColorClass = () => {
 
 // 跳转到方案上传页面
 const goToSchemeUpload = () => {
-  console.log('点击方案提交按钮，准备跳转至方案上传页');
-  console.log('目标路由名称:', 'StudentSchemeUpload');
-  console.log('目标路由路径:', '/student/scheme-upload');
-  
-  router.push({ name: 'StudentSchemeUpload' }).catch(err => {
-    console.error('路由跳转失败 (使用name):', err);
-    console.log('尝试使用路径跳转...');
-    router.push('/student/scheme-upload').catch(err2 => {
-      console.error('路由跳转失败 (使用path):', err2);
-    });
-  });
+  router.push('/student/scheme-upload');
 };
 </script>
 

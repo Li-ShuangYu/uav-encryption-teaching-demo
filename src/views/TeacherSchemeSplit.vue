@@ -185,7 +185,7 @@ const allGroupData = [
 // 修改：点击评审按钮时更新后端状态并跳转
 const goToAiEvaluate = async () => {
   try {
-    await fetch('/api/state/update', {
+    await fetch('http://localhost:3000/api/state/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ai_evaluated: 1 })
@@ -199,7 +199,7 @@ const goToAiEvaluate = async () => {
 // 重置后端状态
 const resetBackendState = async () => {
   try {
-    await fetch('/api/state/reset', {
+    await fetch('http://localhost:3000/api/state/reset', {
       method: 'POST'
     });
     console.log('后端状态已重置为默认值');
@@ -212,7 +212,7 @@ const resetBackendState = async () => {
 // 轮询后端获取 4 组方案的上传状态
 const fetchState = async () => {
   try {
-    const res = await fetch('/api/state');
+    const res = await fetch('http://localhost:3000/api/state');
     const state = await res.json();
     
     // 直接映射后端字段到前端的布尔值数组中

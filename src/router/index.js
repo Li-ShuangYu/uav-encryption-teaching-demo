@@ -10,20 +10,6 @@ const routes = [
     component: () => import('../views/InitialPage.vue'),
     meta: { title: '初始页面' }
   },
-  // ================= 管理员页面 =================
-  {
-    path: '/admin',
-    name: 'AdminPage',
-    component: () => import('../views/AdminPage.vue'),
-    meta: { title: '管理员控制台' }
-  },
-  // ================= 学生首页 =================
-  {
-    path: '/student-home',
-    name: 'StudentHome',
-    component: () => import('../views/StudentHome.vue'),
-    meta: { title: '学生工作台' }
-  },
   // ================= 分组推荐页面 =================
   {
     path: '/group-recommendation',
@@ -35,55 +21,49 @@ const routes = [
   {
     path: '/teacher',
     component: Layout,
-    redirect: '/teacher/task-publish',
+    redirect: '/teacher/task-publish', // 默认重定向到教师发布页
     children: [
       {
         path: 'task-publish',
         name: 'TeacherTaskPublish',
         component: () => import('../views/TeacherTaskPublish.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏1：任务发布页' }
       },
       {
         path: 'demand-summary',
         name: 'TeacherDemandSummary',
         component: () => import('../views/TeacherDemandSummary.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏 2：教学控制台 - 需求分析汇总页' }
       },
       {
         path: 'demand-split',
         name: 'TeacherDemandSplit',
         component: () => import('../views/TeacherDemandSplit.vue'),
-        meta: { title: '教师控制台' }
-      },
-      {
-        path: 'task-split',
-        name: 'TeacherTaskSplit',
-        component: () => import('../views/TeacherTaskSplit.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏 3：教学控制台 - 4 组需求分屏页' }
       },
       {
         path: 'scheme-split',
         name: 'TeacherSchemeSplit',
         component: () => import('../views/TeacherSchemeSplit.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏 5：教学控制台 - 4 组方案分屏页' }
       },
       {
         path: 'ai-evaluate',
         name: 'TeacherAiEvaluate',
         component: () => import('../views/TeacherAiEvaluate.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏 6：教学控制台 - 方案 AI 评估页' }
       },
       {
         path: 'simulation',
         name: 'TeacherSimulation',
         component: () => import('../views/TeacherSimulation.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '屏 8：教学控制台 - 4 组仿真性能分屏页' }
       },
       {
         path: 'scheme-detail',
         name: 'TeacherSchemeDetail',
         component: () => import('../views/TeacherSchemeDetail.vue'),
-        meta: { title: '教师控制台' }
+        meta: { title: '方案详情页' }
       }
     ]
   },
@@ -91,37 +71,19 @@ const routes = [
   {
     path: '/student',
     component: StudentLayout,
-    redirect: '/student/task-receive',
+    redirect: '/student/task-receive', // 默认重定向到学生任务接收页
     children: [
       {
         path: 'task-receive',
         name: 'StudentTaskReceive',
         component: () => import('../views/StudentTaskReceive.vue'),
-        meta: { title: '学生工作台' }
-      },
-      {
-        path: 'task-select',
-        name: 'StudentTaskSelect',
-        component: () => import('../views/StudentTaskSelect.vue'),
-        meta: { title: '学生工作台' }
-      },
-      {
-        path: 'task-split',
-        name: 'StudentTaskSplit',
-        component: () => import('../views/StudentTaskSplit.vue'),
-        meta: { title: '学生工作台' }
+        meta: { title: '屏 4：学习工作台 - 任务接收 + 需求提交页（合并 1 个页）' }
       },
       {
         path: 'scheme-upload',
         name: 'StudentSchemeUpload',
         component: () => import('../views/StudentSchemeUpload.vue'),
-        meta: { title: '学生工作台' }
-      },
-      {
-        path: 'scheme-detail',
-        name: 'StudentSchemeDetail',
-        component: () => import('../views/StudentSchemeDetail.vue'),
-        meta: { title: '学生工作台' }
+        meta: { title: '屏 7：学习工作台 - 方案上传 + 评估结果页（合并 1 个页）' }
       }
     ]
   }
@@ -130,14 +92,6 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
-})
-
-// 路由守卫，设置页面标题
-router.beforeEach((to, from) => {
-  // 设置页面标题
-  if (to.meta.title) {
-    document.title = to.meta.title
-  }
 })
 
 export default router
