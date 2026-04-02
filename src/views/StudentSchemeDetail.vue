@@ -87,7 +87,7 @@
           </div>
         </div>
 
-        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up shadow-lg" style="animation-delay: 0.2s;" :style="{ borderTopColor: currentGroup.themeColor + '66' }">
+        <div class="flex-1 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col relative overflow-hidden transition-all duration-700 ease-out animate-fade-in-up shadow-lg" :style="{ animationDelay: '0.2s', borderTopColor: currentGroup.themeColor + '66' }">
           <div class="text-xs font-black mb-3 flex items-center gap-1.5 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
             开发需实现的核心算法
@@ -104,35 +104,70 @@
         </div>
       </div>
 
-      <div class="col-span-5 bg-panelBg border border-borderColor rounded-lg p-4 flex flex-col shadow-lg animate-fade-in-up" style="animation-delay: 0.25s;" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
-        <div class="text-base font-black text-white mb-4 flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500" :style="{ backgroundColor: currentGroup.themeColor }"></div>
-          系统架构与数据流转参考
-        </div>
-        <div class="flex-1 flex flex-col justify-between mb-4 relative py-1">
-          <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-borderColor -translate-x-1/2 z-0 rounded-full"></div>
-          <div v-for="(layer, index) in currentGroup.archLayers" :key="index" class="relative z-10 w-[85%] mx-auto bg-cardInnerBg border rounded-lg py-2.5 px-4 flex items-center justify-between transition-all duration-500 hover:scale-[1.02]" :style="{ borderColor: layer.highlight ? currentGroup.themeColor : '#374151', backgroundColor: layer.highlight ? '#1f2937' : '' }">
-            <div class="text-xs font-black transition-colors duration-500" :style="{ color: layer.highlight ? currentGroup.themeColor : '#9ca3af' }">{{ layer.name }}</div>
-            <div class="text-xs font-bold text-textMain text-right w-2/3 leading-snug">{{ layer.desc }}</div>
+      <div class="col-span-5 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
+        <div class="bg-panelBg border border-borderColor rounded-lg p-5 flex flex-col shadow-lg animate-fade-in-up h-full" :style="{ animationDelay: '0.25s' }">
+          <div class="text-base font-black text-white mb-5 flex items-center gap-2 shrink-0">
+            <div class="w-2.5 h-2.5 rounded-full transition-colors duration-500 shadow-sm" :style="{ backgroundColor: currentGroup.themeColor, boxShadow: `0 0 8px ${currentGroup.themeColor}80` }"></div>
+            系统架构与数据流转参考
           </div>
-        </div>
-        <div class="shrink-0 bg-darkBg/80 rounded-lg p-3 border border-borderColor">
-          <div class="text-[11px] font-black text-textMuted mb-2 uppercase tracking-widest flex justify-between items-center">
-            <span>Security Flow / 时序图节点</span>
-            <span class="text-[#3b82f6] hover:underline cursor-pointer">查看详细UML图</span>
+
+          <div class="flex-1 flex flex-col justify-between mb-6 px-1 relative min-h-[240px]">
+            
+            <div class="absolute top-6 bottom-6 left-[56px] w-px bg-gray-600 z-0 opacity-50"></div>
+
+            <div v-for="(layer, index) in currentGroup.archLayers" :key="index" 
+                 class="relative group rounded-xl p-3 flex items-center gap-4 transition-all duration-300 border"
+                 :class="layer.highlight ? 'bg-[#1f2937] shadow-md z-10 scale-[1.02]' : 'bg-cardInnerBg/40 hover:bg-cardInnerBg z-0'" 
+                 :style="{ borderColor: layer.highlight ? currentGroup.themeColor : '#374151' }">
+              
+              <div class="shrink-0 w-20 py-1.5 flex justify-center items-center rounded bg-darkBg border transition-colors duration-500 relative z-10"
+                   :style="{ borderColor: layer.highlight ? currentGroup.themeColor + '80' : '#2d353e' }">
+                <span class="text-xs font-black transition-colors duration-500" :style="{ color: layer.highlight ? currentGroup.themeColor : '#9ca3af' }">
+                  {{ layer.name }}
+                </span>
+              </div>
+
+              <div class="flex-1 text-xs font-medium leading-relaxed transition-colors duration-500 relative z-10"
+                   :class="layer.highlight ? 'text-gray-200' : 'text-textMuted'">
+                {{ layer.desc }}
+              </div>
+
+              <div v-if="layer.highlight" class="absolute right-0 top-0 bottom-0 w-1.5 rounded-r-xl opacity-80 z-10" 
+                   :style="{ backgroundColor: currentGroup.themeColor }"></div>
+            </div>
           </div>
-          <div class="flex items-center justify-between text-xs font-black font-mono transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
-            <template v-for="(step, index) in currentGroup.flow" :key="index">
-              <span>{{ step }}</span>
-              <span v-if="index < currentGroup.flow.length - 1" class="text-textMuted opacity-50">➔</span>
-            </template>
+
+          <div class="shrink-0 bg-darkBg rounded-xl p-4 border border-borderColor relative overflow-hidden group">
+            <div class="absolute -right-6 -top-6 w-24 h-24 blur-3xl opacity-10 transition-colors duration-500" 
+                 :style="{ backgroundColor: currentGroup.themeColor }"></div>
+
+            <div class="text-[11px] font-black text-textMuted mb-3 uppercase tracking-widest flex justify-between items-center relative z-10">
+              <span class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Security Flow / 时序节点
+              </span>
+              <span class="text-[#3b82f6] hover:text-blue-400 hover:underline cursor-pointer transition-colors flex items-center gap-1">
+                查看详细UML图
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-y-2.5 relative z-10">
+              <template v-for="(step, index) in currentGroup.flow" :key="index">
+                <div class="text-xs font-bold font-mono transition-colors duration-500 bg-cardInnerBg px-2 py-1 rounded border border-gray-700/50 shadow-sm" 
+                     :style="{ color: currentGroup.themeColor }">
+                  {{ step }}
+                </div>
+                <svg v-if="index < currentGroup.flow.length - 1" class="w-4 h-4 mx-1.5 text-gray-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </template>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="col-span-4 flex flex-col gap-3" :class="{ 'opacity-0 transform scale-95': showAnimation }" :style="{ transition: 'all 0.3s ease' }">
         <!-- 学生查看自己小组时显示AI评价 -->
-        <div v-if="isStudentOwnGroup" class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" style="animation-delay: 0.3s; border-top-width: 4px;" :style="{ borderTopColor: currentGroup.themeColor }">
+        <div v-if="isStudentOwnGroup" class="flex-1 bg-panelBg border border-borderColor rounded-lg flex flex-col relative overflow-hidden shadow-lg transition-all duration-700 ease-out animate-fade-in-up" :style="{ animationDelay: '0.3s', borderTopWidth: '4px', borderTopColor: currentGroup.themeColor }">
           
           <div class="px-4 pt-3 pb-3 shrink-0 relative z-20 flex justify-between items-center border-b border-borderColor bg-cardInnerBg">
             <div class="text-base font-black flex items-center gap-2 transition-colors duration-500" :style="{ color: currentGroup.themeColor }">
@@ -147,48 +182,11 @@
           <div class="relative w-full flex-1 overflow-y-auto custom-scrollbar flex flex-col p-4 gap-4">
             
             <!-- 雷达图 -->
-            <div class="bg-darkBg rounded-lg border border-borderColor p-4">
+            <!-- <div class="bg-darkBg rounded-lg border border-borderColor p-4"> -->
               <div class="w-full h-[180px] flex items-center justify-center">
-                <div class="w-full h-full relative">
-                  <!-- 雷达图 -->
-                  <svg class="w-full h-full" viewBox="0 0 200 200">
-                    <!-- 网格 -->
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="56.25" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="37.5" fill="none" stroke="#2d353e" stroke-width="1" />
-                    <circle cx="100" cy="100" r="18.75" fill="none" stroke="#2d353e" stroke-width="1" />
-                    
-                    <!-- 轴线 -->
-                    <line x1="100" y1="25" x2="100" y2="175" stroke="#2d353e" stroke-width="1" />
-                    <line x1="25" y1="100" x2="175" y2="100" stroke="#2d353e" stroke-width="1" />
-                    <line x1="47.5" y1="47.5" x2="152.5" y2="152.5" stroke="#2d353e" stroke-width="1" />
-                    <line x1="152.5" y1="47.5" x2="47.5" y2="152.5" stroke="#2d353e" stroke-width="1" />
-                    
-                    <!-- 数据区域 -->
-                    <polygon 
-                      :points="getRadarPoints(currentGroup.review.scores)" 
-                      fill="rgba(59, 130, 246, 0.2)" 
-                      stroke="#3b82f6" 
-                      stroke-width="2" 
-                    />
-                    
-                    <!-- 指标标签和数值 -->
-                    <text x="100" y="15" text-anchor="middle" class="text-sm fill-gray-400">安全保密性</text>
-                    <text x="100" y="190" text-anchor="middle" class="text-sm fill-gray-400">系统可用性</text>
-                    <text x="15" y="105" text-anchor="start" class="text-sm fill-gray-400">数据完整性</text>
-                    <text x="185" y="105" text-anchor="end" class="text-sm fill-gray-400">硬件成本</text>
-                    <text x="45" y="35" text-anchor="start" class="text-sm fill-gray-400">方案创新性</text>
-                    
-                    <!-- 数值标签 -->
-                    <text :x="getRadarPointX('security', currentGroup.review.scores)" :y="getRadarPointY('security', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.security }}</text>
-                    <text :x="getRadarPointX('integrity', currentGroup.review.scores)" :y="getRadarPointY('integrity', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.integrity }}</text>
-                    <text :x="getRadarPointX('usability', currentGroup.review.scores)" :y="getRadarPointY('usability', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.usability }}</text>
-                    <text :x="getRadarPointX('cost', currentGroup.review.scores)" :y="getRadarPointY('cost', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.cost }}</text>
-                    <text :x="getRadarPointX('innovation', currentGroup.review.scores)" :y="getRadarPointY('innovation', currentGroup.review.scores)" text-anchor="middle" class="text-sm fill-blue-400 font-bold">{{ currentGroup.review.scores.innovation }}</text>
-                  </svg>
-                </div>
+                <div id="radar-chart" class="w-full h-full"></div>
               </div>
-            </div>
+            <!-- </div> -->
 
             <div class="flex justify-between items-end pb-3 border-b border-gray-700/50">
               <span class="text-sm font-medium text-textMuted">AI 计算综合得分</span>
@@ -310,8 +308,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import * as echarts from 'echarts';
 
 const router = useRouter();
 const route = useRoute();
@@ -354,7 +353,7 @@ const groups = reactive([
     ],
     // 教师评审数据
     review: {
-      scores: { security: 85, integrity: 80, usability: 90, cost: 95, innovation: 75 },
+      scores: { security: 95, integrity: 90, usability: 85, cost: 80, innovation: 90 },
       comment: '',
       isSubmitted: false
     }
@@ -379,7 +378,7 @@ const groups = reactive([
       { label: '身份认证体系', name: 'ECC 双向认证', desc: '执行设备校验并完成会话密钥协商，保障密钥分发的安全性与合法性。' }
     ],
     review: {
-      scores: { security: 95, integrity: 90, usability: 75, cost: 70, innovation: 85 },
+      scores: { security: 95, integrity: 90, usability: 85, cost: 80, innovation: 90 },
       comment: '',
       isSubmitted: false
     }
@@ -404,7 +403,7 @@ const groups = reactive([
       { label: '抗重放防护机制', name: '滑动窗口计数器', desc: '每发送一帧计数器自增并随数据加密发送；接收端校验大于本地记录才处理，并自动丢弃过期旧包。' }
     ],
     review: {
-      scores: { security: 85, integrity: 95, usability: 85, cost: 80, innovation: 75 },
+      scores: { security: 80, integrity: 85, usability: 95, cost: 75, innovation: 85 },
       comment: '',
       isSubmitted: false
     }
@@ -429,7 +428,7 @@ const groups = reactive([
       { label: '实时通信加密', name: '对称加密体制', desc: '使用 Kyber 算法安全协商生成的会话密钥对通信数据进行实时加解密，保障协议兼容性与高机密性。' }
     ],
     review: {
-      scores: { security: 98, integrity: 90, usability: 60, cost: 50, innovation: 95 },
+      scores: { security: 88, integrity: 95, usability: 80, cost: 70, innovation: 95 },
       comment: '',
       isSubmitted: false
     }
@@ -442,10 +441,20 @@ const studentGroupId = ref(null);
 const isGenerating = ref(false);
 const showContent = ref(false);
 const showAnimation = ref(false);
+const chartInstance = ref(null);
 const currentGroup = computed(() => groups.find(g => g.id === currentGroupId.value));
 const isStudentOwnGroup = computed(() => {
   return studentGroupId.value && currentGroupId.value === studentGroupId.value;
 });
+
+// 雷达图指标
+const indicators = [
+  { name: '保密性', max: 100 },
+  { name: '完整性', max: 100 },
+  { name: '可用性', max: 100 },
+  { name: '成本控制', max: 100 },
+  { name: '创新性', max: 100 }
+];
 
 // 检查是否所有其他组的评审都已提交
 const allReviewsSubmitted = computed(() => {
@@ -464,7 +473,6 @@ const completeEvaluation = () => {
   
   // 模拟完成互评的逻辑
   setTimeout(() => {
-    alert('互评打分已完成！');
     // 可以添加跳转到其他页面的逻辑
   }, 300);
 };
@@ -477,6 +485,10 @@ const prevGroup = () => {
     setTimeout(() => {
       currentGroupId.value--;
       showAnimation.value = false;
+      // 更新雷达图
+      setTimeout(() => {
+        initChart();
+      }, 100);
     }, 300);
   }
 };
@@ -487,6 +499,10 @@ const nextGroup = () => {
     setTimeout(() => {
       currentGroupId.value++;
       showAnimation.value = false;
+      // 更新雷达图
+      setTimeout(() => {
+        initChart();
+      }, 100);
     }, 300);
   }
 };
@@ -504,7 +520,6 @@ const submitReview = () => {
   // 模拟提交网络请求
   setTimeout(() => {
     currentGroup.value.review.isSubmitted = true;
-    alert(`已成功录入 ${currentGroup.value.name} 的综合评审结果！`);
   }, 300);
 };
 
@@ -543,60 +558,69 @@ const generateReview = async () => {
   }
 };
 
-// 计算雷达图点坐标
-const getRadarPoints = (scores) => {
-  const centerX = 100;
-  const centerY = 100;
-  const maxRadius = 75;
+// 初始化雷达图
+const initChart = () => {
+  if (!currentGroup.value) return;
   
-  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
-  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
-  const points = [];
+  const chartDom = document.getElementById('radar-chart');
+  if (!chartDom) return;
   
-  dimensions.forEach((key, index) => {
-    const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
-    const value = (scores[key] || 0) / 100;
-    const radius = value * maxRadius;
-    const x = centerX + Math.cos(angle) * radius;
-    const y = centerY + Math.sin(angle) * radius;
-    points.push(`${x},${y}`);
-  });
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
   
-  return points.join(' ');
+  chartInstance.value = echarts.init(chartDom);
+  
+  const scores = currentGroup.value.review.scores;
+  const values = [scores.security, scores.integrity, scores.usability, scores.cost, scores.innovation];
+  
+  const customIndicators = indicators.map((ind, idx) => ({
+    name: `${ind.name}\n${values[idx]}%`,
+    max: ind.max
+  }));
+  
+  const option = {
+    radar: {
+      indicator: customIndicators,
+      radius: '50%', 
+      center: ['50%', '50%'],
+      splitNumber: 4,
+      axisName: { 
+        color: '#d1d5db', 
+        fontSize: 13, 
+        fontWeight: 'bold',
+        lineHeight: 16
+      },
+      splitLine: { lineStyle: { color: ['#2d353e'], width: 1 } },
+      splitArea: { show: false },
+      axisLine: { lineStyle: { color: '#2d353e' } }
+    },
+    series: [{
+      type: 'radar',
+      data: [{
+        value: values,
+        itemStyle: { color: currentGroup.value.themeColor },
+        areaStyle: { 
+          color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+            { color: currentGroup.value.themeColor, offset: 0, opacity: 0.1 },
+            { color: currentGroup.value.themeColor, offset: 1, opacity: 0.5 }
+          ])
+        },
+        lineStyle: { width: 2, color: currentGroup.value.themeColor },
+        symbol: 'circle',
+        symbolSize: 8
+      }]
+    }]
+  };
+  
+  chartInstance.value.setOption(option);
 };
 
-// 计算雷达图单个点的X坐标
-const getRadarPointX = (key, scores) => {
-  const centerX = 100;
-  const maxRadius = 75;
-  
-  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
-  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
-  const index = dimensions.indexOf(key);
-  
-  if (index === -1) return centerX;
-  
-  const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
-  const value = (scores[key] || 0) / 100;
-  const radius = value * maxRadius;
-  return centerX + Math.cos(angle) * radius;
-};
-
-// 计算雷达图单个点的Y坐标
-const getRadarPointY = (key, scores) => {
-  const centerY = 100;
-  const maxRadius = 75;
-  
-  // 维度顺序：安全保密性、数据完整性、系统可用性、硬件成本控制、方案创新性
-  const dimensions = ['security', 'integrity', 'usability', 'cost', 'innovation'];
-  const index = dimensions.indexOf(key);
-  
-  if (index === -1) return centerY;
-  
-  const angle = (Math.PI * 2 / dimensions.length) * index - Math.PI / 2;
-  const value = (scores[key] || 0) / 100;
-  const radius = value * maxRadius;
-  return centerY + Math.sin(angle) * radius;
+// 处理窗口 resize
+const handleResize = () => {
+  if (chartInstance.value) {
+    chartInstance.value.resize();
+  }
 };
 
 onMounted(() => {
@@ -620,7 +644,22 @@ onMounted(() => {
   // 入场动画
   setTimeout(() => {
     showContent.value = true;
+    // 初始化雷达图
+    setTimeout(() => {
+      initChart();
+    }, 100);
   }, 100);
+  
+  // 监听窗口 resize
+  window.addEventListener('resize', handleResize);
+});
+
+onBeforeUnmount(() => {
+  // 清理事件监听器和图表实例
+  window.removeEventListener('resize', handleResize);
+  if (chartInstance.value) {
+    chartInstance.value.dispose();
+  }
 });
 </script>
 
