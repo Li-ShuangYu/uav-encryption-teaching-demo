@@ -30,6 +30,23 @@
       <router-view />
 
     </div>
+
+    <transition name="toast">
+      <div v-if="showRefreshToast" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none">
+        <div :class="[
+          'px-6 py-3 rounded shadow-lg flex items-center gap-2',
+          refreshToastSuccess ? 'bg-accentGreen text-white' : 'bg-red-600 text-white'
+        ]">
+          <svg v-if="refreshToastSuccess" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+          <span class="font-bold">{{ refreshToastSuccess ? '刷新成功！' : '刷新失败！' }}</span>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -106,24 +123,26 @@ const updateSelectedMenuItem = () => {
 }
 
 // 刷新数据
-const refreshData = () => {
-  // 模拟刷新数据的逻辑
-  console.log('刷新数据中...')
-  // 这里可以添加实际的刷新逻辑，比如重新获取数据
-  
-  // 显示刷新提示
-  const refreshBtn = document.querySelector('button:contains("刷新数据")')
-  if (refreshBtn) {
-    const originalText = refreshBtn.textContent
-    refreshBtn.textContent = '刷新中...'
-    refreshBtn.disabled = true
-    
-    // 模拟刷新完成
+const showRefreshToast = ref(false)
+const refreshToastSuccess = ref(true)
+
+const refreshData = async () => {
+  try {
+    await fetch('/api/state/reset', {
+      method: 'POST'
+    });
+    refreshToastSuccess.value = true;
+    showRefreshToast.value = true;
     setTimeout(() => {
-      refreshBtn.textContent = originalText
-      refreshBtn.disabled = false
-      console.log('数据刷新完成')
-    }, 1000)
+      showRefreshToast.value = false;
+    }, 2000);
+  } catch (error) {
+    console.error('刷新失败', error);
+    refreshToastSuccess.value = false;
+    showRefreshToast.value = true;
+    setTimeout(() => {
+      showRefreshToast.value = false;
+    }, 2000);
   }
 }
 
@@ -157,5 +176,21 @@ const navigateToHome = () => {
             flex-shrink: 0;
         }
     }
+}
+
+/* Toast 动画 */
+.toast-enter-active {
+    transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.toast-leave-active {
+    transition: all 0.3s ease-in;
+}
+.toast-enter-from {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+}
+.toast-leave-to {
+    transform: translate(-50%, -20px);
+    opacity: 0;
 }
 </style>
