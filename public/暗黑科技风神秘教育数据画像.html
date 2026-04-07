@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育数据画像概念 - 升级版</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --cyan: #00e5ff;
+            --blue: #1e88e5;
+            --dark-blue: #0b1426;
+            --panel-bg: rgba(11, 25, 44, 0.75);
+            --border-color: rgba(0, 229, 255, 0.3);
+            --pink: #ff4081;
+            --text-main: #e0f2f1;
+            --text-sub: #80cbc4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Microsoft YaHei', sans-serif; }
+
+        body {
+            width: 100vw; height: 100vh;
+            background-color: #050914;
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* 1. 全局 3D 场景底图占位 (保留原状) */
+        .global-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: url('./background.png') center/cover no-repeat;
+            opacity: 0.6;
+        }
+        .global-bg::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* --- 顶部 Header --- */
+        header {
+            height: 70px;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 0 20px; z-index: 10;
+        }
+
+        .header-left { width: 30%; padding-top: 15px; font-size: 18px; font-weight: bold; }
+        .header-left span { font-size: 12px; color: var(--text-sub); font-weight: normal; margin-left: 10px; }
+
+        .header-center {
+            width: 40%; height: 60px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 60"><polygon points="0,0 400,0 360,60 40,60" fill="rgba(30,136,229,0.2)" stroke="%2300e5ff" stroke-width="2"/></svg>') no-repeat center top;
+            background-size: 100% 100%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 28px; font-weight: bold; color: #fff;
+            text-shadow: 0 0 10px var(--cyan); letter-spacing: 2px;
+        }
+
+        .header-right { width: 30%; display: flex; justify-content: flex-end; padding-top: 15px; gap: 15px; }
+        .avatar-icon { width: 30px; height: 30px; background: #ddd; border-radius: 50%; border: 2px solid var(--cyan); }
+        .setting-icon { font-size: 20px; cursor: pointer; color: var(--cyan); line-height: 30px;}
+
+        /* --- 主体布局 --- */
+        main { display: flex; flex: 1; padding: 10px 20px 20px; gap: 15px; z-index: 10; height: calc(100vh - 70px); }
+
+        .sidebar { flex: 2.5; display: flex; flex-direction: column; gap: 10px; }
+        
+        .panel {
+            flex: 1; background: var(--panel-bg);
+            border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 10px; position: relative;
+            backdrop-filter: blur(5px); display: flex; flex-direction: column;
+        }
+        
+        .panel::before, .panel::after {
+            content: ''; position: absolute; width: 10px; height: 10px; border: 2px solid var(--cyan);
+        }
+        .panel::before { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 8px;}
+        .panel::after { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 8px;}
+
+        .panel-title { font-size: 15px; font-weight: bold; margin-bottom: 5px; color: #fff; display: flex; align-items: center;}
+        .panel-title::before { content: ''; display: inline-block; width: 4px; height: 14px; background: var(--cyan); margin-right: 8px; border-radius: 2px;}
+
+        .chart-box { flex: 1; width: 100%; position: relative; min-height: 0; }
+
+        /* --- 中心区域 (科技感升级) --- */
+        .center-stage { flex: 5; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        /* 发光粒子 */
+        .particles-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 4; pointer-events: none; }
+        .particle { position: absolute; width: 4px; height: 4px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px 2px var(--cyan); opacity: 0; animation: floatUp 4s infinite ease-in; }
+        .p1 { left: 35%; bottom: 20%; animation-delay: 0s; }
+        .p2 { left: 65%; bottom: 15%; animation-delay: 1s; width: 6px; height: 6px; background: #b388ff; box-shadow: 0 0 10px #b388ff;}
+        .p3 { left: 45%; bottom: 25%; animation-delay: 2s; }
+        .p4 { left: 55%; bottom: 10%; animation-delay: 0.5s; }
+        .p5 { left: 40%; bottom: 30%; animation-delay: 1.5s; width: 3px; height: 3px; }
+
+        /* 3D全息扫描环 */
+        .hologram-rings {
+            position: absolute; top: 60%; width: 480px; height: 180px;
+            transform-style: preserve-3d; z-index: 3;
+            perspective: 1000px; pointer-events: none;
+        }
+        .ring { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; box-sizing: border-box; }
+        .ring-1 {
+            border-top: 3px solid var(--cyan); border-bottom: 3px solid rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 20px var(--cyan), inset 0 0 20px rgba(0, 229, 255, 0.4);
+            animation: spin1 6s linear infinite;
+        }
+        .ring-2 {
+            width: 110%; height: 110%; top: -5%; left: -5%;
+            border-left: 2px dashed #b388ff; border-right: 2px dashed #b388ff;
+            box-shadow: 0 0 15px #b388ff, inset 0 0 10px #b388ff;
+            animation: spin2 10s linear infinite;
+        }
+        .ring-3 {
+            width: 85%; height: 85%; top: 7.5%; left: 7.5%;
+            border: 2px dotted rgba(0, 229, 255, 0.8);
+            animation: spin1 4s linear reverse infinite;
+        }
+
+        /* 2. AI 透明人像占位 (保留原状) */
+        .avatar-image {
+            position: absolute; top: 10%; width: 350px; height: 500px; z-index: 2;
+            background: url('./human.png') no-repeat center/contain;
+            filter: drop-shadow(0 0 20px rgba(0,229,255,0.6));
+        }
+
+        /* 加厚科技底座 */
+        .pedestal {
+            position: absolute; bottom: 8%; width: 400px; height: 100px;
+            z-index: 1; display: flex; justify-content: center; align-items: center;
+        }
+        .pedestal-ring {
+            position: absolute; width: 100%; height: 100px;
+            background: radial-gradient(ellipse at center, rgba(0,229,255,0.3) 0%, rgba(11,25,44,0.95) 70%);
+            border-radius: 50%; border: 2px solid var(--cyan);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.5), inset 0 0 30px rgba(0, 229, 255, 0.3);
+            transform: translateY(-20px);
+        }
+        .pedestal-ring::after {
+            content: ''; position: absolute; top: 35px; left: -2px; width: 100%; height: 100px;
+            border-radius: 50%;
+            border-bottom: 6px solid var(--cyan);
+            border-left: 2px solid rgba(0, 229, 255, 0.5); border-right: 2px solid rgba(0, 229, 255, 0.5);
+            background: linear-gradient(to bottom, rgba(11,25,44,0.95), rgba(0, 229, 255, 0.1));
+            z-index: -1; box-shadow: 0 20px 40px rgba(0,229,255,0.3);
+        }
+        .pedestal-core {
+            position: absolute; width: 200px; height: 50px;
+            background: var(--cyan); border-radius: 50%;
+            filter: blur(25px); opacity: 0.6;
+            transform: translateY(-20px);
+            animation: pulse 2s infinite alternate;
+        }
+
+        /* 3. 学生信息悬浮卡片 */
+        .student-card {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            background: rgba(11, 25, 44, 0.8); border: 1px solid var(--cyan); border-radius: 8px;
+            padding: 15px; width: 220px; box-shadow: 0 0 15px rgba(0,229,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        .student-info-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; }
+        .student-info-row span:last-child { color: var(--cyan); font-weight: bold; }
+
+        /* 动画关键帧 */
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0; } 20% { opacity: 0.8; } 80% { opacity: 0.5; } 100% { transform: translateY(-250px) scale(0); opacity: 0; } }
+        @keyframes pulse { 0% { opacity: 0.3; transform: translateY(-20px) scale(0.9); } 100% { opacity: 0.8; transform: translateY(-20px) scale(1.1); } }
+        @keyframes spin1 { 100% { transform: rotate(360deg); } }
+        @keyframes spin2 { 100% { transform: rotate(-360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="global-bg"></div>
+
+    <header>
+        <div class="header-left">教育数据画像概念<span>(EduData Portrait Concept)</span></div>
+        <div class="header-center">学习能力画像</div>
+        <div class="header-right">
+            <div class="avatar-icon"></div>
+            <div class="setting-icon">⚙</div>
+        </div>
+    </header>
+
+    <main>
+        <aside class="sidebar left">
+            <div class="panel">
+                <div class="panel-title">综合能力画像</div>
+                <div id="chart-l1" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">知识内化转化进度</div>
+                <div id="chart-l2" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">课堂互动行为结构</div>
+                <div id="chart-l3" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">成绩波动追踪</div>
+                <div id="chart-l4" class="chart-box"></div>
+            </div>
+        </aside>
+
+        <section class="center-stage">
+            <div class="particles-container">
+                <div class="particle p1"></div><div class="particle p2"></div>
+                <div class="particle p3"></div><div class="particle p4"></div>
+                <div class="particle p5"></div>
+            </div>
+
+            <div class="hologram-rings">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+            </div>
+            
+            <div class="avatar-image"></div>
+            
+            <div class="pedestal">
+                <div class="pedestal-ring"></div>
+                <div class="pedestal-core"></div>
+            </div>
+
+            <div class="student-card">
+                <div style="font-size: 16px; color: #fff; margin-bottom: 10px; border-bottom: 1px solid rgba(0,229,255,0.3); padding-bottom: 5px;">被试档案</div>
+                <div class="student-info-row"><span>姓名：</span><span>张三丰</span></div>
+                <div class="student-info-row"><span>学号：</span><span>EDU-20260320</span></div>
+                <div class="student-info-row"><span>综合评级：</span><span style="color: #69f0ae;">S 级</span></div>
+                <div class="student-info-row"><span>脑力负荷：</span><span>42% (正常)</span></div>
+            </div>
+        </section>
+
+        <aside class="sidebar right">
+            <div class="panel">
+                <div class="panel-title">答题节奏偏离度</div>
+                <div id="chart-r1" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">作业责任心评价</div>
+                <div id="chart-r2" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">预习行为深度评估</div>
+                <div id="chart-r3" class="chart-box"></div>
+            </div>
+            <div class="panel">
+                <div class="panel-title">考场异常行为汇总</div>
+                <div id="chart-r4" class="chart-box"></div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // ECharts 通用配置
+        const axisStyle = { axisLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } } };
+        
+        // 初始化 8 个图表实例
+        const charts = {
+            l1: echarts.init(document.getElementById('chart-l1')),
+            l2: echarts.init(document.getElementById('chart-l2')),
+            l3: echarts.init(document.getElementById('chart-l3')),
+            l4: echarts.init(document.getElementById('chart-l4')),
+            r1: echarts.init(document.getElementById('chart-r1')),
+            r2: echarts.init(document.getElementById('chart-r2')),
+            r3: echarts.init(document.getElementById('chart-r3')),
+            r4: echarts.init(document.getElementById('chart-r4'))
+        };
+
+        // 1. 雷达图 (综合能力画像)
+        charts.l1.setOption({
+            radar: {
+                indicator: [
+                    { name: '预习任务完成率', max: 100 }, { name: '出勤率', max: 100 },
+                    { name: '作业准时提交率', max: 100 }, { name: '客观题得分率', max: 100 },
+                    { name: '主观题得分率', max: 100 }, { name: '压轴题得分率', max: 100 }
+                ],
+                radius: '65%', center: ['50%', '55%'],
+                axisName: { color: 'var(--text-sub)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0, 229, 255, 0.2)' } },
+                splitArea: { show: false },
+                axisLine: { lineStyle: { color: 'rgba(0, 229, 255, 0.2)' } }
+            },
+            series: [{
+                type: 'radar',
+                data: [{
+                    value: [85, 100, 90, 95, 70, 50],
+                    areaStyle: { color: 'rgba(0, 229, 255, 0.4)' },
+                    lineStyle: { color: '#00e5ff' },
+                    itemStyle: { color: '#00e5ff' },
+                    label: { show: true, color: '#fff', fontSize: 10 }
+                }]
+            }]
+        });
+
+        // 2. 柱状图 (知识内化转化进度)
+        charts.l2.setOption({
+            grid: { top: 25, bottom: 20, left: 30, right: 10 },
+            xAxis: { type: 'category', data: ['课堂测验(即时)', '课后作业(巩固)', '综合考试(应用)'], ...axisStyle, axisTick: {show: false} },
+            yAxis: { type: 'value', min: 0, max: 100, ...axisStyle },
+            series: [{
+                type: 'bar', barWidth: '35%',
+                data: [88, 80, 72],
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: '#00e5ff' }, { offset: 1, color: '#0b192c' }]),
+                    borderRadius: [4, 4, 0, 0]
+                },
+                label: { show: true, position: 'top', formatter: '{c}%', color: '#fff', fontSize: 11 }
+            }]
+        });
+
+        // 3. 环形图 (课堂互动行为结构)
+        charts.l3.setOption({
+            title: {
+                text: '总互动数\n38', left: 'center', top: '35%',
+                textStyle: { color: '#fff', fontSize: 14, fontWeight: 'bold', lineHeight: 20 }
+            },
+            legend: { bottom: 0, textStyle: { color: 'var(--text-sub)', fontSize: 10 }, itemWidth: 10, itemHeight: 10 },
+            series: [{
+                type: 'pie', radius: ['50%', '70%'], center: ['50%', '45%'],
+                itemStyle: { borderColor: '#050914', borderWidth: 2 },
+                label: { show: true, formatter: '{b}\n{d}%', color: '#fff', fontSize: 10 },
+                data: [
+                    { value: 8, name: '提问次数', itemStyle: { color: '#00e5ff' } },
+                    { value: 5, name: '抢答次数', itemStyle: { color: '#ff4081' } },
+                    { value: 25, name: '弹幕数', itemStyle: { color: '#b388ff' } }
+                ]
+            }]
+        });
+
+        // 4. 折线图 (成绩波动追踪)
+        charts.l4.setOption({
+            title: { text: '成绩波动系数 (CV值)：0.02', right: 5, top: 0, textStyle: { color: 'var(--text-sub)', fontSize: 10, fontWeight: 'normal' } },
+            grid: { top: 30, bottom: 20, left: 30, right: 15 },
+            xAxis: { type: 'category', data: ['第1次', '第2次', '第3次', '第4次', '第5次'], ...axisStyle, boundaryGap: false },
+            yAxis: { type: 'value', min: 0, max: 100, ...axisStyle },
+            series: [{
+                type: 'line', smooth: true,
+                data: [82, 85, 84, 86, 85],
+                itemStyle: { color: '#00e5ff' },
+                lineStyle: { width: 3, shadowColor: 'rgba(0, 229, 255, 0.5)', shadowBlur: 10 },
+                label: { show: true, color: '#fff', fontSize: 10 }
+            }]
+        });
+
+        // 5. 散点图 (答题节奏偏离度)
+        charts.r1.setOption({
+            grid: { top: 20, bottom: 20, left: 40, right: 15 },
+            xAxis: { type: 'category', data: ['1','2','3','4','5','6','7','8','9','10'], name: '题号', nameTextStyle: {color: 'var(--text-sub)', fontSize: 10}, ...axisStyle },
+            yAxis: { type: 'value', ...axisStyle },
+            series: [{
+                type: 'scatter',
+                data: [
+                    { value: [0, 5], itemStyle: { color: '#69f0ae' } },
+                    { value: [1, -2], itemStyle: { color: '#69f0ae' } },
+                    { value: [2, 10], itemStyle: { color: '#69f0ae' } },
+                    { value: [3, -5], itemStyle: { color: '#69f0ae' } },
+                    { value: [4, 120], itemStyle: { color: '#ff4081' }, symbolSize: 15 }, // 大于100 标红放大
+                    { value: [5, -10], itemStyle: { color: '#69f0ae' } },
+                    { value: [6, 200], itemStyle: { color: '#ff4081' }, symbolSize: 15 }, // 大于100 标红放大
+                    { value: [7, -30], itemStyle: { color: '#69f0ae' } },
+                    { value: [8, 5], itemStyle: { color: '#69f0ae' } },
+                    { value: [9, -10], itemStyle: { color: '#69f0ae' } }
+                ],
+                markLine: {
+                    data: [{ yAxis: 0 }],
+                    lineStyle: { color: 'rgba(255,255,255,0.8)', type: 'solid' },
+                    symbol: ['none', 'none']
+                }
+            }]
+        });
+
+        // 6. 仪表盘 (作业责任心评价)
+        charts.r2.setOption({
+            title: { text: '作业修正率：80%', bottom: 0, left: 'center', textStyle: { color: '#fff', fontSize: 13 } },
+            series: [{
+                type: 'gauge', radius: '90%', center: ['50%', '55%'],
+                min: 0, max: 100,
+                axisLine: {
+                    lineStyle: {
+                        width: 12,
+                        color: [ [0.6, '#ff4081'], [0.8, '#ffd54f'], [1, '#69f0ae'] ]
+                    }
+                },
+                pointer: { length: '60%', width: 4, itemStyle: { color: '#00e5ff' } },
+                axisTick: { show: false },
+                splitLine: { length: 15, lineStyle: { color: 'auto', width: 2 } },
+                axisLabel: { color: 'var(--text-sub)', fontSize: 10, distance: -20 },
+                detail: { show: false },
+                data: [{ value: 80 }]
+            }]
+        });
+
+        // 7. 双轴图 (预习行为深度评估)
+        charts.r3.setOption({
+            grid: { top: 30, bottom: 20, left: 30, right: 30 },
+            legend: { data: ['完成率', '深度指数'], top: 0, textStyle: { color: 'var(--text-sub)', fontSize: 10 }, itemWidth: 10, itemHeight: 10 },
+            xAxis: { type: 'category', data: ['9月', '10月', '11月', '12月'], ...axisStyle },
+            yAxis: [
+                { type: 'value', min: 0, max: 100, ...axisStyle },
+                { type: 'value', min: 0, max: 1, ...axisStyle, splitLine: { show: false } }
+            ],
+            series: [
+                {
+                    name: '完成率', type: 'bar', barWidth: '35%', yAxisIndex: 0,
+                    data: [100, 90, 80, 70],
+                    itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#00e5ff'}, {offset: 1, color: 'rgba(0,229,255,0.1)'}]), borderRadius: [3, 3, 0, 0] }
+                },
+                {
+                    name: '深度指数', type: 'line', yAxisIndex: 1, smooth: true,
+                    data: [0.9, 0.85, 0.6, 0.4],
+                    itemStyle: { color: '#ff4081' },
+                    label: { show: true, color: '#fff', fontSize: 10 }
+                }
+            ]
+        });
+
+        // 8. 堆叠条形图 (考场异常与跳过行为)
+        charts.r4.setOption({
+            grid: { top: 15, bottom: 20, left: 60, right: 15 },
+            xAxis: { type: 'value', ...axisStyle },
+            yAxis: { type: 'category', data: ['期中考试'], ...axisStyle, axisLine: { show: false }, axisTick: { show: false } },
+            series: [
+                {
+                    name: '切屏次数', type: 'bar', stack: 'total', barWidth: '40%',
+                    label: { show: true, position: 'inside', formatter: '{c}' },
+                    data: [3], itemStyle: { color: '#ffd54f' }
+                },
+                {
+                    name: '失去焦点次数', type: 'bar', stack: 'total',
+                    label: { show: true, position: 'inside', formatter: '{c}' },
+                    data: [2], itemStyle: { color: '#ff9800' }
+                },
+                {
+                    name: '跳过题目数', type: 'bar', stack: 'total',
+                    label: { show: true, position: 'inside', formatter: '{c}' },
+                    data: [5], itemStyle: { color: '#ff4081' }
+                }
+            ]
+        });
+
+        // 响应式自适应
+        window.addEventListener('resize', () => {
+            Object.values(charts).forEach(chart => chart.resize());
+        });
+    </script>
+</body>
+</html>

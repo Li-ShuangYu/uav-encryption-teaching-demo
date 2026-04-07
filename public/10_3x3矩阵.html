@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学智能体管理平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        /* 基础重置与全屏禁止滚动 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* 绝对锁定，不准出现下拉条 */
+        }
+
+        /* 顶部 Header 和 Filter (留出 8vh 且字体大幅放大) */
+        .header {
+            padding: 0 2.5vw;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 8vh; 
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 2.6vh; /* 标题史诗级放大 */
+            color: #1f2329;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1.2vw;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1vw;
+            color: #8f959e;
+            font-size: 2vh;
+        }
+
+        .search-box input {
+            padding: 1vh 1vw 1vh 3.2vw;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            font-size: 1.6vh; /* 搜索框字体放大 */
+            width: 14vw;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus { border-color: #3370ff; }
+
+        select {
+            padding: 1vh 2.5vw 1vh 1.2vw;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            font-size: 1.6vh; /* 下拉框字体放大 */
+            color: #1f2329;
+            background-color: white;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238f959e%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1vw center;
+            background-size: 1.4vh auto;
+        }
+
+        .btn-add {
+            background-color: #3370ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 1vh 1.5vw;
+            font-size: 1.6vh; /* 按钮字体放大 */
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+        }
+        .btn-add:hover { background-color: #2b5cce; }
+
+        /* 主体内容区 */
+        .content {
+            flex: 1;
+            padding: 2vh 2.5vw; /* 内边距充分放开 */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 网格：动态弹性 3列 x 3行（每个卡片拥有极大的专属空间） */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr); 
+            gap: 2.5vh 2vw; /* 间距全面拉开，非常透气 */
+            flex: 1;
+            min-height: 0; 
+        }
+
+        /* 卡片样式 */
+        .card {
+            border-radius: 10px; /* 圆角变大更显档次 */
+            padding: 1.8vh 1.5vw; /* 内部 Padding 放大 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            position: relative; 
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        /* 绝对禁止卡片内部的任何子元素被压缩！ */
+        .card > * {
+            flex-shrink: 0; 
+        }
+
+        .bg-teacher { background-color: #f4f8fe; border-color: #e6f0ff; }
+        .bg-student { background-color: #f3fcf4; border-color: #e6ffe6; }
+
+        .role-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.5vh 1.2vw;
+            font-size: 1.4vh; /* 角标巨幅放大 */
+            font-weight: 500;
+            border-bottom-left-radius: 10px;
+        }
+        .badge-teacher { background-color: #d2e3fc; color: #174ea6; }
+        .badge-student { background-color: #ceead6; color: #0d652d; }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+
+        .icon {
+            font-size: 3vh; /* 图标巨大化 */
+            width: 5vh;
+            height: 5vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .title {
+            font-size: 2.2vh; /* 标题史诗级放大 */
+            font-weight: 600;
+            color: #1f2329;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 描述：稳如泰山的大保底高度，大字体 */
+        .description {
+            font-size: 1.6vh; /* 描述字体彻底放大 */
+            color: #333333; 
+            line-height: 1.6;
+            min-height: 5.2vh; /* 强制保底高度：舒舒服服装下两行大字 */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 最多两行 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.8vw;
+        }
+        .info-tag {
+            font-size: 1.4vh; /* 标签字体放大 */
+            padding: 0.4vh 0.8vw;
+            border-radius: 4px;
+            background-color: rgba(255,255,255,0.7);
+            color: #555555;
+            border: 1px solid #dee0e3;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 1.5vw;
+            font-size: 1.5vh; /* 统计信息放大 */
+            color: #666666; 
+        }
+        .stat-item { white-space: nowrap; }
+
+        /* 卡片底部 */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5vh; /* 底部留白增大 */
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .status-text {
+            font-size: 1.6vh; /* 状态文字放大 */
+            color: #1f2329; 
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.2vw;
+        }
+
+        .action-link {
+            font-size: 1.6vh; /* 操作按钮放大 */
+            color: #3370ff;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            font-weight: 500;
+        }
+        .action-link:hover { opacity: 0.7; }
+
+        /* 开关控件跟着空间全面放大 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 3.8vw;
+            height: 2.2vh;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 2.2vh;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1.6vh;
+            width: 1.6vh;
+            left: 0.3vh;
+            bottom: 0.3vh;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider-teacher { background-color: #8ab4f8; }
+        input:checked + .slider-student { background-color: #81c995; }
+        input:checked + .slider:before { transform: translateX(calc(3.8vw - 2.2vh)); }
+
+        /* 分页器与左下角统计 (固定高度增加到 8vh，以容纳巨型字体) */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2.5vw;
+            height: 8vh; 
+            box-sizing: border-box;
+            border-top: 1px solid #e8e8e8;
+            flex-shrink: 0;
+            background-color: #fff;
+            white-space: nowrap; 
+        }
+        
+        /* 统计栏字号显著放大 */
+        .stats-group {
+            display: flex;
+            gap: 1.2vw; 
+            font-size: 1.6vh; /* 统计栏字体超级加倍 */
+            color: #333333;
+            align-items: center;
+            white-space: nowrap; 
+        }
+        .stats-group span {
+            display: flex;
+            align-items: center;
+            gap: 0.4vw;
+        }
+        .stats-group b {
+            color: #1f2329;
+            font-size: 1.8vh; /* 统计数字极其醒目 */
+        }
+        .stats-divider {
+            width: 1px;
+            height: 2vh;
+            background-color: #dcdfe6;
+            margin: 0 0.2vw; 
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            white-space: nowrap; 
+        }
+
+        .pag-btn {
+            padding: 0.6vh 1vw;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            background: white;
+            color: #1f2329;
+            font-size: 1.6vh; /* 翻页按钮字号放大 */
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 1.8vw;
+            text-align: center;
+        }
+        .pag-btn:hover:not(.disabled) {
+            border-color: #3370ff;
+            color: #3370ff;
+        }
+        .pag-btn.active {
+            background: #3370ff;
+            color: white;
+            border-color: #3370ff;
+        }
+        .pag-btn.disabled {
+            color: #c0c4cc;
+            cursor: not-allowed;
+            background: #f5f7fa;
+        }
+        .jump-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            font-size: 1.6vh;
+            color: #333;
+            margin-left: 1vw;
+        }
+        .jump-input {
+            width: 3.2vw;
+            padding: 0.5vh;
+            border: 1px solid #dcdfe6;
+            border-radius: 6px;
+            text-align: center;
+            outline: none;
+            font-size: 1.6vh;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>教学智能体管理</h1>
+        <div class="filters">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="搜索智能体...">
+            </div>
+            <select id="roleFilter">
+                <option value="all">使用角色</option>
+                <option value="教师使用">教师使用</option>
+                <option value="学生使用">学生使用</option>
+            </select>
+            <select id="timeFilter">
+                <option value="all">使用时间</option>
+                <option value="课前使用">课前使用</option>
+                <option value="课中使用">课中使用</option>
+                <option value="课后使用">课后使用</option>
+            </select>
+            <select id="courseTypeFilter">
+                <option value="all">课程类型</option>
+                <option value="理论类">理论类</option>
+                <option value="实践类">实践类</option>
+                <option value="综合类">综合类</option>
+            </select>
+            <select id="statusFilter">
+                <option value="all">全部状态</option>
+                <option value="1">已上架</option>
+                <option value="0">待上架</option>
+                <option value="-1">已下架</option>
+            </select>
+            <button class="btn-add">➕ 新增智能体</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="pagination-container">
+        <div class="stats-group">
+            <span>智能体总数<b>8个</b></span>
+            <div class="stats-divider"></div>
+            <span>已启用数量<b>8个</b></span>
+            <div class="stats-divider"></div>
+            <span>学生智能体<b>5个</b></span>
+            <span>教师智能体<b>3个</b></span>
+            <div class="stats-divider"></div>
+            <span>使用<b>220次</b></span>
+            <span>交互<b>315次</b></span>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<script>
+    const ITEMS_PER_PAGE = 9; // 【核心修改点】 3*3 矩阵，每页仅9个，空间极度奢华
+    let currentPage = 1;
+    let agents = [];
+    let filteredAgents = [];
+
+    async function loadAgents() {
+        try {
+            const response = await fetch('agents.xlsx');
+            const arrayBuffer = await response.arrayBuffer();
+            
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const data = XLSX.utils.sheet_to_json(worksheet);
+
+            agents = data.map(row => ({
+                name: row['名称'] || '未命名',
+                type: row['类型'] || '未知类型',
+                icon: row['图标'] || '🤖',
+                description: row['描述'] || '暂无详细描述',
+                role: row['角色'] || '教师使用', 
+                time: row['使用时间'] || '课中使用', 
+                courseType: row['课程类型'] || '理论类', 
+                uses: parseInt(row['使用次数']) || 0,
+                interactions: parseInt(row['交互次数']) || 0,
+                status: parseInt(row['状态']) || 0
+            }));
+            
+            filterAgents();
+        } catch (error) {
+            console.error('加载 agents.xlsx 失败:', error);
+            document.getElementById('grid').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 5vh; font-size: 2vh; color:red;">无法加载 Excel 文件。请确保 agents.xlsx 存在并格式正确。</div>';
+        }
+    }
+
+    function filterAgents() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const roleVal = document.getElementById('roleFilter').value;
+        const timeVal = document.getElementById('timeFilter').value;
+        const courseTypeVal = document.getElementById('courseTypeFilter').value;
+        const statusVal = document.getElementById('statusFilter').value;
+
+        filteredAgents = agents.filter(agent => {
+            const matchSearch = agent.name.toLowerCase().includes(searchText) || agent.description.toLowerCase().includes(searchText);
+            const matchRole = roleVal === 'all' || agent.role === roleVal;
+            const matchTime = timeVal === 'all' || agent.time === timeVal;
+            const matchCourseType = courseTypeVal === 'all' || agent.courseType === courseTypeVal;
+            const matchStatus = statusVal === 'all' || agent.status === parseInt(statusVal);
+
+            return matchSearch && matchRole && matchTime && matchCourseType && matchStatus;
+        });
+
+        currentPage = 1;
+        renderCards();
+    }
+
+    function renderCards() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+        const currentData = filteredAgents.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+
+        currentData.forEach((agent, index) => {
+            const isTeacher = agent.role === '教师使用';
+            
+            const bgClass = isTeacher ? 'bg-teacher' : 'bg-student';
+            const badgeClass = isTeacher ? 'badge-teacher' : 'badge-student';
+            const sliderClass = isTeacher ? 'slider-teacher' : 'slider-student';
+            const roleText = isTeacher ? '教师' : '学生';
+
+            const statusText = agent.status === 1 ? '已上架' : agent.status === 0 ? '待上架' : '已下架';
+            const isChecked = agent.status === 1 ? 'checked' : '';
+
+            grid.innerHTML += `
+                <div class="card ${bgClass}">
+                    <div class="role-badge ${badgeClass}">${roleText}</div>
+                    
+                    <div class="card-header">
+                        <div class="icon">${agent.icon}</div>
+                        <div class="title" title="${agent.name}">${agent.name}</div>
+                    </div>
+                    
+                    <div class="description" title="${agent.description}">${agent.description}</div>
+                    
+                    <div class="card-tags">
+                        <span class="info-tag">${agent.time}</span>
+                        <span class="info-tag">${agent.courseType}</span>
+                    </div>
+
+                    <div class="card-stats">
+                        <div class="stat-item">使用数：${agent.uses.toLocaleString()}</div>
+                        <div class="stat-item">互动数：${agent.interactions.toLocaleString()}</div>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="status-text">${statusText}</span>
+                        <div class="card-actions">
+                            <a class="action-link">编排</a>
+                            <a class="action-link">编辑</a>
+                            <label class="switch">
+                                <input type="checkbox" ${isChecked} onchange="toggleStatus(${startIdx + index}, this)">
+                                <span class="slider ${sliderClass}"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        renderPagination();
+    }
+
+    function toggleStatus(index, checkbox) {
+        const agent = filteredAgents[index];
+        agent.status = checkbox.checked ? 1 : 0;
+        
+        const cardFooter = checkbox.closest('.card-footer');
+        if(cardFooter) {
+            cardFooter.querySelector('.status-text').innerText = agent.status === 1 ? '已上架' : '待上架';
+        }
+    }
+
+    function renderPage(page) {
+        currentPage = page;
+        renderCards();
+    }
+
+    function renderPagination() {
+        const pagContainer = document.getElementById('pagination');
+        pagContainer.innerHTML = '';
+
+        const totalPages = 1; // 写死 13 页
+
+        const prevBtn = document.createElement('div');
+        prevBtn.className = `pag-btn ${currentPage === 1 ? 'disabled' : ''}`;
+        prevBtn.innerText = '上一页';
+        prevBtn.onclick = () => { if (currentPage > 1) renderPage(currentPage - 1); };
+        pagContainer.appendChild(prevBtn);
+
+        let pagesToShow = [];
+        if (currentPage <= 6) {
+            pagesToShow = [1,  totalPages];
+        } else if (currentPage >= totalPages - 5) {
+            pagesToShow = [1, '...', totalPages - 7, totalPages - 6, totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+        } else {
+            pagesToShow = [1, '...', currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, '...', totalPages];
+        }
+
+        pagesToShow.forEach(item => {
+            const pageBtn = document.createElement('div');
+            if (item === '...') {
+                pageBtn.className = `pag-btn disabled`;
+                pageBtn.style.border = 'none';
+                pageBtn.style.backgroundColor = 'transparent';
+                pageBtn.innerText = '...';
+            } else {
+                pageBtn.className = `pag-btn ${currentPage === item ? 'active' : ''}`;
+                pageBtn.innerText = item;
+                pageBtn.onclick = () => renderPage(item);
+            }
+            pagContainer.appendChild(pageBtn);
+        });
+
+        const nextBtn = document.createElement('div');
+        nextBtn.className = `pag-btn ${currentPage === totalPages ? 'disabled' : ''}`;
+        nextBtn.innerText = '下一页';
+        nextBtn.onclick = () => { if (currentPage < totalPages) renderPage(currentPage + 1); };
+        pagContainer.appendChild(nextBtn);
+
+        const jumpUI = document.createElement('div');
+        jumpUI.className = 'jump-box';
+        jumpUI.innerHTML = `跳至 <input type="number" class="jump-input" value="${currentPage}" min="1" max="${totalPages}" onchange="if(this.value>0 && this.value<=${totalPages}) renderPage(parseInt(this.value))"> 页`;
+        pagContainer.appendChild(jumpUI);
+    }
+
+    document.getElementById('searchInput').addEventListener('input', filterAgents);
+    document.getElementById('roleFilter').addEventListener('change', filterAgents);
+    document.getElementById('timeFilter').addEventListener('change', filterAgents);
+    document.getElementById('courseTypeFilter').addEventListener('change', filterAgents);
+    document.getElementById('statusFilter').addEventListener('change', filterAgents);
+
+    window.onload = loadAgents;
+</script>
+</body>
+</html>

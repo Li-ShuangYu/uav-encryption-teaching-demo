@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学情诊断可视化报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        /* 极致白蓝简约风格：干净、明亮、无滚动 */
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; height: 100vh; width: 100vw; 
+            overflow: hidden; 
+            background-color: #f0f2f5; 
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: #222; 
+        }
+
+        .screen-container {
+            display: flex; flex-direction: column;
+            height: 100vh; padding: 10px 15px; gap: 10px;
+        }
+
+        .indicator-row {
+            flex: 1; min-height: 0; 
+            display: flex; background: #ffffff; border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(24,144,255,0.08); overflow: hidden;
+            border: 1px solid #e6ebf1;
+        }
+
+        .left-panel {
+            flex: 5.8; 
+            display: flex; 
+        }
+
+        .level-1-title {
+            writing-mode: vertical-rl; text-align: center;
+            background: #1890ff; color: #fff; 
+            font-size: 16px; 
+            font-weight: 900; 
+            letter-spacing: 4px; padding: 0 8px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .charts-wrapper {
+            flex: 1; display: flex; padding: 10px 5px; gap: 5px;
+            border-right: 1px dashed #e8e8e8;
+        }
+
+        .chart-module {
+            flex: 1; display: flex; align-items: center; min-width: 0;
+        }
+        
+        .level-2-title {
+            writing-mode: vertical-rl; text-align: center;
+            color: #444; 
+            font-size: 12px; 
+            font-weight: 900; 
+            border-left: 3px solid #1890ff; padding-left: 4px;
+            margin-right: -2px; z-index: 10; height: fit-content;
+        }
+
+        .chart-box { flex: 1; height: 100%; min-width: 0; }
+
+        .right-panel {
+            flex: 4.2; 
+            padding: 10px 16px; display: flex; flex-direction: column;
+            background: #fafcff;
+        }
+
+        .assessment-header {
+            font-size: 16px; 
+            font-weight: 900; 
+            color: #1890ff;
+            border-bottom: 2px solid #bae7ff; padding-bottom: 4px; margin-bottom: 8px;
+        }
+
+        .summary-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: space-around;
+            color: #333; overflow: hidden;
+        }
+        
+        .summary-item { 
+            display: flex; flex-direction: row; align-items: flex-start; gap: 8px; 
+        }
+        
+        .tag {
+            color: #1890ff; 
+            font-weight: 900; 
+            font-size: 14px; 
+            margin-bottom: 0;
+            display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; line-height: 1.4;
+        }
+        .tag::before {
+            content: ''; display: inline-block; width: 5px; height: 5px;
+            background: #1890ff; border-radius: 50%; margin-right: 5px; transform: translateY(-1px);
+        }
+        
+        .summary-item p { 
+            margin: 0; text-align: justify; flex: 1; line-height: 1.4; letter-spacing: 0.5px;
+            font-size: 14px; 
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen-container">
+        <div class="indicator-row">
+            <div class="left-panel">
+                <div class="level-1-title">学习习惯</div>
+                <div class="charts-wrapper" id="row1-charts"></div>
+            </div>
+            <div class="right-panel">
+                <div class="assessment-header">评估与对策</div>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="tag">优势特征</span><p>课堂互动与学习兴趣浓厚。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>课前预习与自主拓展较弱。</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="indicator-row">
+            <div class="left-panel">
+                <div class="level-1-title">AI素养</div>
+                <div class="charts-wrapper" id="row2-charts"></div>
+            </div>
+            <div class="right-panel">
+                <div class="assessment-header">评估与对策</div>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="tag">优势特征</span><p>学科基础扎实，及格率高。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>高难度题型攻坚能力分化。</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="indicator-row">
+            <div class="left-panel">
+                <div class="level-1-title">科学思维</div>
+                <div class="charts-wrapper" id="row3-charts"></div>
+            </div>
+            <div class="right-panel">
+                <div class="assessment-header">评估与对策</div>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="tag">优势特征</span><p>思维敏捷，信息处理极快。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>缺乏深度反思与批判质疑。</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="indicator-row">
+            <div class="left-panel">
+                <div class="level-1-title">调控能力</div>
+                <div class="charts-wrapper" id="row4-charts"></div>
+            </div>
+            <div class="right-panel">
+                <div class="assessment-header">评估与对策</div>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="tag">优势特征</span><p>基础规范遵从度整体较好。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>遇压易波动，抗压分化大。</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="indicator-row">
+            <div class="left-panel">
+                <div class="level-1-title">社会协同</div>
+                <div class="charts-wrapper" id="row5-charts"></div>
+            </div>
+            <div class="right-panel">
+                <div class="assessment-header">评估与对策</div>
+                <div class="summary-content">
+                    <div class="summary-item"><span class="tag">优势特征</span><p>团队协作与互助表现良好。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>拔尖引领与自我超越不足。</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const simpleGrid = { top: '22%', bottom: '15%', left: '2%', right: '3%', containLabel: true };
+        
+        function createBarChart(dom, xData, yData, color='#1890ff') {
+            const chart = echarts.init(dom);
+            chart.setOption({
+                animation: true, grid: simpleGrid, tooltip: { show: true, formatter: '{b}: {c}人' },
+                xAxis: { type: 'category', data: xData, axisLabel: { fontSize: 11, fontWeight: 'bold', interval: 0, color: '#444' }, axisTick: { show: false }, axisLine: { lineStyle: { color: '#ccc' } } },
+                yAxis: { type: 'value', min: 0, splitLine: { lineStyle: { type: 'dashed', color: '#f0f0f0' } }, axisLabel: { show: false } },
+                series: [{
+                    data: yData, type: 'bar', barWidth: '40%',
+                    itemStyle: { color: color, borderRadius: [2, 2, 0, 0] },
+                    label: { show: true, position: 'top', color: '#111', fontSize: 12, fontWeight: '900', formatter: '{c}人' }
+                }]
+            });
+            return chart;
+        }
+
+        function createLineChart(dom, xData, yData, color='#1890ff') {
+            const chart = echarts.init(dom);
+            chart.setOption({
+                animation: true, grid: simpleGrid, tooltip: { show: true, formatter: '{b}: {c}人' },
+                xAxis: { type: 'category', data: xData, axisLabel: { fontSize: 11, fontWeight: 'bold', interval: 0, color: '#444' }, axisTick: { show: false }, axisLine: { lineStyle: { color: '#ccc' } } },
+                yAxis: { type: 'value', min: 0, splitLine: { lineStyle: { type: 'dashed', color: '#f0f0f0' } }, axisLabel: { show: false } },
+                series: [{
+                    data: yData, type: 'line', symbol: 'circle', symbolSize: 6,
+                    lineStyle: { color: color, width: 2 },
+                    itemStyle: { color: color, borderColor: '#fff', borderWidth: 1 },
+                    label: { show: true, position: 'top', color: '#111', fontSize: 12, fontWeight: '900', formatter: '{c}人' }
+                }]
+            });
+            return chart;
+        }
+
+        function createRadarChart(dom, indicators, data) {
+            const chart = echarts.init(dom);
+            
+            // 核心修改点：将人数数据直接拼接到维度的名字里，并通过 \n 换行，确保文字显示在三个外角
+            const dynamicIndicators = indicators.map((item, index) => {
+                return {
+                    name: item.name + '\n' + data[index] + '人',
+                    max: item.max
+                };
+            });
+
+            chart.setOption({
+                animation: true, tooltip: { show: true },
+                radar: { 
+                    indicator: dynamicIndicators, 
+                    center: ['50%', '55%'], 
+                    radius: '55%', // 缩小半径给外围文字留出足够空间
+                    axisName: { color: '#111', fontSize: 11, fontWeight: '900', lineHeight: 14 }, // 设置顶点文字样式
+                    splitLine: { lineStyle: { color: '#e8e8e8' } },
+                    splitArea: { show: false }, axisLine: { lineStyle: { color: '#e8e8e8' } }
+                },
+                series: [{
+                    type: 'radar', symbol: 'circle', symbolSize: 4,
+                    lineStyle: { color: '#1890ff', width: 2 },
+                    itemStyle: { color: '#1890ff' },
+                    areaStyle: { color: 'rgba(24,144,255,0.2)' },
+                    data: [{ value: data, name: '分布人数' }],
+                    label: { show: false } // 核心修改点：关闭原本显示在图形内部的数据点label
+                }]
+            });
+            return chart;
+        }
+
+        function createPieChart(dom, data) {
+            const chart = echarts.init(dom);
+            chart.setOption({
+                animation: true, tooltip: { trigger: 'item', formatter: '{b}: {c}人 ({d}%)' },
+                series: [{
+                    type: 'pie', radius: ['45%', '65%'], center: ['50%', '55%'],
+                    itemStyle: { borderColor: '#fff', borderWidth: 1 },
+                    label: { show: true, position: 'outside', formatter: '{b}\n{c}人', fontSize: 11, fontWeight: 'bold', color: '#444', lineHeight: 14 },
+                    labelLine: { show: true, length: 6, length2: 4, lineStyle: { color: '#ccc' } },
+                    data: data
+                }],
+                color: ['#1890ff', '#52c41a', '#faad14']
+            });
+            return chart;
+        }
+
+        function createModule(parentId, titles, num) {
+            const parent = document.getElementById(parentId);
+            const doms = [];
+            for(let i=0; i<num; i++){
+                const wrapper = document.createElement('div');
+                wrapper.className = 'chart-module';
+                const sideTitle = document.createElement('div');
+                sideTitle.className = 'level-2-title';
+                sideTitle.innerText = titles[i];
+                const chartBox = document.createElement('div');
+                chartBox.className = 'chart-box';
+                wrapper.appendChild(sideTitle);
+                wrapper.appendChild(chartBox);
+                parent.appendChild(wrapper);
+                doms.push(chartBox);
+            }
+            return doms;
+        }
+
+        let allCharts = [];
+
+        function renderStaticDashboard() {
+            const bands = ['60-75分', '75-85分', '85-100分'];
+            const radarBands = [{name:'60-75分', max:60}, {name:'75-85分', max:60}, {name:'85-100分', max:60}];
+
+            // --- 行1：学习习惯 ---
+            const r1Doms = createModule('row1-charts', ['课前探究', '课堂交互', '课后拓展'], 3);
+            allCharts.push(createLineChart(r1Doms[0], bands, [52, 30, 16])); 
+            allCharts.push(createRadarChart(r1Doms[1], radarBands, [45, 35, 18])); 
+            allCharts.push(createPieChart(r1Doms[2], [{value:50, name:'60-75分'}, {value:32, name:'75-85分'}, {value:16, name:'85-100分'}]));
+
+            // --- 行2：AI素养 ---
+            const r2Doms = createModule('row2-charts', ['知识掌握', '题型攻坚素养', '学科关键能力'], 3);
+            allCharts.push(createRadarChart(r2Doms[0], radarBands, [15, 38, 45]));
+            allCharts.push(createLineChart(r2Doms[1], bands, [20, 35, 43], '#52c41a'));
+            allCharts.push(createRadarChart(r2Doms[2], radarBands, [18, 36, 44]));
+
+            // --- 行3：科学思维 ---
+            const r3Doms = createModule('row3-charts', ['思维敏捷与响应', '批判质疑与发散', '自我认知与反思'], 3);
+            allCharts.push(createBarChart(r3Doms[0], bands, [10, 35, 53], '#faad14'));
+            allCharts.push(createBarChart(r3Doms[1], bands, [15, 33, 50], '#722ed1'));
+            allCharts.push(createBarChart(r3Doms[2], bands, [12, 38, 48], '#eb2f96'));
+
+            // --- 行4：调控能力 ---
+            const r4Doms = createModule('row4-charts', ['时序统筹&规范自律', '测评决策与应对', '绩效稳定与抗压'], 3);
+            allCharts.push(createBarChart(r4Doms[0], bands, [25, 40, 33]));
+            allCharts.push(createBarChart(r4Doms[1], bands, [28, 45, 25], '#13c2c2'));
+            allCharts.push(createBarChart(r4Doms[2], bands, [30, 38, 30], '#faad14'));
+
+            // --- 行5：社会协同 ---
+            const r5Doms = createModule('row5-charts', ['个性潜能图谱', '发展增值态势', '团队协同与责任'], 3);
+            allCharts.push(createBarChart(r5Doms[0], bands, [15, 42, 41], '#1890ff'));
+            allCharts.push(createBarChart(r5Doms[1], bands, [20, 48, 30], '#52c41a'));
+            allCharts.push(createPieChart(r5Doms[2], [{value:12, name:'60-75分'}, {value:40, name:'75-85分'}, {value:46, name:'85-100分'}]));
+        }
+
+        window.onload = () => {
+            renderStaticDashboard();
+            window.addEventListener('resize', () => {
+                allCharts.forEach(chart => chart.resize());
+            });
+        };
+    </script>
+</body>
+</html>
