@@ -9,11 +9,11 @@
         </div>
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
-            <select v-model="selectedMenuItem" @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
+            <!-- <select v-model="selectedMenuItem" @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition">
                 <option v-for="item in menuItems" :key="item.value" :value="item.value">
                     {{ item.label }}
                 </option>
-            </select>
+            </select> -->
 
             <div class="h-4 w-px bg-borderColor mx-2"></div>
 
@@ -66,7 +66,8 @@ const routeStageMap = {
   '/student/task-split': { stage: '需求分析阶段', order: 3 },
   '/student/scheme-upload': { stage: '方案设计阶段', order: 4 },
   '/student/scheme-detail': { stage: '方案设计阶段', order: 5 },
-  '/student/my-score-result': { stage: '方案设计阶段', order: 6 }
+  '/student/my-score-result': { stage: '方案设计阶段', order: 6 },
+  '/student/robot-debug': { stage: '冰达机器人代码设计', order: 7 }
 }
 
 // 所有菜单项
