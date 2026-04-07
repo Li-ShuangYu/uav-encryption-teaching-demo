@@ -124,6 +124,12 @@ const routes = [
         name: 'StudentMyScoreResult',
         component: () => import('../views/StudentMyScoreResult.vue'),
         meta: { title: '学生工作台' }
+      },
+      {
+        path: 'robot-debug',
+        name: 'StudentAiGenerate',
+        component: () => import('../views/StudentAiGenerate.vue'),
+        meta: { title: 'AI智能助手' }
       }
     ]
   },

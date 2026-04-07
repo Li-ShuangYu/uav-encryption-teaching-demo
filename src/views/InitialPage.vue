@@ -1,5 +1,16 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-[#121417] text-[#d1d5db] font-sans">
+  <div class="min-h-screen flex flex-col items-center justify-center bg-[#121417] text-[#d1d5db] font-sans relative">
+    <!-- AI智能助手入口 -->
+    <button 
+      @click="navigateToRobotDebug"
+      class="absolute top-4 right-4 w-32 h-12 bg-purple-900/40 border border-purple-500/30 rounded-lg shadow-lg hover:border-purple-400 transition flex items-center justify-center gap-2 cursor-pointer group"
+    >
+      <svg class="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+      </svg>
+      <span class="text-sm font-bold text-purple-300 group-hover:text-purple-200 transition">AI智能助手</span>
+    </button>
+
     <div class="text-center mb-12">
       <h1 class="text-4xl font-bold text-white mb-4">无人机密码系统设计实战</h1>
       <p class="text-gray-400 text-lg">请选择您的身份</p>
@@ -185,6 +196,11 @@ const navigateToTeacher = () => {
 const navigateToAdmin = () => {
   // 直接跳转，不存储localStorage
   router.push('/admin');
+};
+
+const navigateToRobotDebug = () => {
+  // 跳转到AI智能助手页面
+  router.push('/student/robot-debug');
 };
 </script>
 
