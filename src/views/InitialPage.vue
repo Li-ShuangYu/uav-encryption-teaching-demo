@@ -199,8 +199,10 @@ const navigateToAdmin = () => {
 };
 
 const navigateToRobotDebug = () => {
+  // 设置demo_state为1
+  localStorage.setItem('demo_state', '1')
   // 跳转到AI智能助手页面
-  router.push('/student/robot-debug');
+  router.push('/student/robot-debug')
 };
 </script>
 
