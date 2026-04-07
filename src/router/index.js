@@ -158,6 +158,12 @@ const routes = [
     name: 'AdminPage',
     component: () => import('../views/AdminPage.vue'),
     meta: { title: '管理员控制台' }
+  },
+  {
+    path: '/profile-dashboard',
+    name: 'StudentProfileDashboard',
+    component: () => import('../views/StudentProfileDashboard.vue'),
+    meta: { title: '个人中心' }
   }
 ]
 

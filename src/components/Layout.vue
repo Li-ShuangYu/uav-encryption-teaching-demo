@@ -10,11 +10,11 @@
         
         <div class="flex items-center space-x-4 text-sm text-textMuted">
             
-            <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition" :value="route.path">
+            <!-- <select @change="handleNavigate" class="bg-cardInnerBg border border-borderColor text-textMain text-xs rounded px-3 py-1.5 outline-none appearance-none cursor-pointer hover:border-accentGreen transition" :value="route.path">
                 <option v-for="item in menuItems" :key="item.value" :value="item.value">
                     {{ item.label }}
                 </option>
-            </select>
+            </select> -->
 
 
             <div class="h-4 w-px bg-accentGreen/30 mx-2"></div>
