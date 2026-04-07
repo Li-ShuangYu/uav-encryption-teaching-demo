@@ -161,7 +161,7 @@ const routes = [
   },
   {
     path: '/profile-dashboard',
-    name: 'StudentProfileDashboard',
+    name: 'ProfileDashboard',
     component: () => import('../views/StudentProfileDashboard.vue'),
     meta: { title: '个人中心' }
   }
