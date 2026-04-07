@@ -112,7 +112,7 @@ window.addEventListener("resize", () => {
   <div class="layout-wrapper">
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <img src="../../assets/image/logo.png" alt="logo" style="width: 28px; height: 28px; border-radius: 4px;" />
+        <img src="../assets/image/mdzx.png" alt="logo" style="width: 28px; height: 28px; border-radius: 4px;" />
       </div>
       <div class="sidebar-menus top-menus">
         <div class="menu-item active" title="学员画像">
