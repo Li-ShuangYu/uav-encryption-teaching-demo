@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>学习能力画像 - 终极完整版</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-liquidfill@3.1.0/dist/echarts-liquidfill.min.js"></script>
+    <style>
+        :root {
+            --main-color: #2563EB;
+            --warn-color: #EF4444;
+            --high-color: #F59E0B;
+            --text-title: #0F172A;
+            --text-norm: #334155;
+            --text-sub: #64748B;
+            
+            /* 高级毛玻璃质感参数 */
+            --mod-bg: rgba(255, 255, 255, 0.65); 
+            --mod-border: rgba(255, 255, 255, 0.7);
+            --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            --mod-radius: 14px;
+            
+            --ai-bg: rgba(239, 246, 255, 0.65);
+            --ai-border: rgba(255, 255, 255, 0.8);
+
+            /* 现代科技感无衬线字体栈 */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 13px; /* 全局基础字体调大 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #F8FAFC;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 叠加冷色半透明渐变，弱化杂乱感，提升通透度 */
+            background: linear-gradient(135deg, rgba(241, 245, 249, 0.35) 0%, rgba(226, 232, 240, 0.35) 100%), url('./background.png') center/cover no-repeat;
+        }
+
+        #app {
+            width: 100vw;
+            height: 100vh;
+            padding: 24px; /* 增加整体边距 */
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 16px; /* 增加模块间距 */
+            position: relative;
+        }
+
+        #app::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .human-watermark {
+            position: absolute;
+            left: 50%;
+            top: 65%;
+            transform: translate(-50%, -50%);
+            width: 550px;
+            height: 700px;
+            background: url('./human.png') no-repeat center/contain;
+            opacity: 0.7; /* 降低水印不透明度，避免抢占视觉焦点 */
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--main-color);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 6px var(--main-color);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 0.08; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+
+        /* ========== 布局区域 ========== */
+        .layout-side {
+            width: 28%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .layout-center {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        /* 基础面板样式 (通透玻璃拟态) */
+        .panel {
+            background: var(--mod-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--mod-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            padding: 16px; /* 增加内部呼吸感 */
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .panel:hover {
+            background: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        /* 尺寸变体 */
+        .panel-half {
+            width: calc((100% - 12px) / 2);
+            height: calc((100% - 12px) / 2);
+        }
+        .panel-full {
+            width: 100%;
+            height: calc((100% - 12px) / 2);
+        }
+        .panel-mini {
+            width: calc((100% - 12px) / 2);
+            height: calc((100% - 36px) / 4);
+            padding: 10px 12px; /* 适当压缩内边距，给图表让出空间 */
+        }
+
+        /* 标题排版优化 */
+        .panel-title {
+            font-size: 15px; /* 调大标题 */
+            font-weight: 600;
+            color: var(--text-title);
+            margin-bottom: 8px; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+        .panel-mini .panel-title {
+            font-size: 14px; /* 调大侧边小标题 */
+            margin-bottom: 2px;
+        }
+        .panel-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.3);
+        }
+
+        .chart-box {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+            position: relative; /* 确保图表容器有定位依据 */
+        }
+
+        /* ========== 中间区域 ========== */
+        
+        .center-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 12px 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--mod-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            height: 54px;
+        }
+        .center-header h1 {
+            font-size: 24px; /* 调大主标题 */
+            color: var(--text-title);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .center-info {
+            background: var(--mod-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--mod-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            padding: 10px 8px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 64px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 60px; 
+        }
+        .info-label {
+            font-size: 13px; /* 调大标签 */
+            color: var(--text-sub);
+            letter-spacing: 0.5px;
+        }
+        .info-val {
+            font-size: 18px; /* 调大数据值 */
+            font-weight: 600;
+            color: var(--text-title);
+            white-space: nowrap;
+        }
+        .info-val.s-rank {
+            font-size: 32px; /* 调大评级 */
+            font-weight: 800;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1;
+            text-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
+        }
+
+        .center-radar-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            cursor: pointer;
+        }
+        #main-radar {
+            width: 100%;
+            height: 100%;
+            max-width: 400px; 
+            max-height: 400px;
+        }
+
+        .center-ai {
+            background: var(--ai-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--ai-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            padding: 14px 18px; 
+            height: auto;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .ai-title {
+            font-size: 15px; /* 调大AI标题 */
+            font-weight: 600;
+            color: #D97706;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.5px;
+        }
+        .ai-title::before {
+            content: '✦';
+            font-size: 16px; /* 调大图标 */
+        }
+        .ai-text {
+            font-size: 13px; /* 调大文字 */
+            color: var(--text-norm);
+            line-height: 1.6;
+            white-space: normal; 
+            overflow: visible;
+            text-overflow: unset;
+            letter-spacing: 0.3px;
+        }
+        .ai-text span.warn {
+            color: #E11D48;
+            font-weight: 600;
+            background: rgba(225, 29, 72, 0.08);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* ========== 交互弹窗 ========== */
+        .l2-floating-container {
+            position: fixed;
+            z-index: 1000;
+            width: 340px; /* 稍微放大容器以容纳更大的字体 */
+            height: 340px;
+            background: transparent;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.2);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+            cursor: grab; 
+        }
+        .l2-floating-container.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+        .l2-chart-floating {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .l2-close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 24px; /* 调大按钮 */
+            height: 24px;
+            background: rgba(15, 23, 42, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748B;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+        .l2-close-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: #EF4444;
+        }
+
+        #l3-tooltip {
+            position: fixed;
+            z-index: 1010;
+            background: var(--mod-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--mod-border);
+            box-shadow: var(--mod-shadow);
+            border-radius: var(--mod-radius);
+            color: var(--text-norm);
+            padding: 12px 16px; /* 增加内边距 */
+            font-size: 13px; /* 调大提示框字体 */
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+        #l3-tooltip.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .tooltip-title {
+            font-size: 14px; /* 调大标题 */
+            font-weight: 600;
+            color: var(--text-title);
+            border-bottom: 1px solid var(--mod-border);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            line-height: 1.4;
+            gap: 16px;
+        }
+        .row-label {
+            color: var(--text-sub);
+        }
+        .row-value {
+            color: var(--main-color);
+            font-weight: 600;
+            font-family: 'Inter', monospace;
+            font-size: 13px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="fade-in">
+        <div class="human-watermark"></div>
+        <div class="particles" id="particles-box"></div>
+
+        <aside class="layout-side">
+            <div class="panel panel-full"><div class="panel-title">知识图谱掌握度演进</div><div id="c-l1" class="chart-box"></div></div>
+            <div class="panel panel-half"><div class="panel-title">自主学习与履约情况</div><div id="c-l3" class="chart-box"></div></div>
+            <div class="panel panel-half"><div class="panel-title">题型攻坚素养评估</div><div id="c-l4" class="chart-box"></div></div>
+        </aside>
+
+        <main class="layout-center">
+            <header class="center-header">
+                <h1>学习能力画像</h1>
+            </header>
+            <section class="center-info">
+                <div class="info-item"><span class="info-label">姓名</span><span class="info-val">张三丰</span></div>
+                <div class="info-item"><span class="info-label">学号</span><span class="info-val" style="font-size:15px; color:#475569; font-weight:500;">EDU-20260320</span></div>
+                <div class="info-item"><span class="info-label">综合评级</span><span class="info-val s-rank">S</span></div>
+                <div class="info-item"><span class="info-label">学习专注度</span><span class="info-val">92%</span></div>
+            </section>
+            
+            <section class="center-radar-container">
+                <div id="main-radar"></div>
+            </section>
+            
+            <section class="center-ai">
+                <div class="ai-title">AI 综合洞察</div>
+                <div class="ai-text">
+                    该生在知识建构与自主学习方面表现优异，综合素养处于核心水平。但近期在 <span class="warn">复杂问题攻坚</span> 及 <span class="warn">实践操作验证</span> 方面表现薄弱，且批判性思维发散度不足，建议加强进阶题型与实践探究的专项突破。
+                </div>
+            </section>
+        </main>
+
+        <aside class="layout-side">
+            <div class="panel panel-mini"><div class="panel-title">时间规划前瞻性</div><div id="c-r1" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">泛在学习拓展度</div><div id="c-r2" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">绩效表现波动率</div><div id="c-r3" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">自我超越增值度</div><div id="c-r4" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">认知与归因复盘转化</div><div id="c-r5" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">学科关键能力结构</div><div id="c-r6" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">任务节奏适配度</div><div id="c-r7" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">批判质疑触发率</div><div id="c-r8" class="chart-box"></div></div>
+        </aside>
+    </div>
+
+    <div id="l3-tooltip">
+        <div id="l3-content"></div>
+    </div>
+
+    <script>
+        // 粒子效果 - 页面加载即可运行
+        const particleBox = document.getElementById('particles-box');
+        for(let i=0; i<20; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 4 + 2) + 's';
+            p.style.animationDelay = (Math.random() * 2) + 's';
+            particleBox.appendChild(p);
+        }
+
+        // ================= 核心修复点：等浏览器排版彻底画完，再初始化 ECharts =================
+        window.addEventListener('load', function() {
+
+            // 图表基础样式优化
+            const axisColor = 'rgba(148, 163, 184, 0.25)';
+            const splitColor = 'rgba(148, 163, 184, 0.12)';
+            const textColor = '#475569'; 
+
+            const commonAxis = {
+                axisLabel: { color: textColor, fontSize: 12, margin: 8 }, // 调大刻度文本
+                axisLine: { lineStyle: { color: axisColor, width: 1 } },
+                splitLine: { show: false }
+            };
+
+            const charts = {
+                l1: echarts.init(document.getElementById('c-l1')),
+                l3: echarts.init(document.getElementById('c-l3')),
+                l4: echarts.init(document.getElementById('c-l4')),
+                r1: echarts.init(document.getElementById('c-r1')),
+                r2: echarts.init(document.getElementById('c-r2')),
+                r3: echarts.init(document.getElementById('c-r3')),
+                r4: echarts.init(document.getElementById('c-r4')),
+                r5: echarts.init(document.getElementById('c-r5')),
+                r6: echarts.init(document.getElementById('c-r6')),
+                r7: echarts.init(document.getElementById('c-r7')),
+                r8: echarts.init(document.getElementById('c-r8')),
+                mainRadar: echarts.init(document.getElementById('main-radar'))
+            };
+
+            // ========== 左侧图表 ==========
+            charts.l1.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['知识即时内化率', '知识长效巩固度', '知识迁移应用度'], textStyle: { color: textColor, fontSize: 12 }, top: 0, right: 0, icon: 'circle', itemWidth: 8, itemGap: 8 },
+                grid: { top: 35, bottom: 25, left: 55, right: 35 }, // 增加左边距，防止字大被切
+                xAxis: { type: 'category', name: '测评频次', data: ['次1', '次2', '次3', '次4', '次5', '次6', '次7'], ...commonAxis, nameTextStyle: {color: textColor, fontSize: 12} },
+                yAxis: { type: 'value', name: '掌握得分率(%)', min: 0, max: 100, ...commonAxis, nameTextStyle: {color: textColor, fontSize: 12}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [
+                    { name: '知识即时内化率', type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#3B82F6' }, itemStyle: { color: '#3B82F6' }, data: [75, 78, 85, 82, 88, 90, 92] },
+                    { name: '知识长效巩固度', type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#10B981' }, itemStyle: { color: '#10B981' }, data: [60, 65, 70, 75, 72, 80, 85] },
+                    { name: '知识迁移应用度', type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2, color: '#F59E0B' }, itemStyle: { color: '#F59E0B' }, data: [45, 50, 55, 62, 68, 75, 78] }
+                ]
+            });
+
+            charts.l3.setOption({
+                grid: { top: 20, bottom: 45, left: 100, right: 25 }, // 增加左边距留给字体
+                xAxis: { 
+                    type: 'value', 
+                    name: '完成度百分比(%)', 
+                    nameLocation: 'middle',
+                    nameGap: 25,
+                    max: 100, 
+                    ...commonAxis, 
+                    nameTextStyle: {color: textColor, fontSize: 12}, 
+                    splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } 
+                },
+                yAxis: { type: 'category', name: '指标', data: ['归因纠错执行率', '课后任务准点率', '学习纪律遵从度', '探究任务履约率'], ...commonAxis, nameTextStyle: {color: textColor, fontSize: 12, align: 'right'}, axisLine: {show:false}, axisTick: {show:false}, axisLabel: { margin: 8, color: textColor, fontSize: 12 } },
+                series: [{ 
+                    type: 'bar', 
+                    barWidth: 10, 
+                    showBackground: true,
+                    backgroundStyle: { color: 'rgba(148, 163, 184, 0.1)', borderRadius: [0, 4, 4, 0] },
+                    itemStyle: { 
+                        borderRadius: [0, 4, 4, 0], 
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{offset: 0, color: '#8B5CF6'}, {offset: 1, color: '#C4B5FD'}]) 
+                    },
+                    label: { show: true, position: 'right', formatter: '{c}%', fontSize: 12, color: textColor },
+                    data: [82, 88, 98, 95] 
+                }]
+            });
+
+            charts.l4.setOption({
+                grid: { top: 35, bottom: 25, left: 50, right: 35 }, // 左侧给一定空间
+                xAxis: { type: 'category', name: '题型', data: ['基础概念解析', '逻辑表达与重构', '复杂问题攻坚'], ...commonAxis, nameTextStyle: {color: textColor, fontSize: 12}, axisLabel: { margin: 8, color: textColor, fontSize: 12 } },
+                yAxis: { type: 'value', name: '攻坚成功率(%)', max: 100, ...commonAxis, nameTextStyle: {color: textColor, fontSize: 12}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [{ 
+                    type: 'bar', 
+                    barWidth: 16, 
+                    itemStyle: { 
+                        borderRadius: [4, 4, 0, 0], 
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#EC4899'}, {offset: 1, color: '#FBCFE8'}]) 
+                    }, 
+                    label: { show: true, position: 'top', formatter: '{c}%', fontSize: 12, color: textColor },
+                    data: [92, 76, 45] 
+                }]
+            });
+
+            // ========== 右侧八宫格图表更新 ==========
+
+            // r1: 水波球/水位图
+            charts.r1.setOption({
+                series: [{
+                    type: 'liquidFill',
+                    data: [0.85, 0.83],
+                    radius: '80%',
+                    center: ['50%', '50%'],
+                    color: ['#3B82F6', 'rgba(59, 130, 246, 0.5)'],
+                    backgroundStyle: { color: 'rgba(59, 130, 246, 0.05)' },
+                    outline: { borderDistance: 2, itemStyle: { borderWidth: 2, borderColor: '#3B82F6' } },
+                    label: { fontSize: 22, color: '#1E293B', fontWeight: 700, formatter: function() { return '85%'; } } // 调大内部字体
+                }]
+            });
+
+            // r2: 环形进度条
+            charts.r2.setOption({
+                title: { text: '62%', left: 'center', top: 'center', textStyle: { fontSize: 22, fontWeight: 800, color: '#8B5CF6' } }, // 调大中心标题
+                series: [{
+                    type: 'pie',
+                    radius: ['65%', '80%'],
+                    center: ['50%', '50%'],
+                    hoverAnimation: false,
+                    label: { show: false },
+                    data: [
+                        { value: 62, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#3B82F6'}, {offset: 1, color: '#8B5CF6'}]) } },
+                        { value: 38, itemStyle: { color: 'rgba(148, 163, 184, 0.15)' } }
+                    ]
+                }]
+            });
+
+            // r3: 迷你折线趋势图
+            charts.r3.setOption({
+                title: { text: '0.08', left: 'center', top: '0', textStyle: { fontSize: 24, fontWeight: 800, color: '#10B981' } }, // 放大顶标
+                grid: { top: 35, bottom: 25, left: 35, right: 10 }, // 微调避免重叠
+                xAxis: { type: 'category', boundaryGap: false, data: ['1','2','3','4','5','6'], ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 11 } },
+                yAxis: { type: 'value', min: 'dataMin', max: 'dataMax', ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 11 }, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [{
+                    type: 'line', smooth: true, symbol: 'none',
+                    lineStyle: { width: 3, color: '#10B981' },
+                    areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: 'rgba(16, 185, 129, 0.4)'}, {offset: 1, color: 'transparent'}]) },
+                    data: [0.15, 0.12, 0.09, 0.11, 0.08, 0.05]
+                }]
+            });
+
+            // r4: 迷你柱状图
+            charts.r4.setOption({
+                title: { text: '18%', left: 'center', top: '0', textStyle: { fontSize: 24, fontWeight: 800, color: '#F59E0B' } }, // 放大顶标
+                grid: { top: 35, bottom: 25, left: 35, right: 10 },
+                xAxis: { type: 'category', data: ['1','2','3','4','5'], ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 11 } },
+                yAxis: { type: 'value', ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 11 }, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [{
+                    type: 'bar', barWidth: 8,
+                    itemStyle: { color: '#F59E0B', borderRadius: [2,2,0,0] },
+                    data: [5, 8, 12, 15, 18]
+                }]
+            });
+
+            // r5: 漏斗图
+            charts.r5.setOption({
+                grid: { top: 5, bottom: 5, left: 5, right: 5 },
+                series: [{
+                    type: 'funnel',
+                    left: '5%', right: '5%', top: '10%', bottom: '5%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: { show: true, position: 'inside', formatter: '{b}\n{c}%', color: '#fff', fontSize: 12 }, // 调大文本
+                    itemStyle: { borderColor: 'transparent' },
+                    data: [
+                        { value: 100, name: '自我感知', itemStyle: { color: 'rgba(59, 130, 246, 0.4)' } },
+                        { value: 85, name: '认知校准', itemStyle: { color: 'rgba(59, 130, 246, 0.7)' } },
+                        { value: 65, name: '归因复盘', itemStyle: { color: '#3B82F6' } }
+                    ]
+                }]
+            });
+
+            // r6: 南丁格尔玫瑰图
+            charts.r6.setOption({
+                series: [{
+                    type: 'pie',
+                    radius: ['20%', '80%'],
+                    center: ['50%', '55%'],
+                    roseType: 'radius',
+                    itemStyle: { borderRadius: 4 },
+                    label: { show: true, fontSize: 11, formatter: '{b}', color: '#64748B' }, // 调大指示线文字
+                    labelLine: { length: 2, length2: 4, lineStyle: { color: '#CBD5E1' } },
+                    data: [
+                        { value: 40, name: '多模态信息提取力', itemStyle: { color: '#C4B5FD' } },
+                        { value: 35, name: '科学逻辑推理力', itemStyle: { color: '#A78BFA' } },
+                        { value: 25, name: '实践操作验证力', itemStyle: { color: '#8B5CF6' } }
+                    ]
+                }]
+            });
+
+            // r7: 阶梯折线图
+            charts.r7.setOption({
+                grid: { top: 15, bottom: 25, left: 30, right: 10 },
+                xAxis: { type: 'category', data: ['进程1', '进程2', '进程3', '进程4', '进程5', '进程6'], axisLine: {show: false}, axisTick: {show: false}, axisLabel: {fontSize: 11, color: '#94A3B8', interval: 0} }, // 调大轴文本
+                yAxis: { type: 'value', axisLabel: {fontSize: 11, color: '#94A3B8'}, splitLine: {lineStyle: {color: 'rgba(148,163,184,0.1)'}} },
+                series: [{
+                    type: 'line',
+                    step: 'middle',
+                    data: [0.4, 0.4, 0.7, 0.7, 0.9, 0.9],
+                    itemStyle: { color: '#F59E0B' },
+                    lineStyle: { width: 3 },
+                    symbol: 'circle',
+                    symbolSize: 6
+                }]
+            });
+
+            // r8: 发光气泡分布图
+            charts.r8.setOption({
+                title: { text: '12次', left: 'center', top: '0', textStyle: { fontSize: 22, fontWeight: 800, color: '#EF4444' } }, // 调大顶标
+                grid: { top: 30, bottom: 20, left: 15, right: 15 },
+                xAxis: { type: 'category', data: ['节点1', '节点2', '节点3', '节点4', '节点5'], axisLine: {show: false}, axisTick: {show: false}, axisLabel: {fontSize: 11, color: '#94A3B8', interval: 0} }, // 调大轴文本
+                yAxis: { type: 'value', show: false },
+                series: [{
+                    type: 'scatter',
+                    data: [3, 5, 12, 8, 4],
+                    symbolSize: function (data) { return data * 2.5 + 4; }, 
+                    itemStyle: {
+                        color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                            {offset: 0, color: 'rgba(239, 68, 68, 0.9)'},
+                            {offset: 1, color: 'rgba(239, 68, 68, 0.1)'}
+                        ]),
+                        borderColor: '#EF4444',
+                        borderWidth: 1,
+                        shadowBlur: 12,
+                        shadowColor: '#EF4444'
+                    }
+                }]
+            });
+
+            // ========== 中心雷达图 ==========
+            const dataTree = {
+                "自主学习与习惯养成": { 
+                    value: 88, 
+                    sub: { 
+                        "课前自主探究": { value: 85, l3: [ { n: "探究任务履约率", v: "95%" }, { n: "时间规划前瞻性", v: "85%" }, { n: "探究深度指数", v: "高" } ] }, 
+                        "课堂交互与沉浸": { value: 92, l3: [ { n: "学习纪律遵从度", v: "98%" }, { n: "课堂活跃交互度", v: "良" }, { n: "有效交互贡献度", v: "80%" } ] }, 
+                        "课后内化与拓展": { value: 82, l3: [ { n: "课后任务准点率", v: "88%" }, { n: "归因纠错执行率", v: "82%" }, { n: "泛在学习拓展度", v: "62%" } ] } 
+                    } 
+                },
+                "学业水平与知识建构": { 
+                    value: 92, 
+                    sub: { 
+                        "知识图谱掌握度": { value: 88, l3: [ { n: "知识即时内化率", v: "92%" }, { n: "知识长效巩固度", v: "85%" }, { n: "知识迁移应用度", v: "78%" } ] }, 
+                        "题型攻坚素养": { value: 85, l3: [ { n: "基础概念解析率", v: "92%" }, { n: "逻辑表达与重构率", v: "76%" }, { n: "复杂问题攻坚率", v: "45%" } ] }, 
+                        "学科关键能力": { value: 90, l3: [ { n: "多模态信息提取力", v: "40%" }, { n: "科学逻辑推理力", v: "35%" }, { n: "实践操作验证力", v: "25%" } ] } 
+                    } 
+                },
+                "科学精神与思维品质": { 
+                    value: 75, 
+                    sub: { 
+                        "思维敏捷与响应": { value: 80, l3: [ { n: "信息处理响应度", v: "较快" }, { n: "限时抗压效能", v: "78%" } ] }, 
+                        "批判质疑与发散": { value: 72, l3: [ { n: "批判质疑探究度", v: "中" }, { n: "多向思维发散度", v: "良" } ] }, 
+                        "自我认知与反思": { value: 75, l3: [ { n: "自我认知校准度", v: "85%" }, { n: "深度归因复盘率", v: "65%" } ] } 
+                    } 
+                },
+                "行为调控与策略应用": { 
+                    value: 85, 
+                    sub: { 
+                        "时序统筹规划": { value: 88, l3: [{ n: "任务节奏适配度", v: "0.9" }, { n: "全局效能把控度", v: "优" }] }, 
+                        "测评决策与应对": { value: 82, l3: [{ n: "风险规避调控率", v: "80%" }, { n: "审慎核验校验率", v: "85%" }] }, 
+                        "绩效稳定与抗压": { value: 80, l3: [{ n: "绩效表现波动率", v: "0.08" }, { n: "操作细节严谨度", v: "良" }] }, 
+                        "学术规范与自律": { value: 95, l3: [{ n: "测评规则遵从度", v: "100%" }, { n: "学术原创自律度", v: "98%" }] } 
+                    } 
+                },
+                "个性发展与社会协同": { 
+                    value: 90, 
+                    sub: { 
+                        "个性潜能图谱": { value: 92, l3: [{ n: "个性化优势区", v: "物理/逻辑" }, { n: "待唤醒提升区", v: "英语/发散" }] }, 
+                        "发展增值态势": { value: 88, l3: [{ n: "自我超越增值度", v: "18%" }, { n: "群体竞争位移度", v: "前15%" }] }, 
+                        "团队协同与责任": { value: 90, l3: [{ n: "团队协同贡献比", v: "30%" }, { n: "朋辈互助辐射度", v: "极高" }] } 
+                    } 
+                }
+            };
+
+            const l1Indicators = Object.keys(dataTree).map(k => ({ name: k, max: 100 }));
+            const l1Values = Object.values(dataTree).map(v => v.value);
+
+            charts.mainRadar.setOption({
+                radar: {
+                    indicator: l1Indicators,
+                    radius: '42%', // 稍微缩小雷达图半径，给外围更大的字体让出空间防止被切除
+                    center: ['50%', '50%'],
+                    splitNumber: 3,
+                    triggerEvent: true,
+                    nameGap: 10,
+                    axisName: { 
+                        color: '#ffffff', 
+                        backgroundColor: 'rgba(37, 99, 235, 0.85)',
+                        borderRadius: 4,
+                        fontSize: 14, // 调大雷达图标签文本
+                        fontWeight: '500', 
+                        padding: [4, 8], 
+                        cursor: 'pointer', 
+                        textShadow: '0 1px 2px rgba(0,0,0,0.2)'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(37, 99, 235, 0.2)', width: 0.8 } },
+                    splitArea: { show: true, areaStyle: { color: ['rgba(255, 255, 255, 0.6)', 'rgba(239, 246, 255, 0.6)'] } },
+                    axisLine: { lineStyle: { color: 'rgba(37, 99, 235, 0.2)', width: 0.8 } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{ value: l1Values, name: '当前学生' }],
+                    itemStyle: { color: '#2563EB' },
+                    areaStyle: { color: 'rgba(37, 99, 235, 0.1)' },
+                    lineStyle: { color: '#2563EB', width: 1 },
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    emphasis: { 
+                        itemStyle: { shadowBlur: 4, shadowColor: '#2563EB' }, 
+                        lineStyle: { width: 1.5 }
+                    }
+                }]
+            });
+
+            // 维护当前处于展开状态的二级雷达图
+            const activeL2Charts = {};
+            const domL3Tooltip = document.getElementById('l3-tooltip');
+            const domL3Content = document.getElementById('l3-content');
+
+            // ======== 动态色彩管理逻辑 ========
+            const colorPalette = [
+                { main: '#3B82F6', bg: 'rgba(59, 130, 246, 0.85)', area: 'rgba(59, 130, 246, 0.2)', line: 'rgba(59, 130, 246, 0.4)' }, // 蓝色
+                { main: '#10B981', bg: 'rgba(16, 185, 129, 0.85)', area: 'rgba(16, 185, 129, 0.2)', line: 'rgba(16, 185, 129, 0.4)' }, // 绿色
+                { main: '#F59E0B', bg: 'rgba(245, 158, 11, 0.85)', area: 'rgba(245, 158, 11, 0.2)', line: 'rgba(245, 158, 11, 0.4)' }, // 橙色
+                { main: '#EC4899', bg: 'rgba(236, 72, 153, 0.85)', area: 'rgba(236, 72, 153, 0.2)', line: 'rgba(236, 72, 153, 0.4)' }, // 粉色
+                { main: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.85)', area: 'rgba(139, 92, 246, 0.2)', line: 'rgba(139, 92, 246, 0.4)' }, // 紫色
+                { main: '#EF4444', bg: 'rgba(239, 68, 68, 0.85)',  area: 'rgba(239, 68, 68, 0.2)',  line: 'rgba(239, 68, 68, 0.4)' }  // 红色
+            ];
+
+            function getNextAvailableColor() {
+                // 获取当前已经在使用中的颜色索引
+                const usedIndexes = Object.values(activeL2Charts).map(item => item.colorIndex);
+                // 优先分配还未被使用的颜色
+                for (let i = 0; i < colorPalette.length; i++) {
+                    if (!usedIndexes.includes(i)) return { index: i, scheme: colorPalette[i] };
+                }
+                // 如果所有颜色都在用，按顺序兜底分配
+                const fallbackIndex = Object.keys(activeL2Charts).length % colorPalette.length;
+                return { index: fallbackIndex, scheme: colorPalette[fallbackIndex] };
+            }
+
+            // 抽取收起动作的复用函数
+            function closeL2Chart(l1Name) {
+                if (activeL2Charts[l1Name]) {
+                    const { container, chartInstance } = activeL2Charts[l1Name];
+                    container.classList.remove('active');
+                    hideL3Tooltip();
+                    setTimeout(() => {
+                        chartInstance.dispose();
+                        container.remove();
+                    }, 400); // 预留动画过渡时间
+                    delete activeL2Charts[l1Name];
+                }
+            }
+
+            charts.mainRadar.on('click', function (params) {
+                let l1Name = params.name;
+                if(!dataTree[l1Name]) return;
+                
+                const e = params.event.event;
+
+                // 如果该面板已打开，则再点击时收起
+                if (activeL2Charts[l1Name]) {
+                    closeL2Chart(l1Name);
+                } else {
+                    // 1. 获取颜色主题
+                    const { index: colorIndex, scheme: colorScheme } = getNextAvailableColor();
+
+                    // 生成新容器
+                    const container = document.createElement('div');
+                    container.className = 'l2-floating-container';
+                    container.style.left = e.clientX + 'px';
+                    container.style.top = e.clientY + 'px';
+                    
+                    // 添加关闭按钮
+                    const closeBtn = document.createElement('div');
+                    closeBtn.className = 'l2-close-btn';
+                    closeBtn.innerHTML = '×';
+                    closeBtn.onclick = function(evt) {
+                        evt.stopPropagation(); 
+                        closeL2Chart(l1Name);
+                    };
+                    container.appendChild(closeBtn);
+
+                    // 添加图表占位
+                    const chartDiv = document.createElement('div');
+                    chartDiv.className = 'l2-chart-floating';
+                    container.appendChild(chartDiv);
+                    
+                    document.body.appendChild(container);
+
+                    const chartInstance = echarts.init(chartDiv);
+                    // 记录图表、容器以及所占用的颜色索引
+                    activeL2Charts[l1Name] = { container, chartInstance, colorIndex };
+
+                    // 异步渲染并加上激活类，触发弹出动画
+                    setTimeout(() => {
+                        container.classList.add('active');
+                        bindL3Tooltip(chartInstance, l1Name, container);
+                        renderLevel2Chart(chartInstance, l1Name, colorScheme);
+                    }, 30);
+                }
+            });
+
+            // ================= 全局拖拽逻辑 =================
+            let activeDragCtx = null;
+
+            document.addEventListener('mousedown', function(e) {
+                const container = e.target.closest('.l2-floating-container');
+                // 如果点击的是容器，且不是按在关闭按钮上，则开始拖拽
+                if (container && !e.target.closest('.l2-close-btn')) {
+                    activeDragCtx = {
+                        container: container,
+                        startX: e.clientX,
+                        startY: e.clientY,
+                        initialX: container.offsetLeft,
+                        initialY: container.offsetTop
+                    };
+                    container.style.cursor = 'grabbing';
+                    container.style.transition = 'none'; // 拖拽时取消动画，防止脱节
+                    
+                    // 将当前操作的容器置于最顶层
+                    document.querySelectorAll('.l2-floating-container').forEach(el => el.style.zIndex = 1000);
+                    container.style.zIndex = 1005;
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (activeDragCtx) {
+                    const dx = e.clientX - activeDragCtx.startX;
+                    const dy = e.clientY - activeDragCtx.startY;
+                    activeDragCtx.container.style.left = (activeDragCtx.initialX + dx) + 'px';
+                    activeDragCtx.container.style.top = (activeDragCtx.initialY + dy) + 'px';
+                    hideL3Tooltip(); // 拖动期间隐藏三级指标提示
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (activeDragCtx) {
+                    activeDragCtx.container.style.cursor = 'grab';
+                    // 恢复关闭时所需的动画过渡效果
+                    activeDragCtx.container.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease';
+                    activeDragCtx = null;
+                }
+            });
+
+            // ================= 二级雷达渲染与三级提示绑定 =================
+            function renderLevel2Chart(chartInstance, l1Name, colorScheme) {
+                const subData = dataTree[l1Name].sub;
+                const l2Indicators = Object.keys(subData).map(k => ({ name: k, max: 100 }));
+                const l2Values = Object.values(subData).map(v => v.value);
+
+                chartInstance.setOption({
+                    // 在图表正中心加入一级指标的文字标题
+                    title: {
+                        text: l1Name,
+                        left: 'center',
+                        top: 'center',
+                        textStyle: {
+                            color: colorScheme.main,
+                            fontSize: 16, // 调大二级雷达图中心字体
+                            fontWeight: 'bold',
+                            textShadowColor: 'rgba(255, 255, 255, 0.9)',
+                            textShadowBlur: 4
+                        }
+                    },
+                    radar: {
+                        indicator: l2Indicators,
+                        triggerEvent: true,
+                        radius: '40%', // 稍微缩小给变大的角标让出空间
+                        center: ['50%', '50%'],
+                        nameGap: 12,
+                        axisName: { 
+                            color: '#fff', 
+                            backgroundColor: colorScheme.bg, // 动态背景色
+                            borderRadius: 2, 
+                            padding: [2, 4], 
+                            fontSize: 12, // 调大二级雷达图标签
+                            cursor: 'pointer'
+                        },
+                        splitArea: { show: false },
+                        splitLine: { lineStyle: { color: colorScheme.line, width: 0.8 } }, // 动态线条色
+                        axisLine: { lineStyle: { color: colorScheme.line, width: 0.8 } }
+                    },
+                    series: [{
+                        type: 'radar',
+                        data: [{ value: l2Values }],
+                        itemStyle: { color: colorScheme.main }, // 动态主题色
+                        areaStyle: { color: colorScheme.area }, // 动态面积色
+                        symbolSize: 5,
+                        symbol: 'circle'
+                    }]
+                });
+            }
+
+            function bindL3Tooltip(l2ChartInstance, contextL1Name, container) {
+                l2ChartInstance.on('mouseover', function (params) {
+                    if(params.name) {
+                        showL3Tooltip(contextL1Name, params.name, params.event.event, container);
+                    }
+                });
+                l2ChartInstance.on('mouseout', function () {
+                    hideL3Tooltip();
+                });
+                l2ChartInstance.on('mousemove', function(params) {
+                    if(params.name) {
+                        updateL3TooltipPos(params.event.event, container);
+                    }
+                });
+            }
+
+            function showL3Tooltip(l1Key, l2Name, e, container) {
+                const l3DataArray = dataTree[l1Key].sub[l2Name] ? dataTree[l1Key].sub[l2Name].l3 : null;
+                if(!l3DataArray) return;
+
+                let htmlStr = `<div class="tooltip-title">${l2Name}</div>`;
+                l3DataArray.forEach(item => {
+                    htmlStr += `<div class="tooltip-row"><span class="row-label">${item.n}</span><span class="row-value">${item.v}</span></div>`;
+                });
+                domL3Content.innerHTML = htmlStr;
+
+                updateL3TooltipPos(e, container);
+                domL3Tooltip.classList.add('show');
+            }
+
+            function updateL3TooltipPos(e, container) {
+                const tooltipWidth = domL3Tooltip.offsetWidth || 150;
+                const tooltipHeight = domL3Tooltip.offsetHeight || 70;
+                
+                const l2Rect = container.getBoundingClientRect();
+                const l2CenterX = l2Rect.left + l2Rect.width / 2;
+                const l2CenterY = l2Rect.top + l2Rect.height / 2;
+
+                let left = e.clientX > l2CenterX ? e.clientX + 8 : e.clientX - tooltipWidth - 8;
+                let top = e.clientY > l2CenterY ? e.clientY + 8 : e.clientY - tooltipHeight - 8;
+
+                left = Math.max(8, Math.min(left, window.innerWidth - tooltipWidth - 8));
+                top = Math.max(8, Math.min(top, window.innerHeight - tooltipHeight - 8));
+
+                domL3Tooltip.style.left = left + 'px';
+                domL3Tooltip.style.top = top + 'px';
+            }
+
+            function hideL3Tooltip() {
+                domL3Tooltip.classList.remove('show');
+            }
+
+            // ================= 最终保险：强制重置所有图表尺寸 =================
+            setTimeout(() => {
+                Object.values(charts).forEach(c => c.resize());
+            }, 100);
+
+            window.addEventListener('resize', () => {
+                Object.values(charts).forEach(c => c.resize());
+                Object.values(activeL2Charts).forEach(item => item.chartInstance.resize());
+            });
+
+        }); // load 监听器结束
+    </script>
+</body>
+</html>

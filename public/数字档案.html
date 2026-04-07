@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>学生数字档案</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-liquidfill@3.1.0/dist/echarts-liquidfill.min.js"></script>
+    <style>
+        :root {
+            --main-color: #2563EB;
+            --warn-color: #EF4444;
+            --high-color: #F59E0B;
+            --text-title: #0F172A;
+            --text-norm: #334155;
+            --text-sub: #64748B;
+            
+            /* 高级毛玻璃质感参数 */
+            --mod-bg: rgba(255, 255, 255, 0.65); 
+            --mod-border: rgba(255, 255, 255, 0.7);
+            --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            --mod-radius: 14px;
+            
+            --ai-bg: rgba(239, 246, 255, 0.65);
+            --ai-border: rgba(255, 255, 255, 0.8);
+
+            /* 现代科技感无衬线字体栈 */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 11px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: #F8FAFC;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(241, 245, 249, 0.35) 0%, rgba(226, 232, 240, 0.35) 100%), url('./background.png') center/cover no-repeat;
+        }
+
+        #app {
+            width: 100vw;
+            height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 16px;
+            position: relative;
+        }
+
+        #app::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--main-color);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 6px var(--main-color);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 0.08; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+
+        /* 基础面板样式 (通透玻璃拟态) */
+        .panel {
+            background: var(--mod-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--mod-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            padding: 16px; 
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
+        }
+        .panel:hover {
+            background: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        /* 标题排版优化 */
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-title);
+            margin-bottom: 8px; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+            z-index: 2;
+        }
+        .panel-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.3);
+        }
+
+        .chart-box {
+            flex: 1;
+            width: 100%;
+            min-height: 0;
+            z-index: 2;
+        }
+
+        /* ========== 左侧布局 ========== */
+        .layout-left {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+        .left-top {
+            flex: 1.4;
+            width: 100%;
+        }
+        .left-bottom-wrapper {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            gap: 12px;
+        }
+        .left-bottom-item {
+            flex: 1;
+            height: 100%;
+            padding: 12px 14px;
+        }
+        .left-bottom-item .panel-title {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        /* ========== 右侧布局 (前2横，后4宫格) ========== */
+        .layout-right {
+            width: 25%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 12px;
+            z-index: 10;
+        }
+        .panel-r-wide {
+            grid-column: span 2;
+            width: 100%;
+            height: 100%;
+            padding: 12px 14px;
+        }
+        .panel-mini {
+            width: 100%;
+            height: 100%;
+            padding: 12px 14px;
+        }
+        .panel-mini .panel-title, .panel-r-wide .panel-title {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        /* ========== 中间布局 ========== */
+        .layout-center {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        /* 顶部档案卡片重构 */
+        .profile-panel {
+            flex: none;
+            padding: 16px 20px;
+        }
+        .profile-header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            padding-bottom: 12px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        .profile-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-sub);
+        }
+        .avatar-circle {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(148, 163, 184, 0.05));
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748B;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .info-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .info-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .info-row .lbl { color: var(--text-sub); min-width: 40px; text-align: right; }
+        .info-row .val { font-weight: 600; color: var(--text-title); margin-right: 6px; font-size: 11px;}
+        .info-row .name { font-size: 15px; color: var(--main-color); }
+        
+        .highlight-section {
+            display: flex;
+            gap: 24px;
+            border-left: 1px solid rgba(148, 163, 184, 0.3);
+            padding-left: 24px;
+            align-self: stretch;
+            align-items: center;
+        }
+        .high-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .high-item .lbl { color: var(--text-sub); margin-bottom: 4px; }
+        .high-item .val { font-size: 18px; font-weight: 700; color: var(--text-title); }
+        .high-item .s-rank { background: linear-gradient(135deg, #3B82F6, #1D4ED8); -webkit-background-clip: text; color: transparent; font-size: 28px; font-weight: 800; line-height: 1; text-shadow: 0 2px 10px rgba(37, 99, 235, 0.2); }
+
+        /* 中部主图表区域 */
+        .center-main-panel {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+        .human-watermark {
+            position: absolute;
+            left: 50%;
+            top: 55%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 90%;
+            background: url('./human.png') no-repeat center/contain;
+            opacity: 0.25; /* 降低背景水印干扰折线图 */
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* AI 综合洞察 */
+        .center-ai {
+            flex: none;
+            background: var(--ai-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--ai-border);
+            border-radius: var(--mod-radius);
+            box-shadow: var(--mod-shadow);
+            padding: 14px 18px; 
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+        .ai-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #D97706;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.5px;
+        }
+        .ai-title::before {
+            content: '✦';
+            font-size: 14px;
+        }
+        .ai-text {
+            font-size: 11px;
+            color: var(--text-norm);
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+        .ai-text span.warn {
+            color: #E11D48;
+            font-weight: 600;
+            background: rgba(225, 29, 72, 0.08);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="fade-in">
+        <div class="particles" id="particles-box"></div>
+
+        <aside class="layout-left">
+            <div class="panel left-top">
+                <div class="panel-title">知识图谱掌握度演进</div>
+                <div id="c-l1" class="chart-box"></div>
+            </div>
+            <div class="left-bottom-wrapper">
+                <div class="panel left-bottom-item">
+                    <div class="panel-title">自主学习与履约情况</div>
+                    <div id="c-l3" class="chart-box"></div>
+                </div>
+                <div class="panel left-bottom-item">
+                    <div class="panel-title">题型攻坚素养评估</div>
+                    <div id="c-l4" class="chart-box"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="layout-center">
+            <div class="panel profile-panel">
+                <div class="profile-header">学生数字档案</div>
+                <div class="profile-content">
+                    <div class="avatar-section">
+                        <div class="avatar-circle">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <span>头像</span>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-row">
+                            <span class="lbl">姓名</span><span class="val name">张三丰</span>
+                            <span class="lbl">学号</span><span class="val">EDU-20260320</span>
+                            <span class="lbl">年级</span><span class="val">七年级1班</span>
+                            <span class="lbl">性别</span><span class="val">男</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="lbl">身份证</span><span class="val">110105********1234</span>
+                            <span class="lbl">电话</span><span class="val">138****5678</span>
+                            <span class="lbl">户籍</span><span class="val">北京市朝阳区</span>
+                        </div>
+                    </div>
+                    <div class="highlight-section">
+                        <div class="high-item">
+                            <div class="lbl">综合评价</div>
+                            <div class="val s-rank">S</div>
+                        </div>
+                        <div class="high-item">
+                            <div class="lbl">本月专注度</div>
+                            <div class="val">92%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel center-main-panel">
+                <div class="human-watermark"></div>
+                <div class="panel-title">关键能力月度成长曲线</div>
+                <div id="main-line" class="chart-box"></div>
+            </div>
+            
+            <section class="center-ai">
+                <div class="ai-title">AI 综合洞察</div>
+                <div class="ai-text">
+                    该生在课前自主探究与课堂交互环节表现极佳，各项基础履约率均显著优于班级均值，且具备优秀的『时间规划前瞻性』。但深层思维架构仍有明显短板：其 <span class="warn">复杂问题攻坚率</span>（45%）落后于班级水平，同时 <span class="warn">深度归因复盘率</span> 仍有较大提升空间。建议后续强化进阶难度的操作验证，通过深度复盘驱动自我超越与增值。
+                </div>
+            </section>
+        </main>
+
+        <aside class="layout-right">
+            <div class="panel panel-r-wide"><div class="panel-title">行为调控与策略应用对标</div><div id="c-r-wide1" class="chart-box"></div></div>
+            <div class="panel panel-r-wide"><div class="panel-title">课堂交互与沉浸分析</div><div id="c-r-wide2" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">时间规划前瞻性</div><div id="c-r3" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">深度归因复盘率</div><div id="c-r4" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">自我超越增值度</div><div id="c-r5" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">团队协同贡献比</div><div id="c-r6" class="chart-box"></div></div>
+        </aside>
+    </div>
+
+    <script>
+        // 粒子背景特效保留
+        const particleBox = document.getElementById('particles-box');
+        for(let i=0; i<20; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 4 + 2) + 's';
+            p.style.animationDelay = (Math.random() * 2) + 's';
+            particleBox.appendChild(p);
+        }
+
+        // 图表基础色彩与样式管理
+        const axisColor = 'rgba(148, 163, 184, 0.25)';
+        const splitColor = 'rgba(148, 163, 184, 0.12)';
+        const textColor = '#475569'; 
+
+        const commonAxis = {
+            axisLabel: { color: textColor, fontSize: 10, margin: 8 }, 
+            axisLine: { lineStyle: { color: axisColor, width: 1 } },
+            splitLine: { show: false }
+        };
+
+        const charts = {
+            l1: echarts.init(document.getElementById('c-l1')),
+            l3: echarts.init(document.getElementById('c-l3')),
+            l4: echarts.init(document.getElementById('c-l4')),
+            rWide1: echarts.init(document.getElementById('c-r-wide1')),
+            rWide2: echarts.init(document.getElementById('c-r-wide2')),
+            r3: echarts.init(document.getElementById('c-r3')),
+            r4: echarts.init(document.getElementById('c-r4')),
+            r5: echarts.init(document.getElementById('c-r5')),
+            r6: echarts.init(document.getElementById('c-r6')),
+            mainLine: echarts.init(document.getElementById('main-line'))
+        };
+
+        // ========== 1. 左侧上部：知识图谱掌握度演进 (个人 vs 班级) ==========
+        charts.l1.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['个人内化率', '班级内化率', '个人巩固度'], textStyle: { color: textColor, fontSize: 10 }, top: 0, right: 0, icon: 'circle', itemWidth: 8, itemGap: 8 },
+            grid: { top: 35, bottom: 25, left: 35, right: 25 }, 
+            xAxis: { type: 'category', data: ['1月', '2月', '3月', '4月', '5月', '6月'], ...commonAxis },
+            yAxis: { type: 'value', min: 40, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+            series: [
+                { name: '个人内化率', type: 'line', smooth: true, symbolSize: 6, lineStyle: { width: 3, color: '#3B82F6' }, itemStyle: { color: '#3B82F6' }, data: [75, 78, 85, 82, 88, 92] },
+                { name: '班级内化率', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: [70, 72, 74, 75, 76, 78] },
+                { name: '个人巩固度', type: 'line', smooth: true, symbolSize: 6, lineStyle: { width: 3, color: '#10B981' }, itemStyle: { color: '#10B981' }, data: [60, 65, 70, 75, 80, 85] }
+            ]
+        });
+
+        // ========== 2. 左侧下部1：自主学习与履约情况 ==========
+        // 3. 解决横坐标拥挤问题：设置换行 formatter 并调大 grid.bottom
+        charts.l3.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['个人', '班级均值'], textStyle: { color: textColor, fontSize: 9 }, top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
+            grid: { top: 30, bottom: 40, left: 25, right: 10 },
+            xAxis: { 
+                type: 'category', 
+                data: ['探究任务履约率', '学习纪律遵从度', '课后任务准点率'], 
+                axisLabel: { 
+                    interval: 0, color: textColor, fontSize: 9,
+                    formatter: function(value) { return value.length > 4 ? value.substring(0, 4) + '\n' + value.substring(4) : value; }
+                }, 
+                axisLine: { lineStyle: { color: axisColor } }, axisTick: { show: false } 
+            },
+            yAxis: { type: 'value', max: 100, axisLabel: { show: false }, splitLine: { show: false } },
+            series: [
+                { name: '个人', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#8B5CF6' }, label: { show: true, position: 'top', fontSize: 9, color: textColor, formatter:'{c}%' }, data: [95, 98, 88] },
+                { name: '班级均值', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: 'rgba(148, 163, 184, 0.4)' }, data: [82, 85, 75] }
+            ]
+        });
+
+        // ========== 3. 左侧下部2：题型攻坚素养评估 ==========
+        // 3. 解决横坐标拥挤问题：设置换行 formatter 并调大 grid.bottom
+        charts.l4.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['个人', '班级均值'], textStyle: { color: textColor, fontSize: 9 }, top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
+            grid: { top: 30, bottom: 40, left: 25, right: 10 },
+            xAxis: { 
+                type: 'category', 
+                data: ['基础概念解析率', '逻辑表达重构率', '复杂问题攻坚率'], 
+                axisLabel: { 
+                    interval: 0, color: textColor, fontSize: 9,
+                    formatter: function(value) { return value.length > 4 ? value.substring(0, 4) + '\n' + value.substring(4) : value; }
+                }, 
+                axisLine: { lineStyle: { color: axisColor } }, axisTick: { show: false } 
+            },
+            yAxis: { type: 'value', max: 100, axisLabel: { show: false }, splitLine: { show: false } },
+            series: [
+                { name: '个人', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#EC4899' }, label: { show: true, position: 'top', fontSize: 9, color: textColor, formatter:'{c}%' }, data: [92, 76, 45] },
+                { name: '班级均值', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: 'rgba(148, 163, 184, 0.4)' }, data: [85, 65, 55] }
+            ]
+        });
+
+        // ========== 4. 中间主图：关键能力月度成长曲线 ==========
+        // 5. 加入了班级均值虚线
+        charts.mainLine.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['多模态信息提取力', '科学逻辑推理力', '实践操作验证力', '多向思维发散度', '班级综合均值'], bottom: 0, textStyle: { color: textColor, fontSize: 10 }, icon: 'roundRect' },
+            grid: { top: 20, bottom: 45, left: 40, right: 20 },
+            xAxis: { type: 'category', boundaryGap: false, data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'], ...commonAxis },
+            yAxis: { type: 'value', min: 40, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, type: 'dashed' } } },
+            series: [
+                { name: '多模态信息提取力', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#3B82F6' }, data: [65, 68, 72, 70, 78, 85, 82, 88, 85, 90, 92, 95] },
+                { name: '科学逻辑推理力', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#10B981' }, data: [55, 60, 65, 72, 68, 75, 80, 78, 85, 82, 88, 90] },
+                { name: '实践操作验证力', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#F59E0B' }, data: [75, 72, 68, 65, 70, 68, 75, 80, 85, 88, 82, 85] },
+                { name: '多向思维发散度', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#8B5CF6' }, data: [50, 55, 60, 58, 65, 70, 68, 72, 75, 80, 78, 82] },
+                { name: '班级综合均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: [60, 62, 65, 68, 70, 72, 74, 76, 78, 80, 82, 84] }
+            ]
+        });
+
+        // ========== 5. 右上通栏1：行为调控与策略应用对标 ==========
+        charts.rWide1.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { data: ['个人', '班级均值'], right: 0, top: 0, textStyle: { fontSize: 10, color: textColor }, itemWidth: 12, itemHeight: 12 },
+            grid: { top: 30, bottom: 20, left: 35, right: 10 },
+            xAxis: { type: 'category', data: ['任务节奏适配度', '全局效能把控度', '风险规避调控率', '审慎核验校验率'], ...commonAxis, axisLabel: { interval: 0, fontSize: 9, color: textColor } },
+            yAxis: { type: 'value', max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor } } },
+            series: [
+                { name: '个人', type: 'bar', barWidth: 14, itemStyle: { borderRadius: [4, 4, 0, 0], color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#3B82F6'}, {offset: 1, color: '#93C5FD'}]) }, label: { show: true, position: 'top', fontSize: 9, color: textColor }, data: [90, 85, 80, 85] },
+                { name: '班级均值', type: 'bar', barWidth: 14, itemStyle: { borderRadius: [4, 4, 0, 0], color: 'rgba(148, 163, 184, 0.4)' }, data: [75, 70, 68, 72] }
+            ]
+        });
+
+        // ========== 6. 右上通栏2：课堂交互与沉浸分析 ==========
+        // 4. 横坐标改成次课
+        charts.rWide2.setOption({
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['个人贡献度', '班级平均贡献度'], right: 0, top: 0, textStyle: { fontSize: 10, color: textColor } },
+            grid: { top: 30, bottom: 20, left: 35, right: 10 },
+            xAxis: { type: 'category', boundaryGap: false, data: ['1次课', '3次课', '5次课', '7次课', '9次课', '11次课'], ...commonAxis },
+            yAxis: { type: 'value', max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor } } },
+            series: [
+                { name: '个人贡献度', type: 'line', smooth: true, areaStyle: { color: 'rgba(16, 185, 129, 0.2)' }, lineStyle: { width: 3, color: '#10B981' }, itemStyle: { color: '#10B981' }, data: [65, 72, 80, 85, 78, 88] },
+                { name: '班级平均贡献度', type: 'line', smooth: true, lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, symbol: 'none', data: [60, 62, 65, 64, 66, 68] }
+            ]
+        });
+
+        // ========== 7. 右下微图1：时间规划前瞻性 ==========
+        charts.r3.setOption({
+            series: [{
+                type: 'liquidFill', data: [0.85, 0.83], radius: '75%', center: ['50%', '50%'],
+                color: ['#3B82F6', 'rgba(59, 130, 246, 0.5)'],
+                backgroundStyle: { color: 'rgba(59, 130, 246, 0.05)' },
+                outline: { borderDistance: 2, itemStyle: { borderWidth: 2, borderColor: '#3B82F6' } },
+                label: { fontSize: 16, color: '#1E293B', fontWeight: 700, formatter: function() { return '85%'; } }
+            }]
+        });
+
+        // ========== 8. 右下微图2：深度归因复盘率 ==========
+        charts.r4.setOption({
+            title: { text: '65%', left: 'center', top: 'center', textStyle: { fontSize: 16, fontWeight: 800, color: '#8B5CF6' } },
+            series: [{
+                type: 'pie', radius: ['60%', '80%'], center: ['50%', '50%'], hoverAnimation: false, label: { show: false },
+                data: [
+                    { value: 65, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#3B82F6'}, {offset: 1, color: '#8B5CF6'}]) } },
+                    { value: 35, itemStyle: { color: 'rgba(148, 163, 184, 0.15)' } }
+                ]
+            }]
+        });
+
+        // ========== 9. 右下微图3：自我超越增值度 ==========
+        // 6. 增加了 Y 轴显示，横向坐标改为“次课”
+        charts.r5.setOption({
+            title: { text: '+18%', left: 'center', top: '0', textStyle: { fontSize: 16, fontWeight: 800, color: '#F59E0B' } },
+            grid: { top: 30, bottom: 25, left: 30, right: 10 },
+            xAxis: { type: 'category', data: ['1次课','2次课','3次课','4次课','5次课'], ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 9 } },
+            yAxis: { type: 'value', show: true, ...commonAxis, axisLabel: { margin: 4, color: textColor, fontSize: 9, formatter: '{value}%' }, splitLine: { show: true, lineStyle: { color: splitColor } } },
+            series: [{
+                type: 'bar', barWidth: 8, itemStyle: { color: '#F59E0B', borderRadius: [2,2,0,0] }, data: [5, 8, 12, 15, 18]
+            }]
+        });
+
+        // ========== 10. 右下微图4：团队协同贡献比 ==========
+        // 6. 修改为标准环形图，中心加上明确的“个人贡献”指示说明
+        charts.r6.setOption({
+            title: { 
+                text: '个人贡献', 
+                subtext: '30%', 
+                left: 'center', 
+                top: '32%', 
+                textStyle: { fontSize: 10, color: '#64748B', fontWeight: 'normal' }, 
+                subtextStyle: { fontSize: 18, fontWeight: 800, color: '#EF4444' },
+                itemGap: 2
+            },
+            series: [{
+                type: 'pie', radius: ['45%', '75%'], center: ['50%', '55%'],
+                itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 }, 
+                label: { show: false },
+                data: [
+                    { value: 30, name: '个人贡献', itemStyle: { color: '#EF4444' } },
+                    { value: 70, name: '团队其他', itemStyle: { color: 'rgba(148, 163, 184, 0.2)' } }
+                ]
+            }]
+        });
+
+        // 窗口响应
+        window.addEventListener('resize', () => {
+            Object.values(charts).forEach(c => c.resize());
+        });
+    </script>
+</body>
+</html>
