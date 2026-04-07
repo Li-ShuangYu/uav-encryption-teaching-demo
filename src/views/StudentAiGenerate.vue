@@ -264,6 +264,21 @@ const scrollCodeToBottom = async () => {
   }
 }
 
+const scrollToDiff = async () => {
+  await nextTick()
+  if (codeScrollRef.value) {
+    const diffIndex = codeLines.value.findIndex(line => line.diffType === 'added' || line.diffType === 'removed')
+    if (diffIndex !== -1) {
+      // 每一行大约22px，减去150px让差异显示在偏上居中位置
+      const topPos = diffIndex * 22 - 150
+      codeScrollRef.value.scrollTo({
+        top: Math.max(0, topPos),
+        behavior: 'smooth'
+      })
+    }
+  }
+}
+
 const scrollTerminalToBottom = async () => {
   await nextTick()
   if (terminalScrollRef.value) {
@@ -422,15 +437,15 @@ const runState2Sequence = async () => {
 
   // 阶段 2：修复话题订阅 (应用第一次 Diff)
   await streamRichText("分析完毕，确认雷达话题名不匹配，正在为您修改相关代码...")
-  await pushAgent("修改寻迹节点话题订阅", "nanocar_track.py", 2000, 1, 1)
+  await pushAgent("修改寻迹节点话题订阅", "nanocar_track.py", 2000, 3, 2)
   codeLines.value = getV2CodeDiff_Part1()
-  await scrollCodeToBottom()
+  await scrollToDiff()
 
   // 阶段 3：补充底层权限 (应用第二次 Diff)
   await streamRichText("雷达节点修复完毕，同步排查关联的权限配置...")
-  await pushAgent("补充设备 udev 权限代码", "nanocar_track.py", 2000, 2, 0)
+  await pushAgent("补充设备 udev 权限代码", "nanocar_track.py", 2000, 7, 1)
   codeLines.value = getV2CodeDiff_Full()
-  await scrollCodeToBottom()
+  await scrollToDiff()
 
   // 阶段 4：二次预检
   await streamRichText("代码修正已完成，正在执行二次预检...")
@@ -443,6 +458,7 @@ const runState2Sequence = async () => {
   // 触发 Diff Bar 和总结
   showDiffBar.value = true
   await streamRichText("已修复雷达话题匹配问题，并增加摄像头权限...")
+  await scrollToDiff()
   
   isGenerating.value = false
 }
@@ -475,7 +491,7 @@ const handleRejectDiff = () => {
   isGenerating.value = false
 }
 
-const navigateToDeploy = () => { router.push('/student/deploy') }
+const navigateToDeploy = () => { if (appState.value !== 3) { router.push('/student/deploy') } }
 
 // 代码高亮逻辑
 const getLineBgColor = (line) => {
@@ -707,22 +723,35 @@ const getV1FullCode = () => {
   return code
 }
 
-// Diff Part 1: 修改话题名
+// Diff Part 1: 修改话题名 (提供更明显的视觉差异块)
 const getV2CodeDiff_Part1 = () => {
   const code = getV1FullCode()
-  code.splice(57, 1, { content: '        <span class="text-[#6a9955]"># 修改：使用冰达 NanoCar 真实的雷达话题</span>' })
-  code.splice(58, 1, { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'removed' })
-  code.splice(59, 0, { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/rplidar_scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'added' })
+  code.splice(58, 2, 
+    { content: '        <span class="text-[#6a9955]"># 错误订阅点：使用了默认的 /scan</span>', diffType: 'removed' },
+    { content: '        rospy.Subscriber(<span class="text-[#ce9178]>"<span class="text-[#f85149] font-bold">/scan</span>"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'removed' },
+    { content: '        <span class="text-[#6a9955]"># 修改：使用冰达 NanoCar 真实的雷达话题，并增加队列保护</span>', diffType: 'added' },
+    { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/rplidar_scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback, queue_size=<span class="text-[#b5cea8]">10</span>)', diffType: 'added' },
+    { content: '        rospy.loginfo(<span class="text-[#ce9178]>"[Fix] Successfully mapped to /rplidar_scan"</span>)', diffType: 'added' }
+  )
   return code
 }
 
-// Diff Part 2: 完整包含 Diff 1 和 Diff 2
+// Diff Part 2: 完整包含 Diff 1 和 Diff 2，补充更多相关代码行以方便审阅
 const getV2CodeDiff_Full = () => {
   const code = getV2CodeDiff_Part1()
-  code.splice(68, 0, 
-      { content: '        <span class="text-[#6a9955]"># 增加：赋予设备节点最高权限，解决 Permission Denied</span>', diffType: 'added' },
-      { content: '        os.system(<span class="text-[#ce9178]>"sudo chmod 777 /dev/video0"</span>)', diffType: 'added' }
-  )
+  const initIdx = code.findIndex(c => c.content.includes('def init_hardware(self):'))
+  if (initIdx !== -1) {
+    code.splice(initIdx + 1, 1, 
+      { content: '        <span class="text-[#6a9955]"># 缺少权限授予代码</span>', diffType: 'removed' },
+      { content: '        <span class="text-[#6a9955]"># 增加：赋予设备节点最高权限，解决 Permission Denied 异常</span>', diffType: 'added' },
+      { content: '        <span class="text-[#c586c0]">try</span>:', diffType: 'added' },
+      { content: '            os.system(<span class="text-[#ce9178]>"echo nanocar | sudo -S chmod 777 /dev/video0"</span>)', diffType: 'added' },
+      { content: '            os.system(<span class="text-[#ce9178]>"echo nanocar | sudo -S chmod 777 /dev/rplidar"</span>)', diffType: 'added' },
+      { content: '            rospy.loginfo(<span class="text-[#ce9178]>"[Hardware] Device permissions granted via udev fallback."</span>)', diffType: 'added' },
+      { content: '        <span class="text-[#c586c0]">except</span> Exception <span class="text-[#c586c0]">as</span> e:', diffType: 'added' },
+      { content: '            rospy.logerr(<span class="text-[#ce9178]>"[Hardware] Failed to grant permissions: %s"</span> % e)', diffType: 'added' }
+    )
+  }
   return code
 }
 

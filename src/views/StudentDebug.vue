@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen w-full flex bg-[#0f172a] text-gray-200 overflow-hidden font-sans">
-    <div class="flex-[3] flex flex-col m-3 mr-1 bg-[#1e293b] border border-gray-700 rounded-xl relative overflow-hidden shadow-2xl fade-in">
+  <div :class="['h-screen w-full flex text-gray-200 overflow-hidden font-sans transition-colors duration-700', rootThemeClass]">
+    <div :class="['flex-[3] flex flex-col m-3 mr-1 bg-[#1e293b] border rounded-xl relative overflow-hidden shadow-2xl fade-in transition-colors duration-700', panelThemeClass]">
       
       <div class="h-10 border-b border-gray-700 bg-[#0f172a]/50 flex items-center px-4 justify-between shrink-0">
         <div class="flex items-center space-x-2">
@@ -20,7 +20,7 @@
         ref="terminalRef" 
         class="flex-1 overflow-y-auto p-4 font-mono text-sm space-y-1 custom-scrollbar bg-[#090b10]"
       >
-        <div v-for="log in logs" :key="log.id" :class="getLogClass(log.type)" class="leading-relaxed break-all">
+        <div v-for="log in logs" :key="log.id" :class="getLogClass(log.type)" class="leading-relaxed break-all transition-colors duration-300">
           {{ log.text }}
         </div>
       </div>
@@ -58,7 +58,7 @@
 
     <div class="flex-[2] flex flex-col m-3 ml-2 space-y-3 relative fade-in" style="animation-delay: 0.2s;">
       
-      <div class="flex-1 bg-[#1e293b] border border-gray-700 rounded-xl relative overflow-hidden shadow-lg flex flex-col">
+      <div :class="['flex-1 bg-[#1e293b] border rounded-xl relative overflow-hidden shadow-lg flex flex-col transition-colors duration-700', panelThemeClass]">
         <div class="h-8 bg-[#0f172a]/80 border-b border-gray-700 px-3 flex items-center justify-between shrink-0 absolute w-full z-10">
           <span class="text-xs font-bold text-gray-300 flex items-center">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div class="flex-1 bg-[#1e293b] border border-gray-700 rounded-xl relative overflow-hidden shadow-lg flex flex-col">
+      <div :class="['flex-1 bg-[#1e293b] border rounded-xl relative overflow-hidden shadow-lg flex flex-col transition-colors duration-700', panelThemeClass]">
         <div class="h-8 bg-[#0f172a]/80 border-b border-gray-700 px-3 flex items-center justify-between shrink-0 absolute w-full z-10">
           <span class="text-xs font-bold text-gray-300 flex items-center">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
@@ -121,6 +121,16 @@
                 <div class="absolute h-full w-[1px] bg-green-900/30"></div>
                 <div class="absolute inset-0 rounded-full radar-sweep"></div>
                 <div class="absolute w-full h-full rounded-full point-clouds"></div>
+                
+                <div v-for="pt in radarPoints" :key="pt.id"
+                     class="absolute w-2 h-2 bg-green-400 rounded-full shadow-[0_0_6px_#4ade80]"
+                     :style="{ 
+                         transform: `translate(${pt.x}px, ${pt.y}px)`, 
+                         opacity: pt.opacity,
+                         transition: 'all 0.4s ease-out'
+                     }">
+                </div>
+
              </div>
           </div>
         </div>
@@ -131,21 +141,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-// 状态读取：'1' 表示失败剧本，'2' 表示成功剧本。默认为 '1'
 const demoState = ref(localStorage.getItem('demo_state') || '1')
+
+// 控制整体视觉风格: 'default' | 'red' | 'green'
+// 事实判定：若处于状态2，进入页面直接继承红色报错风格
+const currentTheme = ref(demoState.value === '2' ? 'red' : 'default')
 
 const logs = ref([])
 const terminalRef = ref(null)
 const isFatalTriggered = ref(false)
 const isSuccessTriggered = ref(false)
 const cpuUsage = ref(12)
+const radarPoints = ref([])
 
 let logInterval = null
 let cpuInterval = null
+let radarInterval = null
+
+// 计算属性：根容器背景主题
+const rootThemeClass = computed(() => {
+    if (currentTheme.value === 'red') return 'bg-[#1a0f11]'
+    if (currentTheme.value === 'green') return 'bg-[#0f1a14]'
+    return 'bg-[#0f172a]'
+})
+
+// 计算属性：核心模块边框主题
+const panelThemeClass = computed(() => {
+    if (currentTheme.value === 'red') return 'border-red-900/60 shadow-[0_0_20px_rgba(220,38,38,0.15)]'
+    if (currentTheme.value === 'green') return 'border-green-900/60 shadow-[0_0_20px_rgba(34,197,94,0.15)]'
+    return 'border-gray-700'
+})
 
 // 生成时间戳
 const getTimestamp = () => {
@@ -161,18 +190,47 @@ const scrollToBottom = async () => {
     }
 }
 
-// 写入单条日志
+// 写入单条日志并触发主题检测
 const pushLog = (type, text) => {
+    // 判定：出现第一条致命错误（fatal）且当前为默认状态时，切换为红色风格
+    if (type === 'fatal' && currentTheme.value === 'default') {
+        currentTheme.value = 'red'
+    }
+    // 判定：出现第一条成功日志（success）且当前为红色风格时，切换为绿色风格
+    if (type === 'success' && currentTheme.value === 'red') {
+        currentTheme.value = 'green'
+    }
+
     logs.value.push({
         id: Date.now() + Math.random(),
         type,
         text: `${getTimestamp()} ${text}`
     })
-    // 限制日志条数，防止内存泄漏
+    
     if (logs.value.length > 300) {
         logs.value.shift()
     }
     scrollToBottom()
+}
+
+// 动态雷达扫描点生成机制
+const startRadarSimulation = () => {
+    radarInterval = setInterval(() => {
+        const points = []
+        // 随机生成 3 到 6 个扫描点
+        const numPoints = Math.floor(Math.random() * 4) + 3 
+        for (let i = 0; i < numPoints; i++) {
+            const angle = Math.random() * Math.PI * 2 // 360度随机弧度
+            const radius = Math.random() * 70 + 15 // 限制在雷达圈的像素半径内
+            points.push({
+                id: i,
+                x: Math.cos(angle) * radius,
+                y: Math.sin(angle) * radius,
+                opacity: Math.random() * 0.6 + 0.4
+            })
+        }
+        radarPoints.value = points
+    }, 700)
 }
 
 // CPU波动模拟
@@ -184,7 +242,6 @@ const startCpuSim = () => {
 
 // 主启动逻辑
 const startLogging = () => {
-    // 共同的启动日志
     pushLog('info', '[SYSTEM] Booting Robot Operating System 2 (Humble)...')
     pushLog('info', '[SYSTEM] Loading kernel modules...')
     pushLog('info', '[SYSTEM] Initializing nodelet manager...')
@@ -194,7 +251,6 @@ const startLogging = () => {
     setTimeout(() => pushLog('info', '[CAMERA] Attempting to open video device /dev/video0...'), 1800)
     setTimeout(() => pushLog('info', '[LIDAR] Attempting to connect to RPLidar on /dev/ttyUSB0...'), 2300)
 
-    // 分支走向
     setTimeout(() => {
         if (demoState.value === '1') {
             triggerFailScenario()
@@ -211,7 +267,6 @@ const triggerFailScenario = () => {
     pushLog('error', '[NODE] process has died [pid 1421, exit code 255, cmd /opt/ros/lidar_node].')
     pushLog('warn', '[CAMERA] /dev/video0 device busy or resource temporarily unavailable.')
 
-    // 自动化无限输出失败日志
     logInterval = setInterval(() => {
         const failMsgs = [
             '[WARN] Retrying to connect to /scan...',
@@ -225,7 +280,7 @@ const triggerFailScenario = () => {
         const msg = failMsgs[Math.floor(Math.random() * failMsgs.length)]
         const type = msg.includes('[ERROR]') ? 'error' : 'warn'
         pushLog(type, msg)
-    }, 700) // 高频报错增加压迫感
+    }, 700)
 }
 
 // 状态2：优化后的成功剧本
@@ -236,7 +291,9 @@ const triggerSuccessScenario = () => {
     pushLog('success', '[SYSTEM] Nodelet initialization complete. Sensor fusion active.')
     pushLog('success', '[SYSTEM] All core nodes running. Ready for autonomous navigation.')
 
-    // 自动化无限输出正常心跳日志
+    // 触发雷达动画数据
+    startRadarSimulation()
+
     logInterval = setInterval(() => {
         const x = (Math.random() * 2 + 1).toFixed(3)
         const y = (Math.random() * 2).toFixed(3)
@@ -252,7 +309,7 @@ const triggerSuccessScenario = () => {
         ]
         const msg = successMsgs[Math.floor(Math.random() * successMsgs.length)]
         pushLog('info', msg)
-    }, 800) // 稳定的刷新频率
+    }, 800)
 }
 
 // 样式类映射
@@ -287,6 +344,7 @@ onMounted(() => {
 onUnmounted(() => {
     if (logInterval) clearInterval(logInterval)
     if (cpuInterval) clearInterval(cpuInterval)
+    if (radarInterval) clearInterval(radarInterval)
 })
 </script>
 
@@ -325,7 +383,7 @@ onUnmounted(() => {
   width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #090b10;
+  background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #334155;
@@ -372,7 +430,7 @@ onUnmounted(() => {
 }
 @keyframes track-flow {
   0% { transform: perspective(800px) rotateX(60deg) scale(1.5) translateY(0); }
-  100% { transform: perspective(800px) rotateX(60deg) scale(1.5) translateY(40px); /* 一格的距离 */ }
+  100% { transform: perspective(800px) rotateX(60deg) scale(1.5) translateY(40px); }
 }
 .crosshair {
   animation: target-wobble 4s ease-in-out infinite;
@@ -395,7 +453,7 @@ onUnmounted(() => {
   100% { transform: rotate(360deg); }
 }
 
-/* 使用 box-shadow 模拟点云随机散布 */
+/* 原始的固定背景光晕点云保留 */
 .point-clouds {
   box-shadow: 
     30px 40px 0 -23px #22c55e,
