@@ -43,10 +43,10 @@
           </div>
           <div class="flex gap-2">
             <button @click="handleRejectDiff" class="px-2.5 py-1 text-[#cccccc] hover:text-white text-[11px] rounded flex items-center transition">
-              <span class="mr-1.5 font-medium">撤销</span> <span class="text-[10px] text-gray-500 font-mono">Ctrl+Backspace</span>
+              <span class="mr-1.5 font-medium">拒绝</span> <span class="text-[10px] text-gray-500 font-mono">Ctrl+Backspace</span>
             </button>
             <button @click="handleAcceptDiff" class="px-2.5 py-1 bg-[#e3e3e3] hover:bg-white text-black text-[11px] rounded flex items-center transition shadow-sm font-medium">
-              <span class="mr-1.5">保留</span> <span class="text-[10px] text-gray-600 font-mono">Ctrl+Enter</span>
+              <span class="mr-1.5">保留变更 (Accept)</span> <span class="text-[10px] text-gray-600 font-mono">Ctrl+Enter</span>
             </button>
             <div class="border-l border-[#2ea043]/50 pl-2 ml-1 text-gray-400 flex items-center space-x-1 cursor-pointer">
                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto custom-scrollbar font-mono text-[13px] leading-[22px] pt-2 pb-10 relative">
+        <div class="flex-1 overflow-y-auto custom-scrollbar font-mono text-[13px] leading-[22px] pt-2 pb-10 relative" ref="codeScrollRef">
           <div v-if="codeLines.length === 0" class="absolute inset-0 flex items-center justify-center text-[#858585]">
             <div class="flex flex-col items-center gap-3 animate-pulse">
                 <svg class="w-8 h-8 text-[#4B8BBE]/50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 4h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
@@ -92,7 +92,7 @@
             <svg class="w-3.5 h-3.5 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </div>
         </div>
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 font-mono text-[12px] leading-[1.6]">
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 font-mono text-[12px] leading-[1.6]" ref="terminalScrollRef">
           <div v-for="(log, idx) in terminalLogs" :key="idx" :class="log.color">
             {{ log.text }}
           </div>
@@ -103,7 +103,7 @@
 
     <div class="w-[35%] flex flex-col bg-[#1e1e1e] border-l border-[#2b2b2b] h-full shadow-[-5px_0_15px_rgba(0,0,0,0.2)] z-10 relative">
       <div class="px-4 py-3 flex justify-between items-center border-b border-[#2b2b2b]">
-        <div class="font-bold text-[14px] tracking-wide text-[#e3e3e3]">TRAE</div>
+        <div class="font-bold text-[14px] tracking-wide text-[#e3e3e3]">CODE</div>
         <div class="flex space-x-3 text-[#858585]">
           <svg class="w-4 h-4 hover:text-[#cccccc] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
           <svg class="w-4 h-4 hover:text-[#cccccc] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -128,30 +128,20 @@
 
           <div v-else class="flex flex-col gap-2 w-full">
             
-            <div v-if="block.type === 'thought'" class="flex items-center gap-2 text-[#858585] text-[12px] cursor-pointer hover:text-[#cccccc] transition-colors">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-              <span>思考过程</span>
-              <span v-if="block.isTyping" class="inline-block w-1 h-3 bg-[#858585] ml-1 animate-pulse"></span>
-            </div>
-
-            <div v-if="block.type === 'thought_detail'" class="flex items-start gap-2 pl-5 text-[#858585] text-[12px]">
-               <svg class="w-3.5 h-3.5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-               <span class="font-mono break-all">{{ block.content }}</span>
-            </div>
-
             <div v-if="block.type === 'agent'" class="pl-5 mt-2 mb-2">
                 <div class="bg-[#252526] border border-[#3c3c3c] rounded-md overflow-hidden transition-all duration-300 w-full max-w-[95%]">
                     <div class="px-3 py-2 flex items-center justify-between">
                     <div class="flex items-center gap-2 text-[12px] flex-1 min-w-0">
                         <svg class="w-3.5 h-3.5 text-[#e3ce62] shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         <span class="font-medium text-[#cccccc] truncate">{{ block.filename }}</span>
-                        <span class="text-[#858585] font-mono truncate hidden lg:inline">{{ block.path }}</span>
+                        <span v-if="block.path" class="text-[#858585] font-mono truncate hidden lg:inline">{{ block.path }}</span>
                         <span v-if="block.status === 'success' && block.add > 0" class="text-[#3fb950] font-mono shrink-0">+{{ block.add }}</span>
                         <span v-if="block.status === 'success' && block.del > 0" class="text-[#f85149] font-mono shrink-0">-{{ block.del }}</span>
                     </div>
                     <div class="flex items-center gap-2 shrink-0 ml-3">
                         <svg v-if="block.status === 'loading'" class="animate-spin h-3.5 w-3.5 text-[#cccccc]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        <button v-else-if="block.status === 'success'" class="text-[11px] text-[#cccccc] bg-[#333333] hover:bg-[#444444] px-2 py-0.5 rounded border border-[#444444] transition-colors">查看变更</button>
+                        <button v-else-if="block.status === 'success' && block.path" class="text-[11px] text-[#cccccc] bg-[#333333] hover:bg-[#444444] px-2 py-0.5 rounded border border-[#444444] transition-colors">查看变更</button>
+                        <svg v-else-if="block.status === 'success'" class="w-3.5 h-3.5 text-[#3fb950]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     </div>
                 </div>
@@ -247,6 +237,8 @@ const canDeploy = ref(false)
 const chatBlocks = ref([])
 const currentInput = ref('')
 const chatScrollRef = ref(null)
+const codeScrollRef = ref(null)
+const terminalScrollRef = ref(null)
 
 // ===== 左侧 UI 状态 =====
 const codeLines = ref([])
@@ -257,10 +249,25 @@ const diffActionHandled = ref(false)
 
 // 辅助函数
 const delay = (ms) => new Promise(res => setTimeout(res, ms))
+
 const scrollToBottom = async () => {
   await nextTick()
   if (chatScrollRef.value) {
     chatScrollRef.value.scrollTop = chatScrollRef.value.scrollHeight
+  }
+}
+
+const scrollCodeToBottom = async () => {
+  await nextTick()
+  if (codeScrollRef.value) {
+    codeScrollRef.value.scrollTop = codeScrollRef.value.scrollHeight
+  }
+}
+
+const scrollTerminalToBottom = async () => {
+  await nextTick()
+  if (terminalScrollRef.value) {
+    terminalScrollRef.value.scrollTop = terminalScrollRef.value.scrollHeight
   }
 }
 
@@ -270,49 +277,46 @@ const streamRichText = async (htmlContent) => {
   chatBlocks.value.push(block)
   await scrollToBottom()
   
-  // 简单模拟逐字，实际富文本逐字需要解析 DOM，这里为演示直接显示一部分或者快速跳跃
-  // 为了真实感，我们切分字符串
   const chunkSize = 15
   for (let i = 0; i < htmlContent.length; i += chunkSize) {
     block.content += htmlContent.slice(i, i + chunkSize)
     await delay(10)
     if (i % 60 === 0) await scrollToBottom()
   }
-  block.content = htmlContent // 确保标签完整闭合
+  block.content = htmlContent
   block.isTyping = false
   await scrollToBottom()
 }
 
-// 推入思考过程
-const pushThought = async (text) => {
-  const block = { role: 'ai', type: 'thought', isTyping: true }
-  chatBlocks.value.push(block)
-  await scrollToBottom()
-  await delay(600)
-  block.isTyping = false
-  chatBlocks.value.push({ role: 'ai', type: 'thought_detail', content: text })
-  await scrollToBottom()
-  await delay(800)
+// 代码模拟打字流式推入
+const streamCodeLines = async (linesToAppend, delayMs = 15) => {
+  for (const line of linesToAppend) {
+    codeLines.value.push(line)
+    await delay(delayMs)
+    if(codeLines.value.length % 5 === 0) await scrollCodeToBottom()
+  }
+  await scrollCodeToBottom()
 }
 
-// 推入 Agent 文件修改动作 (对标图3样式)
-const pushFileAgent = async (filename, path, waitTime, addLines = 0, delLines = 0) => {
+// 终端逐行打印
+const streamTerminal = async (logs, delayMs = 120) => {
+  isTerminalRunning.value = true
+  for (const log of logs) {
+    terminalLogs.value.push(log)
+    await delay(delayMs)
+    await scrollTerminalToBottom()
+  }
+  isTerminalRunning.value = false
+}
+
+// 推入 Agent 节点
+const pushAgent = async (filename, path, waitTime, addLines = 0, delLines = 0) => {
   const block = { role: 'ai', type: 'agent', filename, path, status: 'loading', add: addLines, del: delLines }
   chatBlocks.value.push(block)
   await scrollToBottom()
   await delay(waitTime)
   block.status = 'success'
   await scrollToBottom()
-}
-
-// 终端大量日志打印
-const appendTerminal = async (logs, fast = false) => {
-  isTerminalRunning.value = true
-  for (const log of logs) {
-    terminalLogs.value.push(log)
-    await delay(fast ? 30 : 150)
-  }
-  isTerminalRunning.value = false
 }
 
 // 初始化状态
@@ -360,20 +364,33 @@ const handleSend = async () => {
   }
 }
 
-// ===== 状态 1：大规模生成 =====
+// ===== 状态 1：大规模生成，多Agent协同交互编排 =====
 const runState1Sequence = async () => {
-  await pushThought("用户需要为 NanoCar(melodic) 编写完整的寻迹与图传节点代码，包含雷达(rplidar_super)避障与摄像头(astrapro)推流。")
-  await pushThought("开始构建 nanocar_track.py 的大纲：引入必要依赖，编写 PID 控制算法处理图像中线偏移，加入雷达安全订阅，整合 web_video_server 用于多端查看...")
-  
-  // 大量代码写入模拟
-  await delay(500)
-  await pushFileAgent("nanocar_track.py", "src/nanocar_ros/scripts", 3500, 142, 0)
-  codeLines.value = getV1FullCode() // 加载完整的 140+ 行代码
-  
-  // 终端海量输出模拟
-  await pushThought("正在执行工作空间编译与节点预检 (catkin_make)...")
-  await appendTerminal(getTerminalBuildLogs(), true)
+  // 阶段 1：规划
+  await streamRichText("好的，我将为您梳理冰达机器人按迹寻路及图传的完整步骤，并开始生成代码...")
+  await pushAgent("规划项目结构与环境", "", 1500)
+  codeLines.value = [] // 准备流式写入
+  await streamCodeLines(getV1FullCode().slice(0, 45), 15)
 
+  // 阶段 2：底层寻迹
+  await streamRichText("环境规划完毕，开始为您编写核心的ROS寻迹节点逻辑...")
+  await pushAgent("编写 ROS 寻迹底层代码", "nanocar_track.py", 2500, 120, 0)
+  await streamCodeLines(getV1FullCode().slice(45, 140), 10)
+
+  // 阶段 3：图传与通信
+  await streamRichText("寻迹节点完成，正在补充摄像头图传与通信模块...")
+  await pushAgent("编写图传与多端无线通信代码", "nanocar_track.py", 2000, 80, 0)
+  await streamCodeLines(getV1FullCode().slice(140), 10)
+
+  // 阶段 4：代码预检 (终端同步输出)
+  await streamRichText("所有代码生成完毕，正在进行系统自动预检...")
+  const checkAgent = { role: 'ai', type: 'agent', filename: 'AI 代码预检', path: '', status: 'loading' }
+  chatBlocks.value.push(checkAgent)
+  await scrollToBottom()
+  await streamTerminal(getTerminalBuildLogs(), 150) // 终端逐行慢速敲击输出
+  checkAgent.status = 'success'
+
+  // 总结输出
   const summaryHtml = `
     <h3 class="text-[14px] font-bold text-white mb-2 mt-1">已完成！</h3>
     <p class="mb-3">我已经生成了完整的 <code>nanocar_track.py</code> 寻迹节点。该代码集成了 PID 视觉寻迹控制与图像无线转发机制。</p>
@@ -381,7 +398,7 @@ const runState1Sequence = async () => {
     <ul class="list-disc pl-5 space-y-1 mb-3 text-[#cccccc]">
         <li>创建并配置了 <code>NanoCarTracker</code> 核心控制类。</li>
         <li>利用 OpenCV 实现了路网轮廓识别与质心偏移计算。</li>
-        <li>整合了雷达 <code>/scan</code> 话题的紧急避障防撞。</li>
+        <li>整合了雷达话题的紧急避障防撞。</li>
         <li>实现了图像压缩发布用于手机端和电脑端图传。</li>
     </ul>
     <h4 class="font-bold text-[#e3e3e3] mb-1">操作步骤：</h4>
@@ -397,26 +414,35 @@ const runState1Sequence = async () => {
   canDeploy.value = true
 }
 
-// ===== 状态 2：Diff 修正 =====
+// ===== 状态 2：Diff 修正多步交互编排 =====
 const runState2Sequence = async () => {
-  await pushThought("报错分析：rospy.exceptions.ROSException，由于雷达话题名为 /rplidar_scan 而非 /scan 导致。同时底层设备权限不足无法读取摄像头 /dev/video0。")
-  
-  await pushFileAgent("nanocar_track.py", "src/nanocar_ros/scripts", 2500, 3, 1)
-  
-  // 注入 Diff
-  codeLines.value = getV2CodeDiff()
+  // 阶段 1：召回报错
+  await streamRichText("收到报错信息，正在回顾项目上下文并分析错误原因...")
+  await pushAgent("召回上下文与报错分析", "", 1800)
+
+  // 阶段 2：修复话题订阅 (应用第一次 Diff)
+  await streamRichText("分析完毕，确认雷达话题名不匹配，正在为您修改相关代码...")
+  await pushAgent("修改寻迹节点话题订阅", "nanocar_track.py", 2000, 1, 1)
+  codeLines.value = getV2CodeDiff_Part1()
+  await scrollCodeToBottom()
+
+  // 阶段 3：补充底层权限 (应用第二次 Diff)
+  await streamRichText("雷达节点修复完毕，同步排查关联的权限配置...")
+  await pushAgent("补充设备 udev 权限代码", "nanocar_track.py", 2000, 2, 0)
+  codeLines.value = getV2CodeDiff_Full()
+  await scrollCodeToBottom()
+
+  // 阶段 4：二次预检
+  await streamRichText("代码修正已完成，正在执行二次预检...")
+  const checkAgent = { role: 'ai', type: 'agent', filename: 'AI 二次预检', path: '', status: 'loading' }
+  chatBlocks.value.push(checkAgent)
+  await scrollToBottom()
+  await streamTerminal(getV2TerminalPrecheck(), 120) // 终端逐行输出二次预检
+  checkAgent.status = 'success'
+
+  // 触发 Diff Bar 和总结
   showDiffBar.value = true
-  
-  const summaryHtml = `
-    <h3 class="text-[14px] font-bold text-white mb-2 mt-1">修复已提交！</h3>
-    <p class="mb-2">我已在 <code>src/nanocar_ros/scripts/nanocar_track.py</code> 中修改了路由配置：</p>
-    <ul class="list-disc pl-5 space-y-1">
-        <li>修改前：指向 <code>/scan</code></li>
-        <li>修改后：指向 <code>/rplidar_scan</code> 并添加 <code>sudo chmod 777</code> 操作</li>
-    </ul>
-    <p class="mt-3 text-[#e3ce62]">请点击左侧代码区的 <b>[保留]</b> 按钮确认采纳更改，系统将自动重新执行部署。</p>
-  `
-  await streamRichText(summaryHtml)
+  await streamRichText("已修复雷达话题匹配问题，并增加摄像头权限...")
   
   isGenerating.value = false
 }
@@ -425,18 +451,18 @@ const runState2Sequence = async () => {
 const handleAcceptDiff = async () => {
   showDiffBar.value = false
   diffActionHandled.value = true
-  codeLines.value = getV2FullCode() // 应用完整干净的V2代码
+  codeLines.value = getV2FullCode() 
   
   isGenerating.value = true
-  await pushThought("用户确认变更，正在重载 ROS 节点...")
-  await appendTerminal([
+  await pushAgent("应用变更并重载 ROS 环境", "", 1500)
+  await streamTerminal([
     { text: '$ source devel/setup.bash', color: 'text-[#cccccc]' },
     { text: '$ roslaunch nanocar_track start.launch', color: 'text-[#cccccc]' },
     { text: '[INFO] [1712481691.124]: Setting /dev/video0 permissions...', color: 'text-[#3fb950]' },
     { text: '[INFO] [1712481691.562]: Successfully subscribed to /rplidar_scan', color: 'text-[#3fb950]' },
     { text: '[INFO] [1712481692.015]: Video streaming started on port 8080.', color: 'text-[#3fb950]' },
     { text: '✅ [SYSTEM] All subsystems operational.', color: 'text-[#4B8BBE] font-bold' }
-  ], false)
+  ], 100)
   
   await streamRichText("<p>变更已应用并验证通过。系统当前运行良好，可随时打包代码。</p>")
   isGenerating.value = false
@@ -449,7 +475,7 @@ const handleRejectDiff = () => {
   isGenerating.value = false
 }
 
-const navigateToDeploy = () => { alert('触发路由跳转：/deploy') }
+const navigateToDeploy = () => { router.push('/student/deploy') }
 
 // 代码高亮逻辑
 const getLineBgColor = (line) => {
@@ -468,7 +494,7 @@ const getLineTextColor = (line) => {
   return 'text-[#cccccc]'
 }
 
-// ===== 模拟长篇代码生成库 (100多行) =====
+// ===== 模拟长篇代码生成库 (提升至近 200 行级别的标准 ROS 节点规格) =====
 const getV1FullCode = () => {
   const code = [
     { content: '<span class="text-[#c586c0]">#!/usr/bin/env python</span>' },
@@ -483,31 +509,49 @@ const getV1FullCode = () => {
     { content: '<span class="text-[#c586c0]">import</span> cv2' },
     { content: '<span class="text-[#c586c0]">import</span> numpy <span class="text-[#c586c0]">as</span> np' },
     { content: '<span class="text-[#c586c0]">import</span> os' },
+    { content: '<span class="text-[#c586c0]">import</span> sys' },
+    { content: '<span class="text-[#c586c0]">import</span> threading' },
+    { content: '<span class="text-[#c586c0]">import</span> math' },
     { content: '<span class="text-[#c586c0]">from</span> sensor_msgs.msg <span class="text-[#c586c0]">import</span> Image, LaserScan' },
-    { content: '<span class="text-[#c586c0]">from</span> geometry_msgs.msg <span class="text-[#c586c0]">import</span> Twist' },
+    { content: '<span class="text-[#c586c0]">from</span> geometry_msgs.msg <span class="text-[#c586c0]">import</span> Twist, PoseStamped' },
+    { content: '<span class="text-[#c586c0]">from</span> std_msgs.msg <span class="text-[#c586c0]">import</span> String, Int32, Float32' },
+    { content: '<span class="text-[#c586c0]">from</span> nav_msgs.msg <span class="text-[#c586c0]">import</span> Odometry' },
     { content: '<span class="text-[#c586c0]">from</span> cv_bridge <span class="text-[#c586c0]">import</span> CvBridge, CvBridgeError' },
+    { content: '<span class="text-[#c586c0]">from</span> dynamic_reconfigure.server <span class="text-[#c586c0]">import</span> Server' },
     { content: '' },
     { content: '<span class="text-[#569cd6]">class</span> <span class="text-[#4ec9b0]">NanoCarTracker</span>:' },
     { content: '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">__init__</span>(<span class="text-[#569cd6]">self</span>):' },
     { content: '        rospy.init_node(<span class="text-[#ce9178]>"nanocar_track_node"</span>, anonymous=<span class="text-[#569cd6]">True</span>)' },
     { content: '        <span class="text-[#569cd6]">self</span>.bridge = CvBridge()' },
     { content: '        ' },
-    { content: '        <span class="text-[#6a9955]"># PID parameters for tracking</span>' },
-    { content: '        <span class="text-[#569cd6]">self</span>.kp = <span class="text-[#b5cea8]">0.005</span>' },
-    { content: '        <span class="text-[#569cd6]">self</span>.kd = <span class="text-[#b5cea8]">0.001</span>' },
+    { content: '        <span class="text-[#6a9955]"># ===============================</span>' },
+    { content: '        <span class="text-[#6a9955]"># Parameter Initialization</span>' },
+    { content: '        <span class="text-[#6a9955]"># ===============================</span>' },
+    { content: '        <span class="text-[#569cd6]">self</span>.kp = rospy.get_param(<span class="text-[#ce9178]>"~kp"</span>, <span class="text-[#b5cea8]">0.005</span>)' },
+    { content: '        <span class="text-[#569cd6]">self</span>.ki = rospy.get_param(<span class="text-[#ce9178]>"~ki"</span>, <span class="text-[#b5cea8]">0.000</span>)' },
+    { content: '        <span class="text-[#569cd6]">self</span>.kd = rospy.get_param(<span class="text-[#ce9178]>"~kd"</span>, <span class="text-[#b5cea8]">0.001</span>)' },
     { content: '        <span class="text-[#569cd6]">self</span>.last_error = <span class="text-[#b5cea8]">0</span>' },
+    { content: '        <span class="text-[#569cd6]">self</span>.integral_error = <span class="text-[#b5cea8]">0</span>' },
+    { content: '        <span class="text-[#569cd6]">self</span>.max_angular_z = <span class="text-[#b5cea8]">1.5</span>' },
     { content: '        ' },
     { content: '        <span class="text-[#6a9955]"># State variables</span>' },
     { content: '        <span class="text-[#569cd6]">self</span>.safe_distance = <span class="text-[#b5cea8]">0.3</span>  <span class="text-[#6a9955]"># meters</span>' },
     { content: '        <span class="text-[#569cd6]">self</span>.obstacle_detected = <span class="text-[#569cd6]">False</span>' },
+    { content: '        <span class="text-[#569cd6]">self</span>.current_linear_velocity = <span class="text-[#b5cea8]">0.2</span>' },
+    { content: '        <span class="text-[#569cd6]">self</span>.is_active = <span class="text-[#569cd6]">True</span>' },
     { content: '        ' },
-    { content: '        <span class="text-[#6a9955]"># Publishers & Subscribers</span>' },
+    { content: '        <span class="text-[#6a9955]"># Publishers</span>' },
     { content: '        <span class="text-[#569cd6]">self</span>.cmd_pub = rospy.Publisher(<span class="text-[#ce9178]>"cmd_vel"</span>, Twist, queue_size=<span class="text-[#b5cea8]">10</span>)' },
     { content: '        <span class="text-[#569cd6]">self</span>.image_pub = rospy.Publisher(<span class="text-[#ce9178]>"camera/processed/image_raw"</span>, Image, queue_size=<span class="text-[#b5cea8]">2</span>)' },
+    { content: '        <span class="text-[#569cd6]">self</span>.diag_pub = rospy.Publisher(<span class="text-[#ce9178]>"diagnostics/tracker_status"</span>, String, queue_size=<span class="text-[#b5cea8]">1</span>)' },
     { content: '        ' },
+    { content: '        <span class="text-[#6a9955]"># ===============================</span>' },
+    { content: '        <span class="text-[#6a9955]"># Subscribers</span>' },
+    { content: '        <span class="text-[#6a9955]"># ===============================</span>' },
     { content: '        <span class="text-[#6a9955]"># 错误订阅点：使用了默认的 /scan</span>' },
     { content: '        rospy.Subscriber(<span class="text-[#ce9178]>"<span class="text-[#f85149] font-bold">/scan</span>"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)' },
     { content: '        rospy.Subscriber(<span class="text-[#ce9178]>"camera/rgb/image_raw"</span>, Image, <span class="text-[#569cd6]">self</span>.image_callback)' },
+    { content: '        rospy.Subscriber(<span class="text-[#ce9178]>"odom"</span>, Odometry, <span class="text-[#569cd6]">self</span>.odom_callback)' },
     { content: '        ' },
     { content: '        <span class="text-[#6a9955]"># 初始化底层硬件</span>' },
     { content: '        <span class="text-[#569cd6]">self</span>.init_hardware()' },
@@ -521,104 +565,175 @@ const getV1FullCode = () => {
     { content: '            rospy.logwarn(<span class="text-[#ce9178]>"Warning: /dev/video0 not found!"</span>)' },
     { content: '' }
   ]
-  // 填充一些凑行数的逼真逻辑
+  
   const filler = [
+    '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">odom_callback</span>(<span class="text-[#569cd6]">self</span>, msg):',
+    '        <span class="text-[#6a9955]"># Store current odometry for potential dead reckoning fallback</span>',
+    '        <span class="text-[#569cd6]">self</span>.current_pose = msg.pose.pose',
+    '',
     '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">lidar_callback</span>(<span class="text-[#569cd6]">self</span>, msg):',
-    '        <span class="text-[#6a9955]"># Process Lidar data to find front obstacles</span>',
-    '        front_ranges = msg.ranges[<span class="text-[#b5cea8]">340</span>:] + msg.ranges[:<span class="text-[#b5cea8]">20</span>]',
-    '        valid_ranges = [r <span class="text-[#c586c0]">for</span> r <span class="text-[#c586c0]">in</span> front_ranges <span class="text-[#c586c0]">if</span> r > <span class="text-[#b5cea8]">0.01</span>]',
+    '        <span class="text-[#6a9955]"># Process Lidar data to find front obstacles from rplidar_super</span>',
+    '        ranges_len = <span class="text-[#c586c0]">len</span>(msg.ranges)',
+    '        <span class="text-[#c586c0]">if</span> ranges_len == <span class="text-[#b5cea8]">0</span>: <span class="text-[#c586c0]">return</span>',
+    '        ',
+    '        <span class="text-[#6a9955]"># Front 40 degrees cone (-20 to +20 degrees)</span>',
+    '        idx_offset = <span class="text-[#c586c0]">int</span>((<span class="text-[#b5cea8]">20</span> / <span class="text-[#b5cea8]">360.0</span>) * ranges_len)',
+    '        front_ranges = msg.ranges[-idx_offset:] + msg.ranges[:idx_offset]',
+    '        valid_ranges = [r <span class="text-[#c586c0]">for</span> r <span class="text-[#c586c0]">in</span> front_ranges <span class="text-[#c586c0]">if</span> r > <span class="text-[#b5cea8]">0.01</span> <span class="text-[#c586c0]">and</span> <span class="text-[#c586c0]">not</span> math.isinf(r)]',
+    '        ',
     '        <span class="text-[#c586c0]">if</span> valid_ranges <span class="text-[#c586c0]">and</span> min(valid_ranges) < <span class="text-[#569cd6]">self</span>.safe_distance:',
+    '            <span class="text-[#c586c0]">if not</span> <span class="text-[#569cd6]">self</span>.obstacle_detected:',
+    '                rospy.logwarn(<span class="text-[#ce9178]>"Obstacle detected! Stopping..."</span>)',
     '            <span class="text-[#569cd6]">self</span>.obstacle_detected = <span class="text-[#569cd6]">True</span>',
+    '            <span class="text-[#569cd6]">self</span>.diag_pub.publish(<span class="text-[#ce9178]>"STATUS: OBSTACLE_AVOIDANCE_ACTIVE"</span>)',
     '        <span class="text-[#c586c0]">else</span>:',
+    '            <span class="text-[#c586c0]">if</span> <span class="text-[#569cd6]">self</span>.obstacle_detected:',
+    '                rospy.loginfo(<span class="text-[#ce9178]>"Path clear. Resuming..."</span>)',
     '            <span class="text-[#569cd6]">self</span>.obstacle_detected = <span class="text-[#569cd6]">False</span>',
+    '            <span class="text-[#569cd6]">self</span>.diag_pub.publish(<span class="text-[#ce9178]>"STATUS: TRACKING_NORMAL"</span>)',
     '',
     '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">image_callback</span>(<span class="text-[#569cd6]">self</span>, data):',
+    '        <span class="text-[#c586c0]">if not</span> <span class="text-[#569cd6]">self</span>.is_active: <span class="text-[#c586c0]">return</span>',
+    '        ',
     '        <span class="text-[#c586c0]">try</span>:',
     '            cv_image = <span class="text-[#569cd6]">self</span>.bridge.imgmsg_to_cv2(data, <span class="text-[#ce9178]>"bgr8"</span>)',
     '        <span class="text-[#c586c0]">except</span> CvBridgeError <span class="text-[#c586c0]">as</span> e:',
-    '            <span class="text-[#c586c0]">print</span>(e)',
+    '            rospy.logerr(<span class="text-[#ce9178]>"CV Bridge Error: %s"</span> % e)',
     '            <span class="text-[#c586c0]">return</span>',
     '',
+    '        <span class="text-[#6a9955]"># Halt if obstacle is in front</span>',
     '        <span class="text-[#c586c0]">if</span> <span class="text-[#569cd6]">self</span>.obstacle_detected:',
     '            <span class="text-[#569cd6]">self</span>.stop_robot()',
+    '            <span class="text-[#569cd6]">self</span>.publish_annotated_image(cv_image, text=<span class="text-[#ce9178]>"BLOCKED"</span>)',
     '            <span class="text-[#c586c0]">return</span>',
     '',
-    '        <span class="text-[#6a9955]"># Image processing logic</span>',
-    '        hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)',
+    '        <span class="text-[#6a9955]"># ===============================</span>',
+    '        <span class="text-[#6a9955]"># Image Processing Core Logic</span>',
+    '        <span class="text-[#6a9955]"># ===============================</span>',
+    '        <span class="text-[#6a9955]"># 1. Gaussian Blur to reduce noise</span>',
+    '        blurred = cv2.GaussianBlur(cv_image, (<span class="text-[#b5cea8]">5</span>, <span class="text-[#b5cea8]">5</span>), <span class="text-[#b5cea8]">0</span>)',
+    '        ',
+    '        <span class="text-[#6a9955]"># 2. Convert to HSV for robust color extraction</span>',
+    '        hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)',
+    '        ',
+    '        <span class="text-[#6a9955]"># 3. Define line tracking color range (e.g., Black line)</span>',
     '        lower_black = np.array([<span class="text-[#b5cea8]">0</span>, <span class="text-[#b5cea8]">0</span>, <span class="text-[#b5cea8]">0</span>])',
     '        upper_black = np.array([<span class="text-[#b5cea8]">180</span>, <span class="text-[#b5cea8]">255</span>, <span class="text-[#b5cea8]">50</span>])',
     '        mask = cv2.inRange(hsv, lower_black, upper_black)',
     '',
+    '        <span class="text-[#6a9955]"># 4. Region of Interest (ROI) extraction</span>',
     '        h, w, d = cv_image.shape',
     '        search_top = <span class="text-[#c586c0]">int</span>(<span class="text-[#b5cea8]">3</span>*h/<span class="text-[#b5cea8]">4</span>)',
+    '        search_bot = <span class="text-[#c586c0]">int</span>(h)',
     '        mask[<span class="text-[#b5cea8]">0</span>:search_top, <span class="text-[#b5cea8]">0</span>:w] = <span class="text-[#b5cea8]">0</span>',
+    '        mask[search_bot:h, <span class="text-[#b5cea8]">0</span>:w] = <span class="text-[#b5cea8]">0</span>',
     '',
+    '        <span class="text-[#6a9955]"># 5. Centroid calculation via moments</span>',
     '        M = cv2.moments(mask)',
     '        <span class="text-[#c586c0]">if</span> M[<span class="text-[#ce9178]>\'m00\'</span>] > <span class="text-[#b5cea8]">0</span>:',
     '            cx = <span class="text-[#c586c0]">int</span>(M[<span class="text-[#ce9178]>\'m10\'</span>]/M[<span class="text-[#ce9178]>\'m00\'</span>])',
     '            cy = <span class="text-[#c586c0]">int</span>(M[<span class="text-[#ce9178]>\'m01\'</span>]/M[<span class="text-[#ce9178]>\'m00\'</span>])',
     '            cv2.circle(cv_image, (cx, cy), <span class="text-[#b5cea8]">20</span>, (<span class="text-[#b5cea8]">0</span>,<span class="text-[#b5cea8]">0</span>,<span class="text-[#b5cea8]">255</span>), <span class="text-[#b5cea8]>-1</span>)',
     '            ',
-    '            <span class="text-[#6a9955]"># PID calculation</span>',
+    '            <span class="text-[#6a9955]"># PID Controller Execution</span>',
     '            error = cx - w/<span class="text-[#b5cea8]">2</span>',
-    '            angular_z = <span class="text-[#569cd6]">self</span>.kp * error + <span class="text-[#569cd6]">self</span>.kd * (error - <span class="text-[#569cd6]">self</span>.last_error)',
+    '            <span class="text-[#569cd6]">self</span>.integral_error += error',
+    '            ',
+    '            <span class="text-[#6a9955]"># Anti-windup</span>',
+    '            <span class="text-[#569cd6]">self</span>.integral_error = max(min(<span class="text-[#569cd6]">self</span>.integral_error, <span class="text-[#b5cea8]">1000</span>), -<span class="text-[#b5cea8]">1000</span>)',
+    '            ',
+    '            angular_z = (<span class="text-[#569cd6]">self</span>.kp * error) + (<span class="text-[#569cd6]">self</span>.ki * <span class="text-[#569cd6]">self</span>.integral_error) + (<span class="text-[#569cd6]">self</span>.kd * (error - <span class="text-[#569cd6]">self</span>.last_error))',
     '            <span class="text-[#569cd6]">self</span>.last_error = error',
     '            ',
+    '            <span class="text-[#6a9955]"># Clamp angular velocity</span>',
+    '            angular_z = max(min(angular_z, <span class="text-[#569cd6]">self</span>.max_angular_z), -<span class="text-[#569cd6]">self</span>.max_angular_z)',
+    '            ',
+    '            <span class="text-[#6a9955]"># Command dispatch</span>',
     '            twist = Twist()',
-    '            twist.linear.x = <span class="text-[#b5cea8]">0.2</span>',
+    '            twist.linear.x = <span class="text-[#569cd6]">self</span>.current_linear_velocity',
     '            twist.angular.z = -<span class="text-[#c586c0]">float</span>(angular_z)',
     '            <span class="text-[#569cd6]">self</span>.cmd_pub.publish(twist)',
+    '            ',
+    '            <span class="text-[#569cd6]">self</span>.publish_annotated_image(cv_image, text=<span class="text-[#ce9178]>"TRACKING"</span>)',
     '        <span class="text-[#c586c0]">else</span>:',
+    '            <span class="text-[#6a9955]"># Lost line logic - spin to search</span>',
     '            <span class="text-[#569cd6]">self</span>.stop_robot()',
+    '            <span class="text-[#569cd6]">self</span>.publish_annotated_image(cv_image, text=<span class="text-[#ce9178]>"LOST_LINE"</span>)',
     '',
-    '        <span class="text-[#6a9955]"># Compress and publish for Web Viewer</span>',
+    '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">publish_annotated_image</span>(<span class="text-[#569cd6]">self</span>, image, text=<span class="text-[#ce9178]>""</span>):',
+    '        <span class="text-[#6a9955]"># Add HUD overlays for web visualizer</span>',
+    '        font = cv2.FONT_HERSHEY_SIMPLEX',
+    '        cv2.putText(image, text, (<span class="text-[#b5cea8]">10</span>, <span class="text-[#b5cea8]">30</span>), font, <span class="text-[#b5cea8]">1</span>, (<span class="text-[#b5cea8]">0</span>, <span class="text-[#b5cea8]">255</span>, <span class="text-[#b5cea8]">0</span>), <span class="text-[#b5cea8]">2</span>, cv2.LINE_AA)',
+    '        cv2.putText(image, <span class="text-[#ce9178]>"NanoCar Stream"</span>, (<span class="text-[#b5cea8]">10</span>, <span class="text-[#b5cea8]">60</span>), font, <span class="text-[#b5cea8]">0.6</span>, (<span class="text-[#b5cea8]">255</span>, <span class="text-[#b5cea8]">255</span>, <span class="text-[#b5cea8]">0</span>), <span class="text-[#b5cea8]">1</span>)',
+    '        ',
+    '        <span class="text-[#6a9955]"># Compress and publish for Web Server compatibility</span>',
     '        <span class="text-[#c586c0]">try</span>:',
-    '            <span class="text-[#569cd6]">self</span>.image_pub.publish(<span class="text-[#569cd6]">self</span>.bridge.cv2_to_imgmsg(cv_image, <span class="text-[#ce9178]>"bgr8"</span>))',
+    '            msg = <span class="text-[#569cd6]">self</span>.bridge.cv2_to_imgmsg(image, <span class="text-[#ce9178]>"bgr8"</span>)',
+    '            <span class="text-[#569cd6]">self</span>.image_pub.publish(msg)',
     '        <span class="text-[#c586c0]">except</span> CvBridgeError <span class="text-[#c586c0]">as</span> e:',
-    '            <span class="text-[#c586c0]">print</span>(e)',
+    '            rospy.logerr(e)',
     '',
     '    <span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">stop_robot</span>(<span class="text-[#569cd6]">self</span>):',
+    '        <span class="text-[#6a9955]"># Emergency halt sequence</span>',
     '        twist = Twist()',
     '        twist.linear.x = <span class="text-[#b5cea8]">0</span>',
+    '        twist.linear.y = <span class="text-[#b5cea8]">0</span>',
+    '        twist.linear.z = <span class="text-[#b5cea8]">0</span>',
+    '        twist.angular.x = <span class="text-[#b5cea8]">0</span>',
+    '        twist.angular.y = <span class="text-[#b5cea8]">0</span>',
     '        twist.angular.z = <span class="text-[#b5cea8]">0</span>',
     '        <span class="text-[#569cd6]">self</span>.cmd_pub.publish(twist)',
     '',
-    '<span class="text-[#c586c0]">if</span> __name__ == <span class="text-[#ce9178]>"__main__"</span>:',
+    '<span class="text-[#569cd6]">def</span> <span class="text-[#dcdcaa]">main</span>():',
     '    <span class="text-[#c586c0]">try</span>:',
     '        tracker = NanoCarTracker()',
+    '        ',
+    '        <span class="text-[#6a9955]"># Setup background thread for diagnostics</span>',
+    '        rate = rospy.Rate(<span class="text-[#b5cea8]">10</span>) <span class="text-[#6a9955]"># 10 Hz</span>',
+    '        ',
+    '        <span class="text-[#6a9955]"># Spin architecture</span>',
     '        rospy.spin()',
+    '        ',
     '    <span class="text-[#c586c0]">except</span> rospy.ROSInterruptException:',
-    '        <span class="text-[#c586c0]">pass</span>'
-  ];
-  for(let line of filler) code.push({ content: line });
-  return code;
+    '        rospy.logwarn(<span class="text-[#ce9178]>"Tracker node terminated."</span>)',
+    '    <span class="text-[#c586c0]">finally</span>:',
+    '        <span class="text-[#c586c0]">print</span>(<span class="text-[#ce9178]>"Shutting down vision tracker system."</span>)',
+    '',
+    '<span class="text-[#c586c0]">if</span> __name__ == <span class="text-[#ce9178]>"__main__"</span>:',
+    '    main()'
+  ]
+  
+  for(let line of filler) code.push({ content: line })
+  return code
 }
 
-const getV2CodeDiff = () => {
-  const code = getV1FullCode();
-  code.splice(35, 1, { content: '        <span class="text-[#6a9955]"># 修改：使用冰达 NanoCar 真实的雷达话题</span>' });
-  code.splice(36, 1, 
-      { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'removed' }
-  );
-  code.splice(37, 0, 
-      { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/rplidar_scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'added' }
-  );
-  
-  code.splice(44, 0, 
+// Diff Part 1: 修改话题名
+const getV2CodeDiff_Part1 = () => {
+  const code = getV1FullCode()
+  code.splice(57, 1, { content: '        <span class="text-[#6a9955]"># 修改：使用冰达 NanoCar 真实的雷达话题</span>' })
+  code.splice(58, 1, { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'removed' })
+  code.splice(59, 0, { content: '        rospy.Subscriber(<span class="text-[#ce9178]">"/rplidar_scan"</span>, LaserScan, <span class="text-[#569cd6]">self</span>.lidar_callback)', diffType: 'added' })
+  return code
+}
+
+// Diff Part 2: 完整包含 Diff 1 和 Diff 2
+const getV2CodeDiff_Full = () => {
+  const code = getV2CodeDiff_Part1()
+  code.splice(68, 0, 
       { content: '        <span class="text-[#6a9955]"># 增加：赋予设备节点最高权限，解决 Permission Denied</span>', diffType: 'added' },
       { content: '        os.system(<span class="text-[#ce9178]>"sudo chmod 777 /dev/video0"</span>)', diffType: 'added' }
-  );
-  return code;
+  )
+  return code
 }
 
+// 将 Diff 样式剥离生成终版代码
 const getV2FullCode = () => {
-  const code = getV2CodeDiff().filter(c => c.diffType !== 'removed').map(c => {
-    return { content: c.content } // strip diff styling
+  return getV2CodeDiff_Full().filter(c => c.diffType !== 'removed').map(c => {
+    return { content: c.content } 
   })
-  return code;
 }
 
-// 终端海量日志
+// ===== 终端日志 =====
 const getTerminalBuildLogs = () => {
     let logs = [
         { text: '$ source /opt/ros/melodic/setup.bash', color: 'text-[#cccccc]' },
@@ -631,27 +746,50 @@ const getTerminalBuildLogs = () => {
         { text: '####', color: 'text-[#858585]' },
         { text: '#### Running command: "make cmake_check_build_system" in "/home/nanocar/nanocar_ws/build"', color: 'text-[#858585]' },
         { text: '####', color: 'text-[#858585]' }
-    ];
+    ]
     for(let i=1; i<=15; i++) {
-        logs.push({ text: `[ ${Math.floor(i*6)}%] Built target subsystem_component_${i}`, color: 'text-[#3fb950]' });
+        logs.push({ text: `[ ${Math.floor(i*6)}%] Built target subsystem_component_${i}`, color: 'text-[#3fb950]' })
     }
-    logs.push({ text: '[ 98%] Built target nanocar_ros', color: 'text-[#3fb950]' });
-    logs.push({ text: '[100%] Built target web_video_server', color: 'text-[#3fb950]' });
-    logs.push({ text: '✓ 依赖树完整，预检通过。', color: 'text-[#4B8BBE] font-bold' });
-    return logs;
+    logs.push({ text: '[ 98%] Built target nanocar_ros', color: 'text-[#3fb950]' })
+    logs.push({ text: '[100%] Built target web_video_server', color: 'text-[#3fb950]' })
+    logs.push({ text: '✓ 依赖树完整，预检通过。', color: 'text-[#4B8BBE] font-bold' })
+    return logs
+}
+
+const getTerminalPrecheckV2 = () => {
+    return [
+        { text: '$ python -m py_compile src/nanocar_ros/scripts/nanocar_track.py', color: 'text-[#cccccc]' },
+        { text: 'Checking syntax and imports...', color: 'text-[#858585]' },
+        { text: '[OK] Syntax check passed.', color: 'text-[#3fb950]' },
+        { text: 'Verifying dependency references...', color: 'text-[#858585]' },
+        { text: '... /rplidar_scan topic exists in message definitions.', color: 'text-[#3fb950]' },
+        { text: '... os.system import verified.', color: 'text-[#3fb950]' },
+        { text: '✓ 代码逻辑二次验证通过，等待用户确认采纳。', color: 'text-[#4B8BBE] font-bold' }
+    ]
 }
 
 const getV1TerminalError = () => {
-    const logs = getTerminalBuildLogs();
-    logs.push({ text: '$ roslaunch nanocar_track start.launch', color: 'text-white mt-4' });
-    logs.push({ text: '... logging to /home/nanocar/.ros/log/...', color: 'text-[#858585]' });
-    logs.push({ text: 'started roslaunch server http://nanocar:41951/', color: 'text-[#cccccc]' });
-    logs.push({ text: 'SUMMARY\n========\n\nPARAMETERS\n * /rosdistro: melodic\n * /rosversion: 1.14.13', color: 'text-[#cccccc]' });
-    logs.push({ text: 'NODES\n  /\n    nanocar_track_node (nanocar_ros/nanocar_track.py)', color: 'text-[#cccccc]' });
-    logs.push({ text: '[ERROR] [1712481690.123456]: Cannot connect to Lidar topic /scan. Retrying...', color: 'text-[#f85149]' });
-    logs.push({ text: '[ERROR] [1712481690.124888]: IOError: [Errno 13] Permission denied: \'/dev/video0\'', color: 'text-[#f85149]' });
-    logs.push({ text: '[FATAL] [1712481690.125001]: Node crashed with rospy.exceptions.ROSException.', color: 'text-[#f85149] font-bold' });
-    return logs;
+    const logs = getTerminalBuildLogs()
+    logs.push({ text: '$ roslaunch nanocar_track start.launch', color: 'text-white mt-4' })
+    logs.push({ text: '... logging to /home/nanocar/.ros/log/...', color: 'text-[#858585]' })
+    logs.push({ text: 'started roslaunch server http://nanocar:41951/', color: 'text-[#cccccc]' })
+    logs.push({ text: 'SUMMARY\n========\n\nPARAMETERS\n * /rosdistro: melodic\n * /rosversion: 1.14.13', color: 'text-[#cccccc]' })
+    logs.push({ text: 'NODES\n  /\n    nanocar_track_node (nanocar_ros/nanocar_track.py)', color: 'text-[#cccccc]' })
+    logs.push({ text: '[ERROR] [1712481690.123456]: Cannot connect to Lidar topic /scan. Retrying...', color: 'text-[#f85149]' })
+    logs.push({ text: '[ERROR] [1712481690.124888]: IOError: [Errno 13] Permission denied: \'/dev/video0\'', color: 'text-[#f85149]' })
+    logs.push({ text: '[FATAL] [1712481690.125001]: Node crashed with rospy.exceptions.ROSException.', color: 'text-[#f85149] font-bold' })
+    return logs
+}
+
+const getV2TerminalPrecheck = () => {
+    return [
+        { text: '$ rosrun rospy_tutorials precheck.py nanocar_track.py', color: 'text-[#cccccc]' },
+        { text: 'Validating topic subscriptions...', color: 'text-[#858585]' },
+        { text: '↳ /rplidar_scan detected. OK.', color: 'text-[#3fb950]' },
+        { text: 'Validating system level bindings...', color: 'text-[#858585]' },
+        { text: '↳ udev rule fallback (sudo chmod 777) found. OK.', color: 'text-[#3fb950]' },
+        { text: '✓ 预检完成，代码健康状态：良好', color: 'text-[#4B8BBE] font-bold' }
+    ]
 }
 
 const getV2TerminalSuccess = () => {

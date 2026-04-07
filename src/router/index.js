@@ -130,6 +130,18 @@ const routes = [
         name: 'StudentAiGenerate',
         component: () => import('../views/StudentAiGenerate.vue'),
         meta: { title: 'AI智能助手' }
+      },
+      {
+        path: 'deploy',
+        name: 'StudentDeploy',
+        component: () => import('../views/StudentDeploy.vue'),
+        meta: { title: '代码部署' }
+      },
+      {
+        path: 'debug',
+        name: 'StudentDebug',
+        component: () => import('../views/StudentDebug.vue'),
+        meta: { title: '机器人调试' }
       }
     ]
   },
