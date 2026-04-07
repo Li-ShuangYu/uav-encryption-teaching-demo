@@ -1,19 +1,10 @@
 <script lang="ts" setup>
 import { ref, onMounted, nextTick, shallowRef } from "vue";
 import * as echarts from "echarts";
+import MdzxLayout from "@/components/MdzxLayout.vue";
+import { Document, UserFilled, Odometer, Medal } from '@element-plus/icons-vue';
 
 // ================= 数据定义 =================
-
-const navItems = [
-  { name: "我的课程", active: true },
-  { name: "教学管理", dropdown: true },
-  { name: "课程资源", dropdown: true },
-  { name: "学员管理", dropdown: true },
-  { name: "AI智能体", dropdown: false },
-  { name: "个人中心", dropdown: true },
-  { name: "使用手册", dropdown: false },
-];
-
 const studentInfo = ref({
   name: "张三",
   gender: "男",
@@ -179,25 +170,7 @@ window.addEventListener("resize", () => {
     </aside>
 
     <div class="main-content">
-      <header class="top-header">
-        <div class="header-left">
-          <el-icon class="sys-logo" :size="22" color="#409EFF"><Box /></el-icon>
-          <span class="sys-title">密盾智学 / 学员画像</span>
-        </div>
-        <div class="header-right">
-          <div class="nav-links">
-            <div 
-              v-for="(item, index) in navItems" 
-              :key="index" 
-              class="nav-item" 
-              :class="{ active: item.active }"
-            >
-              {{ item.name }}
-              <el-icon v-if="item.dropdown" class="ml-1"><CaretBottom /></el-icon>
-            </div>
-          </div>
-        </div>
-      </header>
+      <MdzxLayout />
 
       <div class="workspace">
         
@@ -296,7 +269,6 @@ window.addEventListener("resize", () => {
 }
 
 .mr-1 { margin-right: 6px; }
-.ml-1 { margin-left: 4px; font-size: 12px; }
 
 /* ================== 左侧边栏 ================== */
 .sidebar {
@@ -380,58 +352,6 @@ window.addEventListener("resize", () => {
   display: flex;
   flex-direction: column;
   min-width: 0;
-}
-
-/* 顶部导航条 */
-.top-header {
-  height: 60px;
-  background-color: #fff;
-  border-bottom: 1px solid #e8e8e8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  flex-shrink: 0;
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    
-    .sys-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #303133;
-      letter-spacing: 1px;
-    }
-  }
-
-  .header-right {
-    .nav-links {
-      display: flex;
-      gap: 10px;
-      
-      .nav-item {
-        padding: 8px 16px;
-        font-size: 14px;
-        color: #606266;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        border-radius: 4px;
-        
-        &.active {
-          background-color: #e6f1fc;
-          color: #409EFF;
-          font-weight: 500;
-        }
-
-        &:hover:not(.active) {
-          color: #409EFF;
-        }
-      }
-    }
-  }
 }
 
 /* 工作区 */

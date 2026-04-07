@@ -15,7 +15,7 @@
           </svg>
           <span class="text-xl font-bold tracking-wider" :class="theme.text">部署中控台 (DE-OPS)</span>
         </div>
-        <div class="text-lg px-2 py-1 border rounded" :class="theme.badge">
+        <div class="text-xs px-2 py-1 border rounded" :class="theme.badge">
           STATE_ID: {{ demoState }}
         </div>
       </div>
@@ -25,43 +25,43 @@
         <div class="flex flex-col rounded-lg border p-5 relative overflow-hidden group" :class="[theme.border, theme.bg]">
           <div class="absolute -right-10 -top-10 w-32 h-32 blur-3xl opacity-20 rounded-full" :class="theme.glow"></div>
           
-          <h3 class="text-lg font-bold text-gray-400 mb-2 uppercase tracking-widest">Target Payload</h3>
+          <h3 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Target Payload</h3>
           
           <div v-if="!isState2" class="flex flex-col gap-2">
             <div class="text-xl font-bold text-blue-400 flex items-center">
               待部署版本：V1.0.tar.gz
-              <span class="ml-2 text-lg bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded">STABLE</span>
+              <span class="ml-2 text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded">STABLE</span>
             </div>
-            <p class="text-lg text-gray-400">基于最新 AI 推演生成的标准加密通信模块，已通过静态检查。</p>
+            <p class="text-sm text-gray-400">基于最新 AI 推演生成的标准加密通信模块，已通过静态检查。</p>
           </div>
 
           <div v-else class="flex flex-col gap-2">
             <div class="text-xl font-bold text-red-500 flex items-center">
               待部署版本：V2.0_Fixed.tar.gz
-              <span class="ml-2 text-lg bg-red-900/50 text-red-300 px-2 py-0.5 rounded animate-pulse">HOTFIX</span>
+              <span class="ml-2 text-xs bg-red-900/50 text-red-300 px-2 py-0.5 rounded animate-pulse">HOTFIX</span>
             </div>
-            <p class="text-lg text-gray-300">
+            <p class="text-sm text-gray-300">
               <span class="text-red-400 font-bold">[警告]</span> 包含 1 处高优先级的漏洞修复（侧信道泄露修补），请尽快下发覆盖受感染节点。
             </p>
           </div>
 
-          <div class="mt-4 grid grid-cols-2 gap-4 text-lg text-gray-500 border-t pt-3" :class="theme.border">
+          <div class="mt-4 grid grid-cols-2 gap-4 text-xs text-gray-500 border-t pt-3" :class="theme.border">
             <div>SIZE: <span class="text-gray-300">42.8 MB</span></div>
             <div>CHECKSUM: <span class="text-gray-300 font-mono">a8f9c2...11b</span></div>
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label class="text-lg font-bold text-gray-400 uppercase tracking-widest">Target Device</label>
+          <label class="text-sm font-bold text-gray-400 uppercase tracking-widest">Target Device</label>
           <div class="relative">
-            <select disabled class="w-full bg-[#111827] border appearance-none text-gray-200 text-lg rounded focus:ring-blue-500 focus:border-blue-500 block p-3 pr-8" :class="theme.border">
+            <select disabled class="w-full bg-[#111827] border appearance-none text-gray-200 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-3 pr-8" :class="theme.border">
               <option selected>冰达机器人 NanoCar (IP: 192.168.1.100)</option>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </div>
           </div>
-          <p class="text-lg text-gray-500 mt-1 flex items-center">
+          <p class="text-xs text-gray-500 mt-1 flex items-center">
             <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
             SSH 端口已开启 (Port: 22)
           </p>
@@ -92,20 +92,20 @@
       
       <div class="h-24 border-b flex z-10" :class="theme.border">
         <div class="flex-1 border-r flex flex-col justify-center items-center" :class="theme.border">
-          <span class="text-gray-500 text-lg mb-1">CPU 占用率</span>
-          <span class="text-2xl font-mono text-gray-200">12<span class="text-lg">%</span></span>
+          <span class="text-gray-500 text-xs mb-1">CPU 占用率</span>
+          <span class="text-2xl font-mono text-gray-200">12<span class="text-sm">%</span></span>
         </div>
         <div class="flex-1 border-r flex flex-col justify-center items-center" :class="theme.border">
-          <span class="text-gray-500 text-lg mb-1">内存 (RAM)</span>
-          <span class="text-2xl font-mono text-gray-200">1.4<span class="text-lg">/4 GB</span></span>
+          <span class="text-gray-500 text-xs mb-1">内存 (RAM)</span>
+          <span class="text-2xl font-mono text-gray-200">1.4<span class="text-sm">/4 GB</span></span>
         </div>
         <div class="flex-1 border-r flex flex-col justify-center items-center" :class="theme.border">
-          <span class="text-gray-500 text-lg mb-1">主板温度</span>
-          <span class="text-2xl font-mono" :class="isState2 ? 'text-orange-400' : 'text-green-400'">45<span class="text-lg">°C</span></span>
+          <span class="text-gray-500 text-xs mb-1">主板温度</span>
+          <span class="text-2xl font-mono" :class="isState2 ? 'text-orange-400' : 'text-green-400'">45<span class="text-sm">°C</span></span>
         </div>
         <div class="flex-1 flex flex-col justify-center items-center relative overflow-hidden">
-          <span class="text-gray-500 text-lg mb-1">ROS Master</span>
-          <span class="text-green-500 text-lg border border-green-500/50 bg-green-900/20 px-3 py-1 rounded-full font-bold">ONLINE</span>
+          <span class="text-gray-500 text-xs mb-1">ROS Master</span>
+          <span class="text-green-500 text-sm border border-green-500/50 bg-green-900/20 px-3 py-1 rounded-full font-bold">ONLINE</span>
         </div>
       </div>
 
@@ -129,12 +129,12 @@
             <circle cx="130" cy="35" r="5" :fill="isState2 ? '#f97316' : '#3b82f6'"/>
           </svg>
 
-          <div class="absolute top-10 right-0 bg-[#0f172a]/80 border p-2 text-lg font-mono text-gray-400 rounded" :class="theme.border">
+          <div class="absolute top-10 right-0 bg-[#0f172a]/80 border p-2 text-[10px] font-mono text-gray-400 rounded" :class="theme.border">
             <p>> V_BAT: 11.4V</p>
             <p>> IMU: OK</p>
             <p>> LIDAR: SCANNING</p>
           </div>
-          <div class="absolute bottom-10 left-0 bg-[#0f172a]/80 border p-2 text-lg font-mono text-gray-400 rounded" :class="theme.border">
+          <div class="absolute bottom-10 left-0 bg-[#0f172a]/80 border p-2 text-[10px] font-mono text-gray-400 rounded" :class="theme.border">
             <p>eth0: 192.168.1.100</p>
             <p>rx/tx: 1.2M/45K</p>
           </div>
@@ -147,7 +147,7 @@
       <div v-if="isDeploying" class="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="w-[600px] border rounded-lg bg-[#0a0f16] shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col" :class="theme.border">
           <div class="px-4 py-2 border-b flex justify-between items-center bg-black/50" :class="theme.border">
-            <span class="text-lg font-mono font-bold tracking-widest text-gray-400">SECURE_SHELL_DEPLOYMENT</span>
+            <span class="text-xs font-mono font-bold tracking-widest text-gray-400">SECURE_SHELL_DEPLOYMENT</span>
             <span class="flex space-x-1">
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
@@ -155,7 +155,7 @@
             </span>
           </div>
           
-          <div class="h-64 p-4 font-mono text-lg overflow-y-hidden flex flex-col justify-end relative">
+          <div class="h-64 p-4 font-mono text-sm overflow-y-hidden flex flex-col justify-end relative">
             <div class="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.05)_1px,transparent_1px)] bg-[length:100%_4px] pointer-events-none"></div>
             <div v-for="(log, index) in deployLogs" :key="index" class="text-green-400 mb-1 leading-tight animate-fade-in-up">
               <span class="text-gray-500">[{{ new Date().toISOString().substring(11, 19) }}]</span> 
@@ -166,7 +166,7 @@
           </div>
 
           <div class="p-4 border-t bg-[#0a0f16]" :class="theme.border">
-            <div class="flex justify-between text-lg font-mono mb-2" :class="theme.text">
+            <div class="flex justify-between text-xs font-mono mb-2" :class="theme.text">
               <span>PROGRESS</span>
               <span>{{ deployProgress.toFixed(0) }}%</span>
             </div>
@@ -258,7 +258,7 @@ const startDeploy = () => {
 
   // 动画结束后跳转
   setTimeout(() => {
-    router.push('/student-debug/debug')
+    router.push('/student/debug')
   }, 3000) // 延迟一点让用户看清 100%
 }
 </script>

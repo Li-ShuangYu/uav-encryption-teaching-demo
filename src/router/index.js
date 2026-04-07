@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '../components/Layout.vue'
 import StudentLayout from '../components/StudentLayout.vue'
+import MdzxDebugLayout from '../components/MdzxDebugLayout.vue'
 
 const routes = [
   // ================= 初始页面 =================
@@ -124,7 +125,15 @@ const routes = [
         name: 'StudentMyScoreResult',
         component: () => import('../views/student/StudentMyScoreResult.vue'),
         meta: { title: '学生工作台' }
-      },
+      }
+    ]
+  },
+  // ================= 学生端调试页面（使用 MdzxDebugLayout）=================
+  {
+    path: '/student-debug',
+    component: MdzxDebugLayout,
+    redirect: '/student-debug/robot-debug',
+    children: [
       {
         path: 'robot-debug',
         name: 'StudentAiGenerate',

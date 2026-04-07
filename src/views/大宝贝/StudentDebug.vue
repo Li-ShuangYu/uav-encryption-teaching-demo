@@ -9,41 +9,25 @@
             <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div class="w-3 h-3 rounded-full bg-green-500"></div>
           </div>
-          <span class="ml-4 text-lg font-mono text-gray-400">root@robot-edge-core:~ /ros2_ws</span>
+          <span class="ml-4 text-xs font-mono text-gray-400">root@robot-edge-core:~ /ros2_ws</span>
         </div>
-        <div class="text-lg text-gray-500 font-mono">
+        <div class="text-xs text-gray-500 font-mono">
           <span>MEM: 42%</span> | <span>CPU: {{ cpuUsage }}%</span>
         </div>
       </div>
 
       <div 
         ref="terminalRef" 
-        class="flex-1 overflow-y-auto p-4 font-mono text-lg space-y-1 custom-scrollbar bg-[#090b10] scroll-smooth"
+        class="flex-1 overflow-y-auto p-4 font-mono text-sm space-y-1 custom-scrollbar bg-[#090b10]"
       >
-        <div v-for="log in logs" :key="log.id" :id="'log-' + log.id" :class="getLogClass(log.type)" class="leading-relaxed break-all transition-colors duration-300">
-          
-          <template v-if="log.type !== 'diff'">
-            {{ log.text }}
-          </template>
-          
-          <div v-else class="my-4 p-4 bg-[#0d1117] border border-gray-700 rounded-lg shadow-inner text-lg tracking-wider w-11/12 max-w-3xl">
-            <div class="text-gray-500 mb-2">// Patch applied to: /opt/ros/lidar_node.cpp</div>
-            <div class="flex items-center text-red-400 bg-red-950/40 px-3 py-1.5 line-through">
-              <span class="w-8 inline-block text-gray-600 select-none">-</span>
-              <span>node->set_parameter("frame_id", "");</span>
-            </div>
-            <div class="flex items-center text-green-400 bg-green-950/40 px-3 py-1.5 mt-1">
-              <span class="w-8 inline-block text-gray-600 select-none">+</span>
-              <span>node->set_parameter("frame_id", "laser_link");</span>
-            </div>
-          </div>
-
+        <div v-for="log in logs" :key="log.id" :class="getLogClass(log.type)" class="leading-relaxed break-all transition-colors duration-300">
+          {{ log.text }}
         </div>
       </div>
 
       <div class="h-16 border-t border-gray-700 bg-[#1e293b] flex items-center justify-center shrink-0">
         <transition name="fade" mode="out-in">
-          <div v-if="!isFatalTriggered && !isSuccessTriggered" class="text-gray-500 text-lg animate-pulse flex items-center">
+          <div v-if="!isFatalTriggered && !isSuccessTriggered" class="text-gray-500 text-sm animate-pulse flex items-center">
             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -76,11 +60,11 @@
       
       <div :class="['flex-1 bg-[#1e293b] border rounded-xl relative overflow-hidden shadow-lg flex flex-col transition-colors duration-700', panelThemeClass]">
         <div class="h-8 bg-[#0f172a]/80 border-b border-gray-700 px-3 flex items-center justify-between shrink-0 absolute w-full z-10">
-          <span class="text-lg font-bold text-gray-300 flex items-center">
+          <span class="text-xs font-bold text-gray-300 flex items-center">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             前置广角图传 (PORT 8080)
           </span>
-          <span :class="demoState === '2' && isSuccessTriggered ? 'text-green-500' : 'text-red-500'" class="text-lg flex items-center">
+          <span :class="demoState === '2' && isSuccessTriggered ? 'text-green-500' : 'text-red-500'" class="text-[10px] flex items-center">
             <span class="w-2 h-2 rounded-full mr-1" :class="demoState === '2' && isSuccessTriggered ? 'bg-green-500' : 'bg-red-500'"></span>
             {{ demoState === '2' && isSuccessTriggered ? 'LIVE' : 'DISCONNECTED' }}
           </span>
@@ -91,7 +75,7 @@
             <div class="tv-static opacity-20 absolute inset-0"></div>
             <div class="scan-line absolute inset-0"></div>
             <svg class="w-12 h-12 text-gray-600 mb-2 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path></svg>
-            <span class="text-gray-500 text-lg tracking-widest font-mono relative z-10">NO SIGNAL</span>
+            <span class="text-gray-500 text-sm tracking-widest font-mono relative z-10">NO SIGNAL</span>
           </div>
 
           <div v-else class="absolute inset-0 bg-[#0d151c] flex items-center justify-center overflow-hidden grid-bg">
@@ -100,7 +84,7 @@
              <div class="absolute w-24 h-24 border-2 border-green-400 bg-green-400/10 crosshair flex items-center justify-center">
                 <div class="w-1 h-1 bg-green-400 rounded-full"></div>
              </div>
-             <div class="absolute top-10 left-3 text-green-400 font-mono text-lg flex flex-col gap-1">
+             <div class="absolute top-10 left-3 text-green-400 font-mono text-[10px] flex flex-col gap-1">
                  <span>REC [■]</span>
                  <span>FPS: {{ Math.floor(Math.random() * 5 + 28) }}</span>
                  <span>PITCH: -5.2°</span>
@@ -111,11 +95,11 @@
 
       <div :class="['flex-1 bg-[#1e293b] border rounded-xl relative overflow-hidden shadow-lg flex flex-col transition-colors duration-700', panelThemeClass]">
         <div class="h-8 bg-[#0f172a]/80 border-b border-gray-700 px-3 flex items-center justify-between shrink-0 absolute w-full z-10">
-          <span class="text-lg font-bold text-gray-300 flex items-center">
+          <span class="text-xs font-bold text-gray-300 flex items-center">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
             2D 激光雷达 (/scan)
           </span>
-          <span :class="demoState === '2' && isSuccessTriggered ? 'text-green-500' : 'text-red-500'" class="text-lg flex items-center">
+          <span :class="demoState === '2' && isSuccessTriggered ? 'text-green-500' : 'text-red-500'" class="text-[10px] flex items-center">
              <span class="w-2 h-2 rounded-full mr-1 animate-pulse" :class="demoState === '2' && isSuccessTriggered ? 'bg-green-500' : 'bg-red-500'"></span>
              {{ demoState === '2' && isSuccessTriggered ? 'SCANNING' : 'OFFLINE' }}
           </span>
@@ -146,6 +130,7 @@
                          transition: 'all 0.4s ease-out'
                      }">
                 </div>
+
              </div>
           </div>
         </div>
@@ -162,7 +147,10 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const demoState = ref(localStorage.getItem('demo_state') || '1')
 
+// 控制整体视觉风格: 'default' | 'red' | 'green'
+// 事实判定：若处于状态2，进入页面直接继承红色报错风格
 const currentTheme = ref(demoState.value === '2' ? 'red' : 'default')
+
 const logs = ref([])
 const terminalRef = ref(null)
 const isFatalTriggered = ref(false)
@@ -170,30 +158,31 @@ const isSuccessTriggered = ref(false)
 const cpuUsage = ref(12)
 const radarPoints = ref([])
 
-// 新增：滚动锁定状态，防止新日志把页面强行拉到底部
-const autoScrollEnabled = ref(true) 
-
 let logInterval = null
 let cpuInterval = null
 let radarInterval = null
 
+// 计算属性：根容器背景主题
 const rootThemeClass = computed(() => {
     if (currentTheme.value === 'red') return 'bg-[#1a0f11]'
     if (currentTheme.value === 'green') return 'bg-[#0f1a14]'
     return 'bg-[#0f172a]'
 })
 
+// 计算属性：核心模块边框主题
 const panelThemeClass = computed(() => {
     if (currentTheme.value === 'red') return 'border-red-900/60 shadow-[0_0_20px_rgba(220,38,38,0.15)]'
     if (currentTheme.value === 'green') return 'border-green-900/60 shadow-[0_0_20px_rgba(34,197,94,0.15)]'
     return 'border-gray-700'
 })
 
+// 生成时间戳
 const getTimestamp = () => {
     const now = new Date()
     return `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}]`
 }
 
+// 自动滚动到底部
 const scrollToBottom = async () => {
     await nextTick()
     if (terminalRef.value) {
@@ -201,38 +190,38 @@ const scrollToBottom = async () => {
     }
 }
 
-// 修改：增加全局自动滚动开关的判断
-const pushLog = (type, text, autoScroll = true) => {
+// 写入单条日志并触发主题检测
+const pushLog = (type, text) => {
+    // 判定：出现第一条致命错误（fatal）且当前为默认状态时，切换为红色风格
     if (type === 'fatal' && currentTheme.value === 'default') {
         currentTheme.value = 'red'
     }
+    // 判定：出现第一条成功日志（success）且当前为红色风格时，切换为绿色风格
     if (type === 'success' && currentTheme.value === 'red') {
         currentTheme.value = 'green'
     }
 
     logs.value.push({
-        id: Date.now() + Math.random().toString().slice(2,8),
+        id: Date.now() + Math.random(),
         type,
-        text: text ? `${getTimestamp()} ${text}` : '' 
+        text: `${getTimestamp()} ${text}`
     })
     
     if (logs.value.length > 300) {
         logs.value.shift()
     }
-    
-    // 只有当传入 autoScroll 为 true，并且全局允许自动滚动时，才拉到底部
-    if (autoScroll && autoScrollEnabled.value) {
-        scrollToBottom()
-    }
+    scrollToBottom()
 }
 
+// 动态雷达扫描点生成机制
 const startRadarSimulation = () => {
     radarInterval = setInterval(() => {
         const points = []
+        // 随机生成 3 到 6 个扫描点
         const numPoints = Math.floor(Math.random() * 4) + 3 
         for (let i = 0; i < numPoints; i++) {
-            const angle = Math.random() * Math.PI * 2 
-            const radius = Math.random() * 70 + 15 
+            const angle = Math.random() * Math.PI * 2 // 360度随机弧度
+            const radius = Math.random() * 70 + 15 // 限制在雷达圈的像素半径内
             points.push({
                 id: i,
                 x: Math.cos(angle) * radius,
@@ -244,12 +233,14 @@ const startRadarSimulation = () => {
     }, 700)
 }
 
+// CPU波动模拟
 const startCpuSim = () => {
     cpuInterval = setInterval(() => {
         cpuUsage.value = Math.floor(Math.random() * 15 + (demoState.value === '1' ? 80 : 15))
     }, 2000)
 }
 
+// 主启动逻辑
 const startLogging = () => {
     pushLog('info', '[SYSTEM] Booting Robot Operating System 2 (Humble)...')
     pushLog('info', '[SYSTEM] Loading kernel modules...')
@@ -269,6 +260,7 @@ const startLogging = () => {
     }, 3500)
 }
 
+// 状态1：注定失败的剧本
 const triggerFailScenario = () => {
     isFatalTriggered.value = true
     pushLog('fatal', '[FATAL] [ROS_CORE]: Cannot find topic /scan. rplidar_super failed to match.')
@@ -291,50 +283,17 @@ const triggerFailScenario = () => {
     }, 700)
 }
 
+// 状态2：优化后的成功剧本
 const triggerSuccessScenario = () => {
     isSuccessTriggered.value = true
-    
-    pushLog('info', '[AI_AGENT] 分析系统日志完成，定位到异常根因...')
-    setTimeout(() => pushLog('info', '[AI_AGENT] 发现异常配置：/scan 节点依赖的坐标系参数丢失。'), 800)
-    setTimeout(() => pushLog('info', '[AI_AGENT] 正在生成并应用热更新代码补丁...'), 1800)
+    pushLog('success', '[SUCCESS] /rplidar_scan connected at 115200 baud. Map loading...')
+    pushLog('info', '[INFO] Video stream port 8080 opened. Format: H.264.')
+    pushLog('success', '[SYSTEM] Nodelet initialization complete. Sensor fusion active.')
+    pushLog('success', '[SYSTEM] All core nodes running. Ready for autonomous navigation.')
 
-    const diffLogId = Date.now() + Math.random().toString().slice(2,8);
-    setTimeout(() => {
-        logs.value.push({
-            id: diffLogId,
-            type: 'diff',
-            text: ''
-        })
-    }, 2800)
+    // 触发雷达动画数据
+    startRadarSimulation()
 
-    setTimeout(async () => {
-        autoScrollEnabled.value = false 
-        
-        pushLog('success', '[SYSTEM] 变更已完成，请确认是否采纳。', false) 
-        
-        await nextTick()
-        
-        setTimeout(() => {
-            const diffEl = document.getElementById('log-' + diffLogId)
-            if (diffEl) {
-                // 计算 diff 元素相对于终端容器的位置
-                const terminalRect = terminalRef.value.getBoundingClientRect()
-                const diffRect = diffEl.getBoundingClientRect()
-                const scrollPosition = diffRect.top - terminalRect.top + terminalRef.value.scrollTop - 100
-                
-                terminalRef.value.scrollTo({
-                    top: scrollPosition,
-                    behavior: 'smooth'
-                })
-            }
-        }, 300)
-    }, 4000)
-
-    setTimeout(() => {
-        startRadarSimulation()
-    }, 4500)
-
-    // 继续输出成功日志，但因为 autoScrollEnabled 是 false，这些日志不会干扰用户查看代码
     logInterval = setInterval(() => {
         const x = (Math.random() * 2 + 1).toFixed(3)
         const y = (Math.random() * 2).toFixed(3)
@@ -349,10 +308,11 @@ const triggerSuccessScenario = () => {
             `[DEBUG] TF Broadcaster: Published transform from odom to base_link.`
         ]
         const msg = successMsgs[Math.floor(Math.random() * successMsgs.length)]
-        pushLog('info', msg) // 这里依然输出日志，但底层已经不滚动了
+        pushLog('info', msg)
     }, 800)
 }
 
+// 样式类映射
 const getLogClass = (type) => {
     switch(type) {
         case 'info': return 'text-gray-300'
@@ -364,14 +324,16 @@ const getLogClass = (type) => {
     }
 }
 
+// 按钮点击逻辑：进入状态2
 const triggerAIFix = () => {
     localStorage.setItem('demo_state', '2')
-    router.push('/student-debug/robot-debug')
+    router.push('/student/robot-debug')
 }
 
+// 按钮点击逻辑：进入终态3
 const completeTask = () => {
     localStorage.setItem('demo_state', '3')
-    router.push('/student-debug/robot-debug')
+    router.push('/student/robot-debug')
 }
 
 onMounted(() => {
@@ -387,8 +349,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 原有全部CSS样式原封不动保留 */
-
+/* 入场动画 */
 .fade-in {
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
@@ -398,6 +359,7 @@ onUnmounted(() => {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* 按钮切换过渡 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
@@ -407,6 +369,7 @@ onUnmounted(() => {
   opacity: 0;
 }
 
+/* 红色按钮闪烁 */
 .animate-pulse-fast {
   animation: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -415,6 +378,7 @@ onUnmounted(() => {
   50% { opacity: 0.8; box-shadow: 0 0 25px rgba(220, 38, 38, 0.8); }
 }
 
+/* 终端滚动条 */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -429,6 +393,7 @@ onUnmounted(() => {
   background: #475569;
 }
 
+/* ---- 失败状态：摄像头的雪花和扫描线 ---- */
 .tv-static {
   background-image: repeating-radial-gradient(circle at 17% 32%, #ffffff, #000000 0.00085px);
   animation: static-noise 0.2s linear infinite;
@@ -449,6 +414,7 @@ onUnmounted(() => {
   100% { background-position: 0 100%; }
 }
 
+/* ---- 成功状态：摄像头的透视寻迹轨道与准星 ---- */
 .grid-bg {
   background-image: linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
                     linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
@@ -476,6 +442,7 @@ onUnmounted(() => {
   75% { transform: translate(-20px, -5px) scale(1.02); }
 }
 
+/* ---- 成功状态：激光雷达扫描动效 ---- */
 .radar-sweep {
   border-radius: 50%;
   background: conic-gradient(from 0deg, transparent 70%, rgba(34, 197, 94, 0.5) 100%);
@@ -486,6 +453,7 @@ onUnmounted(() => {
   100% { transform: rotate(360deg); }
 }
 
+/* 原始的固定背景光晕点云保留 */
 .point-clouds {
   box-shadow: 
     30px 40px 0 -23px #22c55e,

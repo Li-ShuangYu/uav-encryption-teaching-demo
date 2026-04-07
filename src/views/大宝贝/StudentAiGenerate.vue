@@ -4,7 +4,7 @@
     <div class="w-[65%] flex flex-col border-r border-[#2b2b2b] h-full overflow-hidden relative">
       
       <div v-if="appState === 3" class="bg-[#1e4620]/80 border-b border-[#2ea043] p-1.5 flex items-center justify-center fade-in z-20 shadow-md">
-        <span class="text-[#3fb950] font-bold text-lg flex items-center tracking-wide">
+        <span class="text-[#3fb950] font-bold text-xs flex items-center tracking-wide">
           <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           🎉 闭环验证已完成，冰达机器人当前运行状态良好，按迹寻路与图传均无异常
         </span>
@@ -12,11 +12,11 @@
 
       <div v-if="appState === 2 && !diffActionHandled" class="bg-[#3a1d1d] border-b border-[#f85149] p-1.5 flex items-center px-4 fade-in z-20">
         <svg class="w-3.5 h-3.5 text-[#f85149] mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span class="text-[#f85149] text-lg font-mono truncate">Run Error: [rospy.exceptions.ROSException] Failed to subscribe to topic '/scan'. Device permission denied for '/dev/video0'.</span>
+        <span class="text-[#f85149] text-[11px] font-mono truncate">Run Error: [rospy.exceptions.ROSException] Failed to subscribe to topic '/scan'. Device permission denied for '/dev/video0'.</span>
       </div>
 
       <div class="flex-[7] flex flex-col min-h-0 bg-[#1e1e1e] relative">
-        <div class="flex items-center justify-between bg-[#181818] border-b border-[#2b2b2b] text-lg">
+        <div class="flex items-center justify-between bg-[#181818] border-b border-[#2b2b2b] text-[12px]">
           <div class="flex">
             <div class="px-4 py-2 bg-[#1e1e1e] border-t border-[#007acc] text-[#e3e3e3] flex items-center gap-2 cursor-pointer">
               <svg class="w-4 h-4 text-[#4B8BBE]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 4h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
@@ -32,31 +32,31 @@
             <span class="text-gray-600 font-bold">···</span>
           </div>
         </div>
-        <div class="px-4 py-1 text-lg text-[#858585] border-b border-[#2b2b2b] flex items-center gap-1.5 font-mono">
+        <div class="px-4 py-1 text-[11px] text-[#858585] border-b border-[#2b2b2b] flex items-center gap-1.5 font-mono">
           <span>src</span> <span class="text-gray-600">></span> <span>nanocar_ros</span> <span class="text-gray-600">></span> <span>scripts</span> <span class="text-gray-600">></span> <span class="text-[#cccccc]">nanocar_track.py</span> <span class="text-gray-600">></span> <span class="text-[#dcdcaa]">NanoCarTracker</span> <span class="text-gray-600">></span> <span class="text-[#dcdcaa]">__init__</span>
         </div>
 
         <div v-if="showDiffBar" class="absolute top-16 left-0 right-0 bg-[#1e4620]/90 backdrop-blur-sm border-y border-[#2ea043]/50 px-4 py-1.5 flex justify-between items-center z-30 fade-in shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
-          <div class="flex items-center text-[#e3e3e3] text-lg gap-2">
+          <div class="flex items-center text-[#e3e3e3] text-[12px] gap-2">
             <svg class="w-4 h-4 text-[#3fb950]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             变更已完成，请确认是否采纳。
           </div>
           <div class="flex gap-2">
-            <button @click="handleRejectDiff" class="px-2.5 py-1 text-[#cccccc] hover:text-white text-lg rounded flex items-center transition">
-              <span class="mr-1.5 font-medium">拒绝</span> <span class="text-lg text-gray-500 font-mono">Ctrl+Backspace</span>
+            <button @click="handleRejectDiff" class="px-2.5 py-1 text-[#cccccc] hover:text-white text-[11px] rounded flex items-center transition">
+              <span class="mr-1.5 font-medium">拒绝</span> <span class="text-[10px] text-gray-500 font-mono">Ctrl+Backspace</span>
             </button>
-            <button @click="handleAcceptDiff" class="px-2.5 py-1 bg-[#e3e3e3] hover:bg-white text-black text-lg rounded flex items-center transition shadow-sm font-medium">
-              <span class="mr-1.5">保留变更 (Accept)</span> <span class="text-lg text-gray-600 font-mono">Ctrl+Enter</span>
+            <button @click="handleAcceptDiff" class="px-2.5 py-1 bg-[#e3e3e3] hover:bg-white text-black text-[11px] rounded flex items-center transition shadow-sm font-medium">
+              <span class="mr-1.5">保留变更 (Accept)</span> <span class="text-[10px] text-gray-600 font-mono">Ctrl+Enter</span>
             </button>
             <div class="border-l border-[#2ea043]/50 pl-2 ml-1 text-gray-400 flex items-center space-x-1 cursor-pointer">
                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-               <span class="text-lg">1/1</span>
+               <span class="text-[10px]">1/1</span>
                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </div>
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto custom-scrollbar font-mono text-lg leading-[22px] pt-2 pb-10 relative" ref="codeScrollRef">
+        <div class="flex-1 overflow-y-auto custom-scrollbar font-mono text-[13px] leading-[22px] pt-2 pb-10 relative" ref="codeScrollRef">
           <div v-if="codeLines.length === 0" class="absolute inset-0 flex items-center justify-center text-[#858585]">
             <div class="flex flex-col items-center gap-3 animate-pulse">
                 <svg class="w-8 h-8 text-[#4B8BBE]/50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6zm4 4h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
@@ -64,7 +64,7 @@
             </div>
           </div>
           <div v-for="(line, idx) in codeLines" :key="idx" class="flex hover:bg-[#2a2d2e] transition-colors w-full group" :class="getLineBgColor(line)">
-            <div class="w-14 text-right pr-4 text-[#858585] select-none shrink-0 text-lg" :class="getLineNumColor(line)">
+            <div class="w-14 text-right pr-4 text-[#858585] select-none shrink-0 text-[12px]" :class="getLineNumColor(line)">
               {{ line.diffType === 'added' ? '+' : line.diffType === 'removed' ? '-' : (idx + 1) }}
             </div>
             <div class="whitespace-pre pl-2 break-all" :class="getLineTextColor(line)" v-html="line.content"></div>
@@ -73,7 +73,7 @@
       </div>
 
       <div class="flex-[3] flex flex-col min-h-0 bg-[#1e1e1e] border-t border-[#2b2b2b]">
-        <div class="flex items-center justify-between text-lg text-[#cccccc] pl-4 pt-1.5 pb-1 border-b border-[#2b2b2b] select-none">
+        <div class="flex items-center justify-between text-[11px] text-[#cccccc] pl-4 pt-1.5 pb-1 border-b border-[#2b2b2b] select-none">
           <div class="flex gap-4">
             <div class="hover:text-white cursor-pointer">问题</div>
             <div class="hover:text-white cursor-pointer">输出</div>
@@ -92,7 +92,7 @@
             <svg class="w-3.5 h-3.5 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </div>
         </div>
-        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 font-mono text-lg leading-[1.6]" ref="terminalScrollRef">
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-3 font-mono text-[12px] leading-[1.6]" ref="terminalScrollRef">
           <div v-for="(log, idx) in terminalLogs" :key="idx" :class="log.color">
             {{ log.text }}
           </div>
@@ -103,7 +103,7 @@
 
     <div class="w-[35%] flex flex-col bg-[#1e1e1e] border-l border-[#2b2b2b] h-full shadow-[-5px_0_15px_rgba(0,0,0,0.2)] z-10 relative">
       <div class="px-4 py-3 flex justify-between items-center border-b border-[#2b2b2b]">
-        <div class="font-bold text-xl tracking-wide text-[#e3e3e3]">CODE</div>
+        <div class="font-bold text-[14px] tracking-wide text-[#e3e3e3]">CODE</div>
         <div class="flex space-x-3 text-[#858585]">
           <svg class="w-4 h-4 hover:text-[#cccccc] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
           <svg class="w-4 h-4 hover:text-[#cccccc] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -114,14 +114,14 @@
 
       <div class="px-4 py-3 flex items-center gap-2 text-[#e3e3e3]">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-        <span class="font-bold text-lg">Builder</span>
+        <span class="font-bold text-[13px]">Builder</span>
       </div>
 
       <div class="flex-1 overflow-y-auto custom-scrollbar px-4 pb-4 space-y-6" ref="chatScrollRef">
         <div v-for="(block, idx) in chatBlocks" :key="idx" class="fade-in">
           
           <div v-if="block.role === 'user'" class="flex justify-end">
-            <div class="bg-[#2d2d2d] text-[#e3e3e3] text-lg px-4 py-2.5 rounded-xl rounded-tr-sm max-w-[95%] leading-relaxed border border-[#3c3c3c]">
+            <div class="bg-[#2d2d2d] text-[#e3e3e3] text-[13px] px-4 py-2.5 rounded-xl rounded-tr-sm max-w-[95%] leading-relaxed border border-[#3c3c3c]">
               {{ block.content }}
             </div>
           </div>
@@ -131,7 +131,7 @@
             <div v-if="block.type === 'agent'" class="pl-5 mt-2 mb-2">
                 <div class="bg-[#252526] border border-[#3c3c3c] rounded-md overflow-hidden transition-all duration-300 w-full max-w-[95%]">
                     <div class="px-3 py-2 flex items-center justify-between">
-                    <div class="flex items-center gap-2 text-lg flex-1 min-w-0">
+                    <div class="flex items-center gap-2 text-[12px] flex-1 min-w-0">
                         <svg class="w-3.5 h-3.5 text-[#e3ce62] shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         <span class="font-medium text-[#cccccc] truncate">{{ block.filename }}</span>
                         <span v-if="block.path" class="text-[#858585] font-mono truncate hidden lg:inline">{{ block.path }}</span>
@@ -140,14 +140,14 @@
                     </div>
                     <div class="flex items-center gap-2 shrink-0 ml-3">
                         <svg v-if="block.status === 'loading'" class="animate-spin h-3.5 w-3.5 text-[#cccccc]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        <button v-else-if="block.status === 'success' && block.path" class="text-lg text-[#cccccc] bg-[#333333] hover:bg-[#444444] px-2 py-0.5 rounded border border-[#444444] transition-colors">查看变更</button>
+                        <button v-else-if="block.status === 'success' && block.path" class="text-[11px] text-[#cccccc] bg-[#333333] hover:bg-[#444444] px-2 py-0.5 rounded border border-[#444444] transition-colors">查看变更</button>
                         <svg v-else-if="block.status === 'success'" class="w-3.5 h-3.5 text-[#3fb950]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                     </div>
                     </div>
                 </div>
             </div>
 
-            <div v-if="block.type === 'text'" class="text-lg text-[#cccccc] leading-[1.7] mt-1 pl-1">
+            <div v-if="block.type === 'text'" class="text-[13px] text-[#cccccc] leading-[1.7] mt-1 pl-1">
               <div v-html="block.content" class="rich-text-content"></div>
               <span v-if="block.isTyping" class="inline-block w-1.5 h-3.5 bg-[#cccccc] ml-1 animate-pulse align-middle"></span>
             </div>
@@ -158,7 +158,7 @@
 
       <div class="p-4 bg-[#1e1e1e] relative">
         
-        <div v-if="canDeploy" class="absolute -top-10 left-4 right-4 bg-[#252526] border border-[#3c3c3c] rounded-md px-3 py-1.5 flex items-center justify-between shadow-lg text-lg text-[#cccccc] fade-in">
+        <div v-if="canDeploy" class="absolute -top-10 left-4 right-4 bg-[#252526] border border-[#3c3c3c] rounded-md px-3 py-1.5 flex items-center justify-between shadow-lg text-[12px] text-[#cccccc] fade-in">
           <div class="flex items-center gap-2">
             <svg class="w-3.5 h-3.5 text-[#858585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
             <svg class="w-3.5 h-3.5 text-[#858585]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -170,7 +170,7 @@
 
         <div class="relative bg-[#252526] border border-[#3c3c3c] rounded-lg focus-within:border-[#555555] transition-colors flex flex-col">
           
-          <div class="flex items-center gap-1.5 px-3 pt-2 text-[#858585] text-lg border-b border-transparent">
+          <div class="flex items-center gap-1.5 px-3 pt-2 text-[#858585] text-[12px] border-b border-transparent">
              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
              <span>@Builder</span>
              <svg class="w-3.5 h-3.5 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"></path></svg>
@@ -180,18 +180,18 @@
             v-model="currentInput"
             :disabled="isGenerating"
             rows="3"
-            class="w-full bg-transparent text-lg text-[#e3e3e3] px-3 py-2 outline-none resize-none custom-scrollbar placeholder-[#6e6e6e] disabled:opacity-50 min-h-[70px]"
+            class="w-full bg-transparent text-[13px] text-[#e3e3e3] px-3 py-2 outline-none resize-none custom-scrollbar placeholder-[#6e6e6e] disabled:opacity-50 min-h-[70px]"
             placeholder="您正在与 Builder 聊天"
           ></textarea>
           
           <div class="flex items-center justify-between px-2 pb-2">
             <div class="flex items-center gap-2 text-[#858585]">
-              <span class="hover:text-[#cccccc] cursor-pointer font-mono text-lg">@</span>
-              <span class="hover:text-[#cccccc] cursor-pointer font-mono text-lg">#</span>
+              <span class="hover:text-[#cccccc] cursor-pointer font-mono text-[14px]">@</span>
+              <span class="hover:text-[#cccccc] cursor-pointer font-mono text-[14px]">#</span>
               <svg class="w-4 h-4 hover:text-[#cccccc] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             </div>
             <div class="flex items-center gap-3">
-              <div class="text-[#858585] text-lg flex items-center gap-1 cursor-pointer hover:text-[#cccccc]">
+              <div class="text-[#858585] text-[12px] flex items-center gap-1 cursor-pointer hover:text-[#cccccc]">
                 <span>Auto</span>
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </div>
@@ -212,7 +212,7 @@
         <button 
           @click="navigateToDeploy"
           :disabled="!canDeploy"
-          class="w-full mt-3 py-2 rounded-md text-lg font-bold transition-all duration-300 flex justify-center items-center gap-2"
+          class="w-full mt-3 py-2 rounded-md text-[13px] font-bold transition-all duration-300 flex justify-center items-center gap-2"
           :class="canDeploy ? 'bg-[#238636] hover:bg-[#2ea043] text-white shadow-[0_0_10px_rgba(46,160,67,0.3)]' : 'bg-[#21262d] text-[#8b949e] border border-[#30363d] cursor-not-allowed'"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
@@ -267,8 +267,15 @@ const scrollCodeToBottom = async () => {
 const scrollToDiff = async () => {
   await nextTick()
   if (codeScrollRef.value) {
-    // 直接滚动到 58-64 行的位置
-    codeScrollRef.value.scrollTop = 1500 // 增加滚动位置，确保显示 58-64 行
+    const diffIndex = codeLines.value.findIndex(line => line.diffType === 'added' || line.diffType === 'removed')
+    if (diffIndex !== -1) {
+      // 每一行大约22px，减去150px让差异显示在偏上居中位置
+      const topPos = diffIndex * 22 - 150
+      codeScrollRef.value.scrollTo({
+        top: Math.max(0, topPos),
+        behavior: 'smooth'
+      })
+    }
   }
 }
 
@@ -484,7 +491,7 @@ const handleRejectDiff = () => {
   isGenerating.value = false
 }
 
-const navigateToDeploy = () => { if (appState.value !== 3) { router.push('/student-debug/deploy') } }
+const navigateToDeploy = () => { if (appState.value !== 3) { router.push('/student/deploy') } }
 
 // 代码高亮逻辑
 const getLineBgColor = (line) => {
