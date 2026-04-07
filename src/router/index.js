@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/group-recommendation',
     name: 'GroupRecommendation',
-    component: () => import('../views/GroupRecommendation.vue'),
+    component: () => import('../views/teacher/GroupRecommendation.vue'),
     meta: { title: '教师控制台' }
   },
   // ================= 教师端页面 =================
@@ -30,55 +30,55 @@ const routes = [
       {
         path: 'task-publish',
         name: 'TeacherTaskPublish',
-        component: () => import('../views/TeacherTaskPublish.vue'),
+        component: () => import('../views/teacher/TeacherTaskPublish.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'demand-summary',
         name: 'TeacherDemandSummary',
-        component: () => import('../views/TeacherDemandSummary.vue'),
+        component: () => import('../views/teacher/TeacherDemandSummary.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'demand-split',
         name: 'TeacherDemandSplit',
-        component: () => import('../views/TeacherDemandSplit.vue'),
+        component: () => import('../views/teacher/TeacherDemandSplit.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'task-split',
         name: 'TeacherTaskSplit',
-        component: () => import('../views/TeacherTaskSplit.vue'),
+        component: () => import('../views/teacher/TeacherTaskSplit.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'scheme-split',
         name: 'TeacherSchemeSplit',
-        component: () => import('../views/TeacherSchemeSplit.vue'),
+        component: () => import('../views/teacher/TeacherSchemeSplit.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'ai-evaluate',
         name: 'TeacherAiEvaluate',
-        component: () => import('../views/TeacherAiEvaluate.vue'),
+        component: () => import('../views/teacher/TeacherAiEvaluate.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'simulation',
         name: 'TeacherSimulation',
-        component: () => import('../views/TeacherSimulation.vue'),
+        component: () => import('../views/teacher/TeacherSimulation.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'scheme-detail',
         name: 'TeacherSchemeDetail',
-        component: () => import('../views/TeacherSchemeDetail.vue'),
+        component: () => import('../views/teacher/TeacherSchemeDetail.vue'),
         meta: { title: '教师控制台' }
       },
       {
         path: 'group-score-overview',
         name: 'TeacherGroupScoreOverview',
-        component: () => import('../views/TeacherGroupScoreOverview.vue'),
+        component: () => import('../views/teacher/TeacherGroupScoreOverview.vue'),
         meta: { title: '教师控制台' }
       }
     ]
@@ -92,55 +92,55 @@ const routes = [
       {
         path: 'task-receive',
         name: 'StudentTaskReceive',
-        component: () => import('../views/StudentTaskReceive.vue'),
+        component: () => import('../views/student/StudentTaskReceive.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'task-select',
         name: 'StudentTaskSelect',
-        component: () => import('../views/StudentTaskSelect.vue'),
+        component: () => import('../views/student/StudentTaskSelect.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'task-split',
         name: 'StudentTaskSplit',
-        component: () => import('../views/StudentTaskSplit.vue'),
+        component: () => import('../views/student/StudentTaskSplit.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'scheme-upload',
         name: 'StudentSchemeUpload',
-        component: () => import('../views/StudentSchemeUpload.vue'),
+        component: () => import('../views/student/StudentSchemeUpload.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'scheme-detail',
         name: 'StudentSchemeDetail',
-        component: () => import('../views/StudentSchemeDetail.vue'),
+        component: () => import('../views/student/StudentSchemeDetail.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'my-score-result',
         name: 'StudentMyScoreResult',
-        component: () => import('../views/StudentMyScoreResult.vue'),
+        component: () => import('../views/student/StudentMyScoreResult.vue'),
         meta: { title: '学生工作台' }
       },
       {
         path: 'robot-debug',
         name: 'StudentAiGenerate',
-        component: () => import('../views/StudentAiGenerate.vue'),
+        component: () => import('../views/student/StudentAiGenerate.vue'),
         meta: { title: 'AI智能助手' }
       },
       {
         path: 'deploy',
         name: 'StudentDeploy',
-        component: () => import('../views/StudentDeploy.vue'),
+        component: () => import('../views/student/StudentDeploy.vue'),
         meta: { title: '代码部署' }
       },
       {
         path: 'debug',
         name: 'StudentDebug',
-        component: () => import('../views/StudentDebug.vue'),
+        component: () => import('../views/student/StudentDebug.vue'),
         meta: { title: '机器人调试' }
       }
     ]
@@ -149,7 +149,7 @@ const routes = [
   {
     path: '/student-home',
     name: 'StudentHome',
-    component: () => import('../views/StudentHome.vue'),
+    component: () => import('../views/student/StudentHome.vue'),
     meta: { title: '学生端主页' }
   },
   // ================= 管理员页面 =================
@@ -162,7 +162,7 @@ const routes = [
   {
     path: '/profile-dashboard',
     name: 'ProfileDashboard',
-    component: () => import('../views/StudentProfileDashboard.vue'),
+    component: () => import('../views/student/StudentProfileDashboard.vue'),
     meta: { title: '个人中心' }
   }
 ]
