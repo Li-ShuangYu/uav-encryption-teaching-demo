@@ -67,7 +67,9 @@ const routeStageMap = {
   '/student/scheme-upload': { stage: '方案设计阶段', order: 4 },
   '/student/scheme-detail': { stage: '方案设计阶段', order: 5 },
   '/student/my-score-result': { stage: '方案设计阶段', order: 6 },
-  '/student/robot-debug': { stage: '冰达机器人代码设计', order: 7 }
+  '/student/robot-debug': { stage: '冰达机器人代码设计', order: 7 },
+  '/student/deploy': { stage: '冰达机器人代码设计', order: 8 },
+  '/student/debug': { stage: '冰达机器人代码设计', order: 9 }
 }
 
 // 所有菜单项
