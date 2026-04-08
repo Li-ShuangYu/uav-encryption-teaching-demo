@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '../components/Layout.vue'
 import StudentLayout from '../components/StudentLayout.vue'
 import MdzxDebugLayout from '../components/MdzxDebugLayout.vue'
+import MdzxLayout from '../components/MdzxLayout.vue'
 
 const routes = [
   // ================= 初始页面 =================
@@ -81,7 +82,13 @@ const routes = [
         name: 'TeacherGroupScoreOverview',
         component: () => import('../views/teacher/TeacherGroupScoreOverview.vue'),
         meta: { title: '教师控制台' }
-      }
+      },
+      {
+        path: 'student-group',
+        name: 'TeacherStudentGroup',
+        component: () => import('../views/teacher/TeacherStudentGroup.vue'),
+        meta: { title: '教师控制台' }
+      },
     ]
   },
   // ================= 学生端页面 =================
@@ -151,6 +158,31 @@ const routes = [
         name: 'StudentDebug',
         component: () => import('../views/student/StudentDebug.vue'),
         meta: { title: '机器人调试' }
+      }
+    ]
+  },
+  // ================= 学生档案页面（使用 MdzxLayout）=================
+  {
+    path: '/student-archive',
+    component: MdzxLayout,
+    children: [
+      {
+        path: 'competency/:studentId',
+        name: 'StudentCompetencyProfile',
+        component: () => import('../views/student/StudentCompetencyProfile.vue'),
+        meta: { title: '学生能力画像' }
+      },
+      {
+        path: 'digital/:studentId',
+        name: 'StudentDigitalArchive',
+        component: () => import('../views/student/StudentDigitalArchive.vue'),
+        meta: { title: '学生数字档案' }
+      },
+      {
+        path: 'holographic/:studentId',
+        name: 'StudentHolographicArchive',
+        component: () => import('../views/student/StudentHolographicArchive.vue'),
+        meta: { title: '学生全息数字档案' }
       }
     ]
   },

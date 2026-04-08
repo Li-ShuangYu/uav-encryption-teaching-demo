@@ -120,7 +120,9 @@ const routeStageMap = {
   '/teacher/scheme-split': { stage: '方案设计阶段', order: 5 },
   '/teacher/ai-evaluate': { stage: '方案设计阶段', order: 6 },
   '/teacher/scheme-detail': { stage: '方案设计阶段', order: 7 },
-  '/teacher/simulation': { stage: '仿真推演阶段', order: 8 }
+  '/teacher/simulation': { stage: '仿真推演阶段', order: 8 },
+  '/teacher/group-score-overview': { stage: '方案设计阶段', order: 9 },
+  '/teacher/student-group': { stage: '综合评价阶段', order: 10 },
 }
 
 // 所有菜单项

@@ -25,7 +25,10 @@
         </div>
       </div>
 
-      <router-view />
+      <div class="content flex-1 overflow-auto">
+        <slot></slot>
+        <router-view v-if="!$slots.default"></router-view>
+      </div>
 
     </div>
   </div>
