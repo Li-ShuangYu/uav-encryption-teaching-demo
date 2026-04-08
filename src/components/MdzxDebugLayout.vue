@@ -2,10 +2,11 @@
   <div class="min-h-screen p-4 flex justify-center items-start relative bg-[#121417] text-[#d1d5db]">
     <div class="w-full max-w-full bg-darkBg border border-borderColor rounded-xl shadow-2xl flex flex-col overflow-hidden">
         
-      <div class="flex justify-between items-center px-6 py-4 border-b border-borderColor head shrink-0">
+      <div class="flex justify-between items-center px-4 py-2 border-b border-borderColor head shrink-0">
         <div @click="navigateToHome" class="flex items-center space-x-2 text-accentGreen font-bold text-lg tracking-wider cursor-pointer hover:text-accentGreenDark transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-width="2"></circle></svg>
-            <span>密盾智学<span class="text-textMuted text-sm font-normal ml-2">| {{ currentStage }}</span></span>
+<div class="w-7 h-7 flex items-center justify-center rounded-full overflow-hidden border border-borderColor hover:border-accentGreen transition shrink-0">
+  <img :src="logoUrl" alt="系统Logo" class="max-w-full max-h-full object-contain" />
+</div>            <span>密盾智学<span class="text-textMuted text-sm font-normal ml-2">| {{ currentStage }}</span></span>
         </div>
         
         <div class="flex space-x-2">
@@ -33,6 +34,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import logoUrl from '../assets/image/blackmdzx.png'
 
 const router = useRouter()
 const route = useRoute()
