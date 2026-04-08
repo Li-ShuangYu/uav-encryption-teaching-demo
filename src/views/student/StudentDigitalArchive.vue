@@ -163,7 +163,7 @@ onUnmounted(() => {
 /* 此处与之前提供的 StudentDigitalArchive CSS 完全一致，直接保留 */
 .dashboard-wrapper {
   --main-color: #2563EB; --warn-color: #EF4444; --high-color: #F59E0B; --text-title: #000000; --text-norm: #000000; --text-sub: #000000; --mod-bg: rgba(255, 255, 255, 0.65); --mod-border: rgba(255, 255, 255, 0.7); --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8); --mod-radius: 14px; --ai-bg: rgba(239, 246, 255, 0.65); --ai-border: rgba(255, 255, 255, 0.8);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 18px; width: 100%; height: calc(100vh - 60px); background-color: #F8FAFC; overflow: hidden; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(241, 245, 249, 0.35) 0%, rgba(226, 232, 240, 0.35) 100%), url('@/assets/background.png') center/cover no-repeat; color: #000000;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 18px; width: 100%; height: calc(100vh - 60px); background-color: #F8FAFC; overflow: hidden; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(241, 245, 249, 0.35) 0%, rgba(226, 232, 240, 0.35) 100%); color: #000000;
   box-sizing: border-box;
 }
 #app { width: 100%; height: 100%; padding: 8px; display: flex; flex-direction: row; justify-content: space-between; align-items: stretch; gap: 16px; position: relative; box-sizing: border-box; }
@@ -199,7 +199,7 @@ onUnmounted(() => {
 .high-item .val { font-size: 20px; font-weight: bold; color: #000000; }
 .high-item .s-rank { background: linear-gradient(135deg, #3B82F6, #1D4ED8); -webkit-background-clip: text; color: transparent; font-size: 32px; font-weight: 800; line-height: 1; text-shadow: 0 2px 10px rgba(37, 99, 235, 0.2); }
 .center-main-panel { flex: 1; overflow: hidden; display: flex; flex-direction: column; padding-top: 12px; }
-.human-watermark { position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); width: 80%; height: 90%; background: url('@/assets/human.png') no-repeat center/contain; opacity: 0.15; z-index: 1; pointer-events: none; }
+.human-watermark { position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); width: 80%; height: 90%; opacity: 0; z-index: 1; pointer-events: none; }
 .center-ai { flex: none; background: var(--ai-bg); backdrop-filter: blur(16px); border: 1px solid var(--ai-border); border-radius: var(--mod-radius); box-shadow: var(--mod-shadow); padding: 7px 9px; min-height: 70px; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
 .ai-title { font-size: 20px; font-weight: 600; color: #D97706; margin-bottom: 6px; display: flex; align-items: center; gap: 4px; letter-spacing: 0.5px; }
 .ai-title::before { content: '✦'; font-size: 20px; }

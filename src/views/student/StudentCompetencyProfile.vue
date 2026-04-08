@@ -262,12 +262,12 @@ onUnmounted(() => {
 /* 此处与之前提供的 StudentCompetencyProfile CSS 完全一致，直接保留 */
 .dashboard-wrapper {
   --main-color: #1D4ED8; --warn-color: #B91C1C; --high-color: #B45309; --text-title: #020617; --text-norm: #0F172A; --text-sub: #334155; --mod-bg: rgba(255, 255, 255, 0.85); --mod-border: rgba(203, 213, 225, 0.8); --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9); --mod-radius: 14px; --ai-bg: rgba(219, 234, 254, 0.85); --ai-border: rgba(191, 219, 254, 0.9);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 18px; width: 100%; height: calc(100vh - 60px); background-color: #F1F5F9; overflow: hidden; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(226, 232, 240, 0.5) 0%, rgba(203, 213, 225, 0.5) 100%), url('@/assets/background.png') center/cover no-repeat;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 18px; width: 100%; height: calc(100vh - 60px); background-color: #F1F5F9; overflow: hidden; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(226, 232, 240, 0.5) 0%, rgba(203, 213, 225, 0.5) 100%);
   box-sizing: border-box;
 }
 #app { width: 100%; height: 100%; padding: 12px; display: flex; justify-content: space-between; align-items: stretch; gap: 16px; position: relative; box-sizing: border-box; }
 #app::before { content: ''; position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
-.human-watermark { position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); width: 550px; height: 700px; background: url('@/assets/human.png') no-repeat center/contain; opacity: 0.7; z-index: 1; pointer-events: none; }
+.human-watermark { position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); width: 550px; height: 700px; opacity: 0; z-index: 1; pointer-events: none; }
 .particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .particle { position: absolute; width: 2px; height: 2px; background: var(--main-color); border-radius: 50%; opacity: 0; box-shadow: 0 0 6px var(--main-color); animation: floatUp linear infinite; }
 @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.15; } 100% { transform: translateY(-100px); opacity: 0; } }
