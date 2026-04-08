@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '../components/Layout.vue'
 import StudentLayout from '../components/StudentLayout.vue'
 import MdzxDebugLayout from '../components/MdzxDebugLayout.vue'
-import MdzxLayout from '../components/MdzxLayout.vue'
+import MdzxLayout from '../components/mdzxLayout.vue'
 
 const routes = [
   // ================= 初始页面 =================
@@ -205,6 +205,18 @@ const routes = [
     name: 'ProfileDashboard',
     component: () => import('../views/student/StudentProfileDashboard.vue'),
     meta: { title: '个人中心' }
+  },
+  {
+    path: '/matrix-3x3',
+    name: 'Matrix3x3',
+    component: () => import('../views/Matrix3x3.vue'),
+    meta: { title: '3x3矩阵管理' }
+  },
+  {
+    path: '/agent-detail',
+    name: 'AgentDetail',
+    component: () => import('../views/AgentDetail.vue'),
+    meta: { title: '智能体详情' }
   }
 ]
 

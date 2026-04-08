@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { useRouter, useRoute } from 'vue-router'
 import { Box, CaretBottom } from '@element-plus/icons-vue'
 
@@ -14,7 +14,7 @@ const navItems = [
 ]
 
 // 导航点击
-const handleNavClick = (item: any) => {
+const handleNavClick = (item) => {
   if (item.path) {
     router.push(item.path)
   }
@@ -30,7 +30,7 @@ const goToTeacherStudentGroup = () => {
   <div class="mdzx-layout">
     <header class="top-header">
       <div class="header-left">
-        <!-- <el-icon class="sys-logo" :size="22" color="#409EFF"><Box /></el-icon> -->
+              <img src="../assets/image/mdzx.png" alt="密盾智学" class="logo">
         <span class="sys-title" @click="goToTeacherStudentGroup">密盾智学 / 学员画像</span>
       </div>
       <div class="header-right">
@@ -132,4 +132,6 @@ const goToTeacherStudentGroup = () => {
   // padding: 20px;
   background-color: #f5f7fa;
 }
+.logo { height: 4vh; width: auto; object-fit: contain; }
+
 </style>

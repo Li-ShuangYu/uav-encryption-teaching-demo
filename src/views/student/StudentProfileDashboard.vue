@@ -270,6 +270,7 @@ window.addEventListener("resize", () => {
     <!-- 顶部导航 -->
     <header class="top-header">
       <div class="header-left">
+              <img src="../../assets/image/mdzx.png" alt="密盾智学" class="logo">
         <span class="sys-title" @click="goToTeacherStudentGroup">密盾智学 / 学员画像</span>
       </div>
       <div class="header-right">
@@ -503,7 +504,7 @@ window.addEventListener("resize", () => {
     position: relative;
   }
 }
-
+.logo { height: 4vh; width: auto; object-fit: contain; }
 /* 左侧大面板 */
 .panel-left {
   flex: 1;

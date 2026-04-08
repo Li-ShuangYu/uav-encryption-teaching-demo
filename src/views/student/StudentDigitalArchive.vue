@@ -27,6 +27,7 @@
 
       <main class="layout-center">
         <div class="panel profile-panel">
+
           <div class="profile-header">学生数字档案</div>
           <div class="profile-content">
             <div class="avatar-section">
