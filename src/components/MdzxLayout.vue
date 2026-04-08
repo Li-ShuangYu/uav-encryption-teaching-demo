@@ -10,7 +10,7 @@ const navItems = [
   { name: "学生能力画像", path: '/student-archive/competency/101', active: true },
   { name: "学生数字档案", path: '/student-archive/digital/101', dropdown: false },
   { name: "学生全息档案", path: '/student-archive/holographic/101', dropdown: false },
-  { name: "个人中心", path: '/profile-dashboard', dropdown: false },
+  { name: "学生对比画像", path: '/profile-dashboard', dropdown: false },
 ]
 
 // 导航点击
