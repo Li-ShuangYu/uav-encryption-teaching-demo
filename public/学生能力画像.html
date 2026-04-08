@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>学习能力画像 - 终极完整版</title>
+    <title>学生学习能力画像 - 新指标体系版</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-liquidfill@3.1.0/dist/echarts-liquidfill.min.js"></script>
     <style>
@@ -232,18 +232,18 @@
 
         <aside class="layout-side">
             <div class="panel panel-full"><div class="panel-title">知识掌握演进</div><div id="c-l1" class="chart-box"></div></div>
-            <div class="panel panel-full"><div class="panel-title">履约与攻坚能力评估</div><div id="c-l3" class="chart-box"></div></div>
+            <div class="panel panel-full"><div class="panel-title">AI素养与题型攻坚评估</div><div id="c-l3" class="chart-box"></div></div>
         </aside>
 
         <main class="layout-center">
             <header class="center-header">
-                <h1>学习能力画像</h1>
+                <h1>学生能力画像</h1>
             </header>
             <section class="center-info">
-                <div class="info-item"><span class="info-label">姓名</span><span class="info-val">张三丰</span></div>
-                <div class="info-item"><span class="info-label">学号</span><span class="info-val" style="font-size:18px; color:#334155; font-weight:700;">EDU-20260320</span></div>
+                <div class="info-item"><span class="info-label">姓名</span><span class="info-val">张晓明</span></div>
+                <div class="info-item"><span class="info-label">学号</span><span class="info-val" style="font-size:18px; color:#334155; font-weight:700;">EDU-20260408</span></div>
                 <div class="info-item"><span class="info-label">综合评级</span><span class="info-val s-rank">S</span></div>
-                <div class="info-item"><span class="info-label">学习专注度</span><span class="info-val">92%</span></div>
+                <div class="info-item"><span class="info-label">系统活跃度</span><span class="info-val">94%</span></div>
             </section>
             
             <section class="center-radar-container">
@@ -253,7 +253,7 @@
             <section class="center-ai">
                 <div class="ai-title">AI 综合洞察</div>
                 <div class="ai-text">
-                    该生在<span class="strength">知识建构</span>与<span class="strength">自主学习</span>方面表现优异，综合素养处于核心水平。但近期在 <span class="weakness">复杂问题攻坚</span> 及 <span class="weakness">实践操作验证</span> 方面表现薄弱，且批判性思维发散度不足，建议加强进阶题型与实践探究的专项突破。
+                    该生在<span class="strength">AI素养</span>与<span class="strength">知识掌握</span>方面表现优异，能高频利用智能工具辅助内化。但近期在 <span class="weakness">复杂问题攻坚</span> 及 <span class="weakness">实践操作验证</span> 方面数据薄弱，且批判发散思维不足，建议加强高阶题型训练与实验探究专项突破。
                 </div>
             </section>
         </main>
@@ -262,8 +262,8 @@
             <div class="panel panel-horizontal"><div class="panel-title">限时抗压效能趋势</div><div id="c-r-top1" class="chart-box"></div></div>
             <div class="panel panel-horizontal"><div class="panel-title">学科关键能力评估</div><div id="c-r-top2" class="chart-box"></div></div>
             
-            <div class="panel panel-mini"><div class="panel-title">时间规划性</div><div id="c-r1" class="chart-box"></div></div>
-            <div class="panel panel-mini"><div class="panel-title">学习拓展度</div><div id="c-r2" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">全局效能把控度</div><div id="c-r1" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">AI拓展学习度</div><div id="c-r2" class="chart-box"></div></div>
         </aside>
     </div>
 
@@ -296,7 +296,6 @@
             const charts = {
                 l1: echarts.init(document.getElementById('c-l1')),
                 l3: echarts.init(document.getElementById('c-l3')),
-                // 注意：这里移除了 l4 的初始化
                 rTop1: echarts.init(document.getElementById('c-r-top1')),
                 rTop2: echarts.init(document.getElementById('c-r-top2')),
                 r1: echarts.init(document.getElementById('c-r1')),
@@ -304,7 +303,7 @@
                 mainRadar: echarts.init(document.getElementById('main-radar'))
             };
 
-            // l1 保持原有折行设计和班级平均线
+            // l1 知识掌握演进
             charts.l1.setOption({
                 tooltip: { trigger: 'axis' },
                 legend: { 
@@ -331,36 +330,36 @@
                 ]
             });
 
-            // l3 修改：将原 l3 和 l4 数据合并，并增加虚线形式的班级平均线
+            // l3 AI素养与题型攻坚评估
             charts.l3.setOption({
                 tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
                 legend: { data: ['个人表现', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
                 grid: { top: 35, bottom: 45, left: 45, right: 20 },
                 xAxis: { 
                     type: 'category', 
-                    data: ['探究履约', '任务准点', '纪律遵从', '纠错执行', '概念解析', '逻辑重构', '复杂攻坚'], 
+                    data: ['AI预习', 'AI互动', 'AI作业', '概念解析', '逻辑重构', '复杂攻坚'], 
                     ...commonAxis, 
                     axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 700, interval: 0, width: 45, overflow: 'break' } 
                 },
-                yAxis: { type: 'value', name: '比率(%)', min:60,max: 100, ...commonAxis, nameTextStyle: {color: textColor, fontSize: 18, fontWeight: 700}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                yAxis: { type: 'value', name: '比率(%)', min:50, max: 100, ...commonAxis, nameTextStyle: {color: textColor, fontSize: 18, fontWeight: 700}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
                 series: [
                     { 
                         name: '个人表现',
-                        type: 'bar', barWidth: 14, 
+                        type: 'bar', barWidth: 16, 
                         itemStyle: { borderRadius: [6, 6, 0, 0], color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#7C3AED'}, {offset: 1, color: '#DB2777'}]) },
                         label: { show: true, position: 'top', formatter: '{c}%', fontSize: 16, fontWeight: 700, color: textColor },
-                        data: [95, 88, 98, 82, 92, 76, 65] 
+                        data: [88, 95, 85, 90, 76, 65] 
                     },
                     {
                         name: '班级平均',
                         type: 'line', symbol: 'none',
                         lineStyle: { color: '#94A3B8', width: 2, type: 'dashed' },
-                        data: [85, 80, 90, 75, 85, 70, 68]
+                        data: [70, 75, 68, 82, 70, 58]
                     }
                 ]
             });
 
-            // rTop1 修改：增加虚线形式的班级平均线，略微下调 grid 以容纳图例
+            // rTop1 限时抗压效能趋势
             charts.rTop1.setOption({
                 tooltip: { trigger: 'axis' },
                 legend: { data: ['个人效能', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
@@ -389,29 +388,29 @@
                 ]
             });
 
-            // rTop2 修改：增加柱状图形式的班级平均，略微下调 grid 以容纳图例
+            // rTop2 学科关键能力评估
             charts.rTop2.setOption({
                 tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
                 legend: { data: ['个人得分', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
                 grid: { top: 35, bottom: 30, left: 40, right: 15 },
                 xAxis: { 
                     type: 'category', 
-                    data: ['信息提取', '逻辑推理', '实践操作'], 
+                    data: ['多模态提取', '科学推理', '实践操作'], 
                     ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 700, interval: 0 } 
                 },
                 yAxis: { type: 'value', max: 100, ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 600 }, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
                 series: [
                     {
                         name: '个人得分',
-                        type: 'bar', barWidth: 14,
+                        type: 'bar', barWidth: 20,
                         itemStyle: { borderRadius: [4, 4, 0, 0], color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#D97706'}, {offset: 1, color: '#FBBF24'}]) },
                         label: { show: true, position: 'top', formatter: '{c}', fontSize: 17, color: '#D97706', fontWeight: 800 },
                         data: [85, 78, 65]
                     },
                     {
                         name: '班级平均',
-                        type: 'bar', barWidth: 14,
-                        itemStyle: { borderRadius: [4, 4, 0, 0], color: '#CBD5E1' }, // 灰色柱状图
+                        type: 'bar', barWidth: 20,
+                        itemStyle: { borderRadius: [4, 4, 0, 0], color: '#CBD5E1' },
                         label: { show: true, position: 'top', formatter: '{c}', fontSize: 16, color: '#64748B', fontWeight: 700 },
                         data: [70, 65, 55]
                     }
@@ -421,71 +420,71 @@
             charts.r1.setOption({
                 title: {  left: 'center', bottom: '0', textStyle: { fontSize: 18, color: '#64748B', fontWeight: 600 } },
                 series: [{
-                    type: 'liquidFill', data: [0.85, 0.83], radius: '70%', center: ['50%', '42%'],
+                    type: 'liquidFill', data: [0.88, 0.85], radius: '70%', center: ['50%', '42%'],
                     color: ['#2563EB', 'rgba(37, 99, 235, 0.6)'], backgroundStyle: { color: 'rgba(37, 99, 235, 0.1)' },
                     outline: { borderDistance: 3, itemStyle: { borderWidth: 3, borderColor: '#2563EB' } },
-                    label: { fontSize: 34, color: '#020617', fontWeight: 900, formatter: function() { return '85%'; } }
+                    label: { fontSize: 34, color: '#020617', fontWeight: 900, formatter: function() { return '88%'; } }
                 }]
             });
 
 
             charts.r2.setOption({
                 title: [
-                    { text: '62%', left: 'center', top: '32%', textStyle: { fontSize: 30, fontWeight: 900, color: '#7C3AED' } },
+                    { text: '85%', left: 'center', top: '32%', textStyle: { fontSize: 30, fontWeight: 900, color: '#7C3AED' } },
                     {  left: 'center', bottom: '0', textStyle: { fontSize: 18, color: '#64748B', fontWeight: 600 } }
                 ],
                 series: [{
                     type: 'pie', radius: ['55%', '70%'], center: ['50%', '42%'], hoverAnimation: false, label: { show: false },
                     data: [
-                        { value: 62, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#2563EB'}, {offset: 1, color: '#7C3AED'}]) } },
-                        { value: 38, itemStyle: { color: 'rgba(100, 116, 139, 0.2)' } }
+                        { value: 85, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#2563EB'}, {offset: 1, color: '#7C3AED'}]) } },
+                        { value: 15, itemStyle: { color: 'rgba(100, 116, 139, 0.2)' } }
                     ]
                 }]
             });
 
 
-            // ========== 雷达图数据与逻辑（全面按照提供的数据字典更新） ==========
+            // ========== 雷达图数据与逻辑：已根据最新指标字典重构 ==========
             const dataTree = {
-                "学习习惯": { 
-                    value: 88, 
-                    sub: { 
-                        "课前探究": { value: 85, l3: [ { n: "探究履约率", v: "95%" }, { n: "时间规划性", v: "85%" }, { n: "探究深度", v: "高" } ] }, 
-                        "课堂交互": { value: 92, l3: [ { n: "纪律遵从度", v: "98%" }, { n: "课堂活跃度", v: "良" }, { n: "交互贡献度", v: "80%" } ] }, 
-                        "课后拓展": { value: 82, l3: [ { n: "任务准点率", v: "88%" }, { n: "纠错执行率", v: "82%" }, { n: "学习拓展度", v: "62%" } ] } 
-                    } 
+                "AI素养": {
+                    value: 88,
+                    sub: {
+                        "课前探究": { value: 85, l3: [ { n: "AI工具预习使用率", v: "82%" }, { n: "AI生成资料利用率", v: "88%" } ] },
+                        "课堂交互": { value: 92, l3: [ { n: "课堂AI互动参与率", v: "95%" }, { n: "AI内容提问质量", v: "高" } ] },
+                        "课后拓展": { value: 87, l3: [ { n: "AI作业辅助使用率", v: "85%" }, { n: "AI推荐内容学习时长", v: "45分钟" } ] }
+                    }
                 },
-                "AI素养": { 
-                    value: 92, 
-                    sub: { 
-                        "知识掌握": { value: 88, l3: [ { n: "知识内化率", v: "92%" }, { n: "知识长效巩固度", v: "85%" }, { n: "知识迁移应用度", v: "78%" } ] }, 
-                        "题型攻坚": { value: 85, l3: [ { n: "基础概念解析率", v: "92%" }, { n: "逻辑表达与重构率", v: "76%" }, { n: "复杂问题攻坚率", v: "45%" } ] }, 
-                        "学科能力": { value: 90, l3: [ { n: "多模态信息提取力", v: "40%" }, { n: "科学逻辑推理力", v: "35%" }, { n: "实践操作验证力", v: "25%" } ] } 
-                    } 
+                "学业水平": {
+                    value: 85,
+                    sub: {
+                        "学科能力": { value: 82, l3: [ { n: "多模态信息提取力", v: "85%" }, { n: "科学逻辑推理力", v: "78%" }, { n: "实践操作验证力", v: "65%" } ] },
+                        "知识掌握": { value: 90, l3: [ { n: "知识内化率", v: "92%" }, { n: "知识长效巩固度", v: "88%" }, { n: "知识迁移应用度", v: "85%" } ] },
+                        "题型攻坚": { value: 78, l3: [ { n: "基础概念解析率", v: "90%" }, { n: "逻辑表达与重构率", v: "76%" }, { n: "复杂问题攻坚率", v: "65%" } ] }
+                    }
                 },
-                "科学思维": { 
-                    value: 75, 
-                    sub: { 
-                        "思维敏捷": { value: 80, l3: [ { n: "信息处理响应度", v: "较快" }, { n: "限时抗压效能", v: "78%" } ] }, 
-                        "批判发散": { value: 72, l3: [ { n: "批判质疑探究度", v: "中" }, { n: "多向思维发散度", v: "良" } ] }, 
-                        "自我认知": { value: 75, l3: [ { n: "自我认知校准度", v: "85%" }, { n: "深度归因复盘率", v: "65%" } ] } 
-                    } 
+                "科学思维": {
+                    value: 80,
+                    sub: {
+                        "思维敏捷": { value: 84, l3: [ { n: "信息处理响应度", v: "较快" }, { n: "限时抗压效能", v: "88%" } ] },
+                        "批判发散": { value: 75, l3: [ { n: "批判质疑探究度", v: "中等" }, { n: "多向思维发散度", v: "不足" } ] },
+                        "自我认知": { value: 82, l3: [ { n: "自我认知校准度", v: "85%" }, { n: "深度归因复盘率", v: "78%" } ] }
+                    }
                 },
-                "调控能力": { 
-                    value: 85, 
-                    sub: { 
-                        "时间规划": { value: 88, l3: [{ n: "任务节奏适配度", v: "0.9" }, { n: "全局效能把控度", v: "优" }] }, 
-                        "测评应对": { value: 82, l3: [{ n: "风险规避调控率", v: "80%" }, { n: "审慎核验校验率", v: "85%" }] }, 
-                        "绩效抗压": { value: 80, l3: [{ n: "绩效表现波动率", v: "0.08" }, { n: "操作细节严谨度", v: "良" }] }, 
-                        "学术自律": { value: 95, l3: [{ n: "测评规则遵从度", v: "100%" }, { n: "学术原创自律度", v: "98%" }] } 
-                    } 
+                "调控能力": {
+                    value: 86,
+                    sub: {
+                        "学术自律": { value: 94, l3: [ { n: "测评规则遵从度", v: "100%" }, { n: "学术原创自律度", v: "92%" } ] },
+                        "时间规划": { value: 85, l3: [ { n: "任务节奏适配度", v: "88%" }, { n: "全局效能把控度", v: "优" } ] },
+                        "测评应对": { value: 82, l3: [ { n: "风险规避调控率", v: "80%" }, { n: "审慎核验校验率", v: "85%" } ] },
+                        "绩效抗压": { value: 84, l3: [ { n: "绩效表现波动率", v: "低" }, { n: "操作细节严谨度", v: "良" } ] }
+                    }
                 },
-                "社会协同": { 
-                    value: 90, 
-                    sub: { 
-                        "个性潜能": { value: 92, l3: [{ n: "个性化优势区", v: "物理/逻辑" }, { n: "待唤醒提升区", v: "英语/发散" }] }, 
-                        "发展增值": { value: 88, l3: [{ n: "自我超越增值度", v: "18%" }, { n: "群体竞争位移度", v: "前15%" }] }, 
-                        "团队协同": { value: 90, l3: [{ n: "团队协同贡献比", v: "30%" }, { n: "朋辈互助辐射度", v: "极高" }] } 
-                    } 
+                "社会协同": {
+                    value: 88,
+                    sub: {
+                        "个性潜能": { value: 85, l3: [ { n: "个性化优势区", v: "系统逻辑" }, { n: "待唤醒提升区", v: "发散表达" } ] },
+                        "发展增值": { value: 90, l3: [ { n: "自我超越增值度", v: "22%" }, { n: "群体竞争位移度", v: "前12%" } ] },
+                        "团队协同": { value: 88, l3: [ { n: "团队协同贡献比", v: "35%" }, { n: "朋辈互助辐射度", v: "高" } ] }
+                    }
                 }
             };
 
