@@ -205,10 +205,10 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch, reactive } from
 import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts';
 
-import audioLight from '../assets/audio/轻量级.mp3';
-import audioSideChannel from '../assets/audio/侧信道.mp3';
-import audioAntiReplay from '../assets/audio/抗重放.mp3';
-import audioPostQuantum from '../assets/audio/后量子算法.mp3';
+import audioLight from '../../assets/audio/轻量级.mp3';
+import audioSideChannel from '../../assets/audio/侧信道.mp3';
+import audioAntiReplay from '../../assets/audio/抗重放.mp3';
+import audioPostQuantum from '../../assets/audio/后量子算法.mp3';
 
 const getAudioFileName = (audio) => {
   if (typeof audio === 'string') {
