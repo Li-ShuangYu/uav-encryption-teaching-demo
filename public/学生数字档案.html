@@ -3,292 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>学生数字档案 - 终极完整版</title>
+    <title>学生学习能力画像 - 新指标体系版</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-liquidfill@3.1.0/dist/echarts-liquidfill.min.js"></script>
     <style>
         :root {
-            --main-color: #2563EB;
-            --warn-color: #EF4444;
-            --high-color: #F59E0B;
+            --main-color: #1D4ED8; 
+            --warn-color: #B91C1C;
+            --high-color: #B45309;
+            --text-title: #020617; 
+            --text-norm: #0F172A;  
+            --text-sub: #334155;   
             
-            /* 强制全黑文字变量 */
-            --text-title: #000000;
-            --text-norm: #000000;
-            --text-sub: #000000;
-            
-            /* 高级毛玻璃质感参数 */
-            --mod-bg: rgba(255, 255, 255, 0.65); 
-            --mod-border: rgba(255, 255, 255, 0.7);
-            --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+            --mod-bg: rgba(255, 255, 255, 0.85); 
+            --mod-border: rgba(203, 213, 225, 0.8);
+            --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             --mod-radius: 14px;
             
-            --ai-bg: rgba(239, 246, 255, 0.65);
-            --ai-border: rgba(255, 255, 255, 0.8);
+            --ai-bg: rgba(219, 234, 254, 0.85); 
+            --ai-border: rgba(191, 219, 254, 0.9);
 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            /* 基础字号修改为17px */
             font-size: 18px; 
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            width: 100vw;
-            height: 100vh;
-            background-color: #F8FAFC;
+            width: 100vw; height: 100vh;
+            background-color: #F1F5F9;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, rgba(241, 245, 249, 0.35) 0%, rgba(226, 232, 240, 0.35) 100%), url('./background.png') center/cover no-repeat;
-            color: #000000;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, rgba(226, 232, 240, 0.5) 0%, rgba(203, 213, 225, 0.5) 100%), url('./background.png') center/cover no-repeat;
         }
 
         #app {
-            width: 100vw;
-            height: 100vh;
-            padding: 8px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: stretch;
-            gap: 16px;
-            position: relative;
+            width: 100vw; height: 100vh;
+            padding: 12px; 
+            display: flex; justify-content: space-between; align-items: stretch;
+            gap: 16px; position: relative;
         }
 
         #app::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background-image: linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
+            content: ''; position: absolute; inset: 0; z-index: 0;
+            background-image: linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+            background-size: 40px 40px; pointer-events: none;
         }
 
-        .particles {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
+        .human-watermark {
+            position: absolute; left: 50%; top: 65%;
+            transform: translate(-50%, -50%); width: 550px; height: 700px;
+            background: url('./human.png') no-repeat center/contain;
+            opacity: 0.7; z-index: 1; pointer-events: none;
         }
+
+        .particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
         .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--main-color);
-            border-radius: 50%;
-            opacity: 0;
-            box-shadow: 0 0 6px var(--main-color);
-            animation: floatUp linear infinite;
+            position: absolute; width: 2px; height: 2px;
+            background: var(--main-color); border-radius: 50%; opacity: 0;
+            box-shadow: 0 0 6px var(--main-color); animation: floatUp linear infinite;
         }
         @keyframes floatUp {
             0% { transform: translateY(0); opacity: 0; }
-            50% { opacity: 0.08; }
+            50% { opacity: 0.15; }
             100% { transform: translateY(-100px); opacity: 0; }
         }
 
+        .layout-side { width: 28%; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 12px; z-index: 10; }
+        .layout-center { width: 42%; display: flex; flex-direction: column; gap: 12px; z-index: 10; }
+
         .panel {
-            background: var(--mod-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--mod-border);
-            border-radius: var(--mod-radius);
-            box-shadow: var(--mod-shadow);
-            padding: 12px; 
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 10;
+            background: var(--mod-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--mod-border); border-radius: var(--mod-radius); box-shadow: var(--mod-shadow);
+            padding: 10px; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .panel:hover {
-            background: rgba(255, 255, 255, 0.65);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 12px 40px 0 rgba(15, 23, 42, 0.1), inset 0 1px 1px rgba(255, 255, 255, 1);
             transform: translateY(-1px);
         }
 
-        /* 标题加粗，全黑，字号放大 */
+        .panel-half { width: calc((100% - 12px) / 2); height: calc((100% - 12px) / 2); }
+        .panel-full { width: 100%; height: calc((100% - 12px) / 2); }
+        .panel-horizontal { width: 100%; height: calc((100% - 24px) / 3); padding: 5px 6px; }
+        .panel-mini { width: calc((100% - 12px) / 2); height: calc((100% - 24px) / 3); padding: 5px 6px; }
+
         .panel-title {
-            font-size: 21px; 
-            font-weight: bold; 
-            color: #000000;
-            margin-bottom: 8px; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: 0.5px;
-            z-index: 2;
+            font-size: 19px; font-weight: 700; color: var(--text-title);
+            margin-bottom: 8px; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;
+        }
+        .panel-mini .panel-title, .panel-horizontal .panel-title {
+            font-size: 18px; margin-bottom: 2px; font-weight: 700;
         }
         .panel-title::before {
-            content: '';
-            width: 3px;
-            height: 14px;
-            background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
-            border-radius: 2px;
-            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.3);
+            content: ''; width: 4px; height: 16px; background: linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%);
+            border-radius: 2px; box-shadow: 0 1px 3px rgba(29, 78, 216, 0.4);
         }
 
-        .chart-box {
-            flex: 1;
-            width: 100%;
-            min-height: 0;
-            z-index: 2;
+        .chart-box { flex: 1; width: 100%; min-height: 0; position: relative; }
+
+        .center-header {
+            display: flex; justify-content: center; align-items: center; text-align: center;
+            padding: 6px 0; background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(241,245,249,0.5) 100%);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--mod-border); border-radius: var(--mod-radius); box-shadow: var(--mod-shadow); height: 58px;
+        }
+        .center-header h1 { font-size: 30px; color: var(--text-title); font-weight: 800; letter-spacing: 5px; text-shadow: 0 2px 4px rgba(255, 255, 255, 1); }
+
+        .center-info {
+            background: var(--mod-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--mod-border); border-radius: var(--mod-radius); box-shadow: var(--mod-shadow);
+            padding: 5px 4px; display: flex; justify-content: space-around; align-items: center; height: 72px;
+        }
+        .info-item { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 60px; }
+        .info-label { font-size: 16px; font-weight: 600; color: var(--text-sub); letter-spacing: 0.5px; }
+        .info-val { font-size: 24px; font-weight: 800; color: var(--text-title); white-space: nowrap; }
+        .info-val.s-rank {
+            font-size: 48px; font-weight: 900; background: linear-gradient(135deg, #1D4ED8, #1E3A8A);
+            -webkit-background-clip: text; color: transparent; line-height: 1; text-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
         }
 
-        /* ========== 左侧布局 ========== */
-        .layout-left {
-            width: 25%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 10;
-        }
-        .left-top {
-            flex: 1.4;
-            width: 100%;
-        }
-        .left-bottom-wrapper {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            gap: 12px;
-        }
-        .left-bottom-item {
-            flex: 1;
-            height: 100%;
-            padding: 7px 9px;
-            width: 100%;
-        }
+        .center-radar-container { flex: 1; position: relative; width: 100%; min-height: 0; cursor: pointer; }
+        #main-radar { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-        /* ========== 右侧布局 ========== */
-        .layout-right {
-            width: 25%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr); 
-            gap: 12px;
-            z-index: 10;
-        }
-        .panel-r-wide {
-            grid-column: span 2;
-            width: 100%;
-            height: 100%;
-            padding: 7px 9px;
-        }
-
-        /* ========== 中间布局 ========== */
-        .layout-center {
-            width: 48%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 10;
-        }
-
-        .profile-panel {
-            flex: none;
-            padding: 8px 10px;
-        }
-        .profile-header {
-            text-align: center;
-            font-size: 26px;
-            font-weight: bold;
-            color: #000000;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-            padding-bottom: 5px;
-        }
-        .profile-content {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .avatar-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: #000000;
-        }
-      .avatar-circle {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(148, 163, 184, 0.05));
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #64748B;
-            border: 1px solid rgba(255,255,255,0.6);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        /* 还原档案信息区 - 弹性布局 */
-        .info-section {
-            flex: 1;
-            display: flex;
-            
-            flex-direction: column;
-            gap: 8px;
-        }
-        .info-row {
-            display: flex;
-            width: 410px;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .info-row .lbl { color: #000000; min-width: 40px; text-align: right; }
-        .info-row .val { font-weight: bold; color: #000000; margin-right: 6px; font-size: 19px;}
-        .info-row .name { font-size: 19px; color: #000000; font-weight: bold; }
-        
-        .highlight-section {
-       
-            display: flex;
-            gap: 12px;
-            border-left: 1px solid rgba(0, 0, 0, 0.3);
-            padding-left: 12px;
-            align-self: stretch;
-            align-items: center;
-        }
-        .high-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .high-item .lbl { color: #000000; margin-bottom: 4px; font-size: 19px; }
-        .high-item .val { font-size: 20px; font-weight: bold; color: #000000; }
-        .high-item .s-rank { background: linear-gradient(135deg, #3B82F6, #1D4ED8); -webkit-background-clip: text; color: transparent; font-size: 32px; font-weight: 800; line-height: 1; text-shadow: 0 2px 10px rgba(37, 99, 235, 0.2); }
-
-        .center-main-panel {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding-top: 12px;
-        }
-        .human-watermark {
-            position: absolute;
-            left: 50%;
-            top: 55%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 90%;
-            background: url('./human.png') no-repeat center/contain;
-            opacity: 0.15; 
-            z-index: 1;
-            pointer-events: none;
-        }
-
-         .center-ai {
+        .center-ai {
             flex: none;
             background: var(--ai-bg);
             backdrop-filter: blur(16px);
@@ -296,7 +134,7 @@
             border: 1px solid var(--ai-border);
             border-radius: var(--mod-radius);
             box-shadow: var(--mod-shadow);
-            padding: 7px 9px; 
+            padding: 4px 6px; 
             min-height: 70px;
             display: flex;
             flex-direction: column;
@@ -324,7 +162,6 @@
             line-height: 1.6;
             letter-spacing: 0.3px;
         }
-        /* 长处与短板高亮配置 */
         .ai-text span.strength {
             color: #10B981;
             font-weight: bold;
@@ -339,98 +176,99 @@
             padding: 0 4px;
             border-radius: 4px;
         }
+        /* ========== 交互弹窗 ========== */
+        .l2-floating-container {
+            position: fixed; z-index: 1000; 
+            width: 480px; height: 480px; 
+            background: transparent; pointer-events: none;
+            
+            opacity: 0; transform: translate(-50%, -50%) scale(0.2); 
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            cursor: grab; 
+        }
+        
+        @keyframes elasticPop {
+            0%   { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+            40%  { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+            65%  { transform: translate(-50%, -50%) scale(0.92); opacity: 1; }
+            85%  { transform: translate(-50%, -50%) scale(1.03); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
 
-        .fade-in {
-            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        .l2-floating-container.active { 
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1);
+            animation: elasticPop 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards; 
+            pointer-events: auto; 
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .l2-chart-floating { width: 100%; height: 100%; }
+        
+        .l2-close-btn {
+            position: absolute; top: 32px; right: 32px; width: 32px; height: 32px; background: rgba(15, 23, 42, 0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: #334155; font-size: 22px; font-weight: bold; cursor: pointer; z-index: 10; transition: all 0.2s;
         }
+        .l2-close-btn:hover { background: rgba(220, 38, 38, 0.2); color: #B91C1C; transform: scale(1.1); }
+
+        #l3-tooltip {
+            position: fixed; z-index: 1010; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 2px solid var(--mod-border); box-shadow: var(--mod-shadow); border-radius: var(--mod-radius); color: var(--text-norm);
+            padding: 7px 10px; font-size: 16px; pointer-events: none; opacity: 0; transform: scale(0.9); transition: opacity 0.2s ease, transform 0.2s ease; white-space: nowrap;
+        }
+        #l3-tooltip.show { opacity: 1; transform: scale(1); }
+        .tooltip-title { font-size: 18px; font-weight: 800; color: var(--text-title); border-bottom: 2px solid var(--mod-border); padding-bottom: 6px; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .tooltip-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; line-height: 1.4; gap: 20px; }
+        .row-label { color: var(--text-sub); font-weight: 600; }
+        .row-value { color: var(--main-color); font-weight: 800; font-family: 'Inter', monospace; font-size: 16px; }
+
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div id="app" class="fade-in">
+        <div class="human-watermark"></div>
         <div class="particles" id="particles-box"></div>
 
-        <aside class="layout-left">
-            <div class="panel left-top">
-                <div class="panel-title">知识掌握与思维敏捷演进</div>
-                <div id="c-l1" class="chart-box"></div>
-            </div>
-            <div class="left-bottom-wrapper">
-                <div class="panel left-bottom-item">
-                    <div class="panel-title">团队协同评估</div>
-                    <div id="c-r3" class="chart-box"></div>
-                </div>
-                <div class="panel left-bottom-item">
-                    <div class="panel-title">自我认知水平</div>
-                    <div id="c-r4" class="chart-box"></div>
-                </div>
-            </div>
+        <aside class="layout-side">
+            <div class="panel panel-full"><div class="panel-title">知识掌握演进</div><div id="c-l1" class="chart-box"></div></div>
+            <div class="panel panel-full"><div class="panel-title">AI素养与题型攻坚评估</div><div id="c-l3" class="chart-box"></div></div>
         </aside>
 
         <main class="layout-center">
-            <div class="panel profile-panel">
-                <div class="profile-header">学生数字档案</div>
-                <div class="profile-content">
-                    <div class="avatar-section">
-                        <div class="avatar-circle">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
-                        <!-- <span>头像</span> -->
-                    </div>
-                    <div class="info-section">
-                        <div class="info-row">
-                            <span class="lbl">姓名</span><span class="val name">张三丰</span>
-                            <span class="lbl">性别</span><span class="val">男</span>
-                           <span class="lbl">学号</span><span class="val">EDU-20260320</span>
-
-                            <span class="lbl">年级</span><span class="val">七年级1班</span>
-                            <span class="lbl">身份证</span><span class="val">110105********1234</span>
-                            <span class="lbl">电话</span><span class="val">138****5678</span>
-                            
-                             
-                            <span class="lbl"></span>
-                        <!-- </div>
-                        <div class="info-row"> -->
-                            
-                            
-                            
-                            <span class="lbl">户籍</span><span class="val">北京市朝阳区</span>
-                        </div>
-                    </div>
-                    <div class="highlight-section">
-                        <div class="high-item">
-                            <div class="lbl">综合评价</div>
-                            <div class="val s-rank">S</div>
-                        </div>
-                        <div class="high-item">
-                            <div class="lbl">本周专注度</div>
-                            <div class="val">92%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <header class="center-header">
+                <h1>学生能力画像</h1>
+            </header>
+            <section class="center-info">
+                <div class="info-item"><span class="info-label">姓名</span><span class="info-val">张晓明</span></div>
+                <div class="info-item"><span class="info-label">学号</span><span class="info-val" style="font-size:18px; color:#334155; font-weight:700;">EDU-20260408</span></div>
+                <div class="info-item"><span class="info-label">综合评级</span><span class="info-val s-rank">S</span></div>
+                <div class="info-item"><span class="info-label">系统活跃度</span><span class="info-val">94%</span></div>
+            </section>
             
-            <div class="panel center-main-panel">
-                <div class="human-watermark"></div>
-                <div class="panel-title">核心素养一级指标成长曲线</div>
-                <div id="main-line" class="chart-box"></div>
-            </div>
+            <section class="center-radar-container">
+                <div id="main-radar"></div>
+            </section>
             
             <section class="center-ai">
                 <div class="ai-title">AI 综合洞察</div>
                 <div class="ai-text">
-                    该生长处显著：<span class="strength">学习习惯</span> 与 <span class="strength">调控能力</span> 远超均值，日常履约极佳。但深层素养存在短板：其 <span class="weakness">题型攻坚</span> 遇强则弱，且 <span class="weakness">自我认知</span> 的复盘深度亟待提升。建议后续针对性强化高阶训练与考后反思。
+                    该生在<span class="strength">AI素养</span>与<span class="strength">知识掌握</span>方面表现优异，能高频利用智能工具辅助内化。但近期在 <span class="weakness">复杂问题攻坚</span> 及 <span class="weakness">实践操作验证</span> 方面数据薄弱，且批判发散思维不足，建议加强高阶题型训练与实验探究专项突破。
                 </div>
             </section>
         </main>
 
-        <aside class="layout-right">
-            <div class="panel panel-r-wide"><div class="panel-title">批判发散发展趋势</div><div id="c-r-wide2" class="chart-box"></div></div>
-            <div class="panel panel-r-wide"><div class="panel-title">学习习惯与AI素养综合评估</div><div id="c-l-combined" class="chart-box"></div></div>
+        <aside class="layout-side">
+            <div class="panel panel-horizontal"><div class="panel-title">限时抗压效能趋势</div><div id="c-r-top1" class="chart-box"></div></div>
+            <div class="panel panel-horizontal"><div class="panel-title">学科关键能力评估</div><div id="c-r-top2" class="chart-box"></div></div>
+            
+            <div class="panel panel-mini"><div class="panel-title">全局效能把控度</div><div id="c-r1" class="chart-box"></div></div>
+            <div class="panel panel-mini"><div class="panel-title">AI拓展学习度</div><div id="c-r2" class="chart-box"></div></div>
         </aside>
+    </div>
+
+    <div id="l3-tooltip">
+        <div id="l3-content"></div>
     </div>
 
     <script>
@@ -438,133 +276,526 @@
         for(let i=0; i<20; i++) {
             let p = document.createElement('div');
             p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = Math.random() * 100 + '%';
-            p.style.animationDuration = (Math.random() * 4 + 2) + 's';
-            p.style.animationDelay = (Math.random() * 2) + 's';
+            p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 4 + 2) + 's'; p.style.animationDelay = (Math.random() * 2) + 's';
             particleBox.appendChild(p);
         }
 
-        // 图表全局配置：强制黑字与15px字号
-        const textColor = '#000000'; 
-        const axisColor = 'rgba(0, 0, 0, 0.25)';
-        const splitColor = 'rgba(0, 0, 0, 0.12)';
+        window.addEventListener('load', function() {
 
-        const commonAxis = {
-            axisLabel: { color: textColor, fontSize: 15, margin: 8 }, 
-            axisLine: { lineStyle: { color: axisColor, width: 1 } },
-            splitLine: { show: false }
-        };
-        const commonTooltip = {
-            trigger: 'axis',
-            textStyle: { fontSize: 15, color: textColor }
-        };
+            const axisColor = 'rgba(71, 85, 105, 0.5)';
+            const splitColor = 'rgba(71, 85, 105, 0.2)';
+            const textColor = '#0F172A'; 
 
-        const charts = {
-            l1: echarts.init(document.getElementById('c-l1')),
-            lCombined: echarts.init(document.getElementById('c-l-combined')),
-            rWide2: echarts.init(document.getElementById('c-r-wide2')),
-            r3: echarts.init(document.getElementById('c-r3')),
-            r4: echarts.init(document.getElementById('c-r4')),
-            mainLine: echarts.init(document.getElementById('main-line'))
-        };
+            const commonAxis = {
+                axisLabel: { color: textColor, fontSize: 17, margin: 10, fontWeight: 600 }, 
+                axisLine: { lineStyle: { color: axisColor, width: 2 } },
+                splitLine: { show: false }
+            };
 
-        // ========== 1. 左侧上部：知识掌握与思维敏捷演进 (应用二级指标) ==========
-        charts.l1.setOption({
-            tooltip: commonTooltip,
-            legend: { data: ['个人知识掌握', '个人思维敏捷', '班级均值'], textStyle: { color: textColor, fontSize: 15 }, top: 0, right: 0, itemWidth: 10 },
-            grid: { top: 35, bottom: 20, left: 45, right: 20 },
-            yAxis: { type: 'category', data: ['W1', 'W3','W5', 'W7',  'W9', 'W11'], ...commonAxis, inverse: true },
-            xAxis: { type: 'value', min: 50, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
-            series: [
-                { name: '个人知识掌握', type: 'bar', barWidth: 6, itemStyle: { borderRadius: [0, 4, 4, 0], color: '#3B82F6' }, data: [75, 78, 85, 82, 88, 92] },
-                { name: '个人思维敏捷', type: 'bar', barWidth: 6, itemStyle: { borderRadius: [0, 4, 4, 0], color: '#10B981' }, data: [60, 65, 70, 75, 80, 85] },
-                { name: '班级均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: [70, 72, 74, 75, 76, 78] }
-            ]
-        });
+            const charts = {
+                l1: echarts.init(document.getElementById('c-l1')),
+                l3: echarts.init(document.getElementById('c-l3')),
+                rTop1: echarts.init(document.getElementById('c-r-top1')),
+                rTop2: echarts.init(document.getElementById('c-r-top2')),
+                r1: echarts.init(document.getElementById('c-r1')),
+                r2: echarts.init(document.getElementById('c-r2')),
+                mainRadar: echarts.init(document.getElementById('main-radar'))
+            };
 
-        // ========== 2. 右侧下部：学习习惯与AI素养综合评估 ==========
-        charts.lCombined.setOption({
-            tooltip: commonTooltip,
-            legend: { data: ['个人', '班级均值'], textStyle: { color: textColor, fontSize: 15 }, top: 0, right: 0, itemWidth: 12 },
-            grid: { top: 40, bottom: 45, left: 40, right: 10 },
-            xAxis: { 
-                type: 'category', 
-                data: ['课前探究', '课堂交互', '课后拓展', '知识掌握', '题型攻坚', '学科能力'], 
-                axisLabel: { 
-                    interval: 0, color: textColor, fontSize: 15,
-                    formatter: function(value) { return value.substring(0, 2) + '\n' + value.substring(2); }
+            // l1 知识掌握演进
+            charts.l1.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { 
+                    data: ['知识内化率', '知识长效巩固度', '知识迁移应用度', '班级平均线'], 
+                    textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, 
+                    top: 0, right: 0, icon: 'circle', itemWidth: 8, itemGap: 10,
+                    width: 260 
+                },
+                grid: { top: 50, bottom: 25, left: 45, right: 35 }, 
+                xAxis: { 
+                    type: 'category', name: '', 
+                    data: ['课次1', '课次2', '课次3', '课次4', '课次5', '课次6', '课次7'], 
+                    ...commonAxis, nameTextStyle: {color: textColor, fontSize: 18, fontWeight: 700} 
                 }, 
-                axisLine: { lineStyle: { color: axisColor } }, axisTick: { show: false } 
-            },
-            yAxis: { type: 'value', max: 100, axisLabel: { color: textColor, fontSize: 15 }, splitLine: { show: false } },
-            series: [
-                { name: '个人', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#8B5CF6' }, label: { show: false }, data: [95, 98, 88, 92, 76, 45] },
-                { name: '班级均值', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: 'rgba(148, 163, 184, 0.4)' }, data: [82, 85, 75, 85, 65, 55] }
-            ]
-        });
-
-        // ========== 3. 中间主图：核心素养一级指标成长曲线 (W周数 + 班级均值) ==========
-        charts.mainLine.setOption({
-            tooltip: commonTooltip,
-            legend: { data: ['学习习惯', 'AI素养', '科学思维', '调控能力', '社会协同', '班级综合均值'], bottom: 0, textStyle: { color: textColor, fontSize: 15 }, icon: 'roundRect' },
-            grid: { top: 20, bottom: 65, left: 45, right: 20 },
-            xAxis: { type: 'category', boundaryGap: false, data: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11'], ...commonAxis },
-            yAxis: { type: 'value', min: 60, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, type: 'dashed' } } },
-            series: [
-                { name: '学习习惯', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#3B82F6' }, data: [85, 88, 92, 90, 88, 95, 92, 94, 95, 96, 92, 95] },
-                { name: 'AI素养', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#10B981' }, data: [65, 70, 75, 72, 78, 85, 80, 82, 85, 88, 85, 90] },
-                { name: '科学思维', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#F59E0B' }, data: [62, 62, 68, 65, 70, 75, 75, 80, 85, 82, 86, 88] },
-                { name: '调控能力', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#8B5CF6' }, data: [70, 75, 80, 78, 82, 85, 84, 86, 88, 90, 88, 92] },
-                { name: '社会协同', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#EC4899' }, data: [64, 65, 65, 70, 72, 75, 78, 80, 82, 85, 85, 88] },
-                { name: '班级综合均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: [68, 72, 75, 74, 78, 82, 80, 83, 85, 87, 86, 90] }
-            ]
-        });
-
-        // ========== 4. 右上通栏：批判发散发展趋势 (应用二级指标) ==========
-        charts.rWide2.setOption({
-            tooltip: commonTooltip,
-            legend: { data: ['个人批判发散', '班级均值'], right: 0, top: 0, textStyle: { fontSize: 15, color: textColor } },
-            grid: { top: 40, bottom: 30, left: 45, right: 20 },
-            xAxis: { type: 'category', boundaryGap: false, data: ['W1', 'W3', 'W5', 'W7',  'W9',  'W11'], ...commonAxis },
-            yAxis: { type: 'value', max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor } } },
-            series: [
-                { name: '个人批判发散', type: 'line', smooth: true, areaStyle: { color: 'rgba(16, 185, 129, 0.2)' }, lineStyle: { width: 3, color: '#10B981' }, itemStyle: { color: '#10B981' }, data: [65, 72, 80, 85, 78, 88] },
-                { name: '班级均值', type: 'line', smooth: true, lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, symbol: 'none', data: [60, 62, 65, 64, 66, 68] }
-            ]
-        });
-
-        // ========== 5. 左下微图1：团队协同评估 (应用二级指标) ==========
-        charts.r3.setOption({
-            series: [{
-                type: 'liquidFill', data: [0.85, 0.83], radius: '75%', center: ['50%', '50%'],
-                color: ['#3B82F6', 'rgba(59, 130, 246, 0.5)'],
-                backgroundStyle: { color: 'rgba(59, 130, 246, 0.05)' },
-                outline: { borderDistance: 2, itemStyle: { borderWidth: 2, borderColor: '#3B82F6' } },
-                label: { fontSize: 20, color: textColor, fontWeight: 'bold', formatter: function() { return '85%'; } }
-            }]
-        });
-
-        // ========== 6. 左下微图2：自我认知水平 ==========
-        charts.r4.setOption({
-            tooltip: { textStyle: { fontSize: 18, color: textColor } },
-            title: { text: '65%', left: 'center', top: 'center', textStyle: { fontSize: 18, fontWeight: 'bold', color: textColor } },
-            series: [{
-                type: 'pie', radius: ['60%', '80%'], center: ['50%', '50%'], hoverAnimation: false, label: { show: false },
-                data: [
-                    { value: 65, name: '认知达标', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#3B82F6'}, {offset: 1, color: '#8B5CF6'}]) } },
-                    { value: 35, name: '待提升', itemStyle: { color: 'rgba(148, 163, 184, 0.3)' } }
+                yAxis: { 
+                    type: 'value', name: '得分(%)', min: 60, max: 100, 
+                    ...commonAxis, nameTextStyle: {color: textColor, fontSize: 18, fontWeight: 700}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } 
+                },
+                series: [
+                    { name: '知识内化率', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: '#2563EB' }, itemStyle: { color: '#2563EB' }, data: [75, 78, 85, 82, 88, 90, 92] },
+                    { name: '知识长效巩固度', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: '#059669' }, itemStyle: { color: '#059669' }, data: [70, 65, 70, 75, 72, 80, 85] },
+                    { name: '知识迁移应用度', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: '#D97706' }, itemStyle: { color: '#D97706' }, data: [65, 77, 62, 62, 68, 75, 78] },
+                    { name: '班级平均线', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 3, color: '#64748B', type: 'dashed' }, itemStyle: { color: '#64748B' }, data: [68, 77, 75, 74, 78, 82, 88] }
                 ]
-            }]
-        });
+            });
 
-        // 确保动画和布局后大小渲染正确
-        setTimeout(() => {
-            Object.values(charts).forEach(c => c.resize());
-        }, 100);
+            // l3 AI素养与题型攻坚评估
+            charts.l3.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                legend: { data: ['个人表现', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
+                grid: { top: 35, bottom: 45, left: 45, right: 20 },
+                xAxis: { 
+                    type: 'category', 
+                    data: ['AI预习', 'AI互动', 'AI作业', '概念解析', '逻辑重构', '复杂攻坚'], 
+                    ...commonAxis, 
+                    axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 700, interval: 0, width: 45, overflow: 'break' } 
+                },
+                yAxis: { type: 'value', name: '比率(%)', min:50, max: 100, ...commonAxis, nameTextStyle: {color: textColor, fontSize: 18, fontWeight: 700}, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [
+                    { 
+                        name: '个人表现',
+                        type: 'bar', barWidth: 16, 
+                        itemStyle: { borderRadius: [6, 6, 0, 0], color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#7C3AED'}, {offset: 1, color: '#DB2777'}]) },
+                        label: { show: true, position: 'top', formatter: '{c}%', fontSize: 16, fontWeight: 700, color: textColor },
+                        data: [88, 95, 85, 90, 76, 65] 
+                    },
+                    {
+                        name: '班级平均',
+                        type: 'line', symbol: 'none',
+                        lineStyle: { color: '#94A3B8', width: 2, type: 'dashed' },
+                        data: [70, 75, 68, 82, 70, 58]
+                    }
+                ]
+            });
 
-        window.addEventListener('resize', () => {
-            Object.values(charts).forEach(c => c.resize());
+            // rTop1 限时抗压效能趋势
+            charts.rTop1.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['个人效能', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
+                grid: { top: 35, bottom: 30, left: 35, right: 15 },
+                xAxis: { 
+                    type: 'category', 
+                    data: ['测验1', '测验2', '测验3', '测验4', '测验5', '测验6'], 
+                    ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 18, fontWeight: 600 } 
+                },
+                yAxis: { type: 'value', min: 0.5, max: 1.0, ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 600 }, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [
+                    {
+                        name: '个人效能',
+                        type: 'line', smooth: true, symbol: 'circle', symbolSize: 8,
+                        lineStyle: { width: 3, color: '#059669' }, itemStyle: { color: '#059669' },
+                        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: 'rgba(5, 150, 105, 0.4)'}, {offset: 1, color: 'transparent'}]) },
+                        data: [0.65, 0.72, 0.68, 0.75, 0.82, 0.88],
+                        label: { show: true, position: 'top', formatter: '{c}', fontSize: 18, color: '#059669', fontWeight: 800 }
+                    },
+                    {
+                        name: '班级平均',
+                        type: 'line', smooth: true, symbol: 'none',
+                        lineStyle: { width: 2, color: '#94A3B8', type: 'dashed' },
+                        data: [0.60, 0.65, 0.63, 0.68, 0.70, 0.75]
+                    }
+                ]
+            });
+
+            // rTop2 学科关键能力评估
+            charts.rTop2.setOption({
+                tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+                legend: { data: ['个人得分', '班级平均'], textStyle: { color: textColor, fontSize: 17, fontWeight: 600 }, top: 0, right: 0 },
+                grid: { top: 35, bottom: 30, left: 40, right: 15 },
+                xAxis: { 
+                    type: 'category', 
+                    data: ['多模态提取', '科学推理', '实践操作'], 
+                    ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 700, interval: 0 } 
+                },
+                yAxis: { type: 'value', max: 100, ...commonAxis, axisLabel: { margin: 10, color: textColor, fontSize: 17, fontWeight: 600 }, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } },
+                series: [
+                    {
+                        name: '个人得分',
+                        type: 'bar', barWidth: 20,
+                        itemStyle: { borderRadius: [4, 4, 0, 0], color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#D97706'}, {offset: 1, color: '#FBBF24'}]) },
+                        label: { show: true, position: 'top', formatter: '{c}', fontSize: 17, color: '#D97706', fontWeight: 800 },
+                        data: [85, 78, 65]
+                    },
+                    {
+                        name: '班级平均',
+                        type: 'bar', barWidth: 20,
+                        itemStyle: { borderRadius: [4, 4, 0, 0], color: '#CBD5E1' },
+                        label: { show: true, position: 'top', formatter: '{c}', fontSize: 16, color: '#64748B', fontWeight: 700 },
+                        data: [70, 65, 55]
+                    }
+                ]
+            });
+
+            charts.r1.setOption({
+                title: {  left: 'center', bottom: '0', textStyle: { fontSize: 18, color: '#64748B', fontWeight: 600 } },
+                series: [{
+                    type: 'liquidFill', data: [0.88, 0.85], radius: '70%', center: ['50%', '42%'],
+                    color: ['#2563EB', 'rgba(37, 99, 235, 0.6)'], backgroundStyle: { color: 'rgba(37, 99, 235, 0.1)' },
+                    outline: { borderDistance: 3, itemStyle: { borderWidth: 3, borderColor: '#2563EB' } },
+                    label: { fontSize: 34, color: '#020617', fontWeight: 900, formatter: function() { return '88%'; } }
+                }]
+            });
+
+
+            charts.r2.setOption({
+                title: [
+                    { text: '85%', left: 'center', top: '32%', textStyle: { fontSize: 30, fontWeight: 900, color: '#7C3AED' } },
+                    {  left: 'center', bottom: '0', textStyle: { fontSize: 18, color: '#64748B', fontWeight: 600 } }
+                ],
+                series: [{
+                    type: 'pie', radius: ['55%', '70%'], center: ['50%', '42%'], hoverAnimation: false, label: { show: false },
+                    data: [
+                        { value: 85, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#2563EB'}, {offset: 1, color: '#7C3AED'}]) } },
+                        { value: 15, itemStyle: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    ]
+                }]
+            });
+
+
+            // ========== 雷达图数据与逻辑：已根据最新指标字典重构 ==========
+            const dataTree = {
+                "AI素养": {
+                    value: 88,
+                    sub: {
+                        "课前探究": { value: 85, l3: [ { n: "AI工具预习使用率", v: "82%" }, { n: "AI生成资料利用率", v: "88%" } ] },
+                        "课堂交互": { value: 92, l3: [ { n: "课堂AI互动参与率", v: "95%" }, { n: "AI内容提问质量", v: "高" } ] },
+                        "课后拓展": { value: 87, l3: [ { n: "AI作业辅助使用率", v: "85%" }, { n: "AI推荐内容学习时长", v: "45分钟" } ] }
+                    }
+                },
+                "学业水平": {
+                    value: 85,
+                    sub: {
+                        "学科能力": { value: 82, l3: [ { n: "多模态信息提取力", v: "85%" }, { n: "科学逻辑推理力", v: "78%" }, { n: "实践操作验证力", v: "65%" } ] },
+                        "知识掌握": { value: 90, l3: [ { n: "知识内化率", v: "92%" }, { n: "知识长效巩固度", v: "88%" }, { n: "知识迁移应用度", v: "85%" } ] },
+                        "题型攻坚": { value: 78, l3: [ { n: "基础概念解析率", v: "90%" }, { n: "逻辑表达与重构率", v: "76%" }, { n: "复杂问题攻坚率", v: "65%" } ] }
+                    }
+                },
+                "科学思维": {
+                    value: 80,
+                    sub: {
+                        "思维敏捷": { value: 84, l3: [ { n: "信息处理响应度", v: "较快" }, { n: "限时抗压效能", v: "88%" } ] },
+                        "批判发散": { value: 75, l3: [ { n: "批判质疑探究度", v: "中等" }, { n: "多向思维发散度", v: "不足" } ] },
+                        "自我认知": { value: 82, l3: [ { n: "自我认知校准度", v: "85%" }, { n: "深度归因复盘率", v: "78%" } ] }
+                    }
+                },
+                "调控能力": {
+                    value: 86,
+                    sub: {
+                        "学术自律": { value: 94, l3: [ { n: "测评规则遵从度", v: "100%" }, { n: "学术原创自律度", v: "92%" } ] },
+                        "时间规划": { value: 85, l3: [ { n: "任务节奏适配度", v: "88%" }, { n: "全局效能把控度", v: "优" } ] },
+                        "测评应对": { value: 82, l3: [ { n: "风险规避调控率", v: "80%" }, { n: "审慎核验校验率", v: "85%" } ] },
+                        "绩效抗压": { value: 84, l3: [ { n: "绩效表现波动率", v: "低" }, { n: "操作细节严谨度", v: "良" } ] }
+                    }
+                },
+                "社会协同": {
+                    value: 88,
+                    sub: {
+                        "个性潜能": { value: 85, l3: [ { n: "个性化优势区", v: "系统逻辑" }, { n: "待唤醒提升区", v: "发散表达" } ] },
+                        "发展增值": { value: 90, l3: [ { n: "自我超越增值度", v: "22%" }, { n: "群体竞争位移度", v: "前12%" } ] },
+                        "团队协同": { value: 88, l3: [ { n: "团队协同贡献比", v: "35%" }, { n: "朋辈互助辐射度", v: "高" } ] }
+                    }
+                }
+            };
+
+            const l1Indicators = Object.keys(dataTree).map(k => ({ name: k, max: 100 }));
+            const l1Values = Object.values(dataTree).map(v => v.value);
+            
+            const activeL2Charts = {};
+            const domL3Tooltip = document.getElementById('l3-tooltip');
+            const domL3Content = document.getElementById('l3-content');
+
+            function formatRadarName(value) {
+                return value;
+            }
+
+            function updateMainRadarLabels() {
+                charts.mainRadar.setOption({
+                    radar: {
+                        axisName: {
+                            formatter: function (value) {
+                                return activeL2Charts[value] ? '{h|}' : '{n|' + formatRadarName(value) + '}';
+                            }
+                        }
+                    }
+                });
+            }
+
+            charts.mainRadar.setOption({
+                radar: {
+                    indicator: l1Indicators,
+                    startAngle: 90,     
+                    clockwise: false,  
+                    radius: '40%', 
+                    center: ['50%', '50%'],
+                    splitNumber: 3,
+                    nameGap: 16, 
+                    axisName: {
+                        formatter: function (value) { return '{n|' + formatRadarName(value) + '}'; },
+                        rich: {
+                            n: { 
+                                color: '#ffffff', backgroundColor: 'rgba(29, 78, 216, 0.95)', 
+                                borderRadius: 6, fontSize: 22, fontWeight: '700', padding: [6, 10], lineHeight: 20,
+                                textShadowBlur: 4, textShadowColor: 'rgba(0,0,0,0.4)', align: 'center', cursor: 'pointer'
+                            },
+                            h: { color: 'transparent', backgroundColor: 'transparent', padding: 0, fontSize: 10, lineHeight: 0 }
+                        }
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(51, 65, 85, 0.4)', width: 1.5 } }, 
+                    splitArea: { show: true, areaStyle: { color: ['rgba(203, 213, 225, 0.6)', 'rgba(226, 232, 240, 0.6)'] } }, 
+                    axisLine: { lineStyle: { color: 'rgba(51, 65, 85, 0.4)', width: 1.5 } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{ 
+                        value: l1Values, 
+                        name: '当前学生',
+                        label: {
+                            show: true,
+                            formatter: function(params) { return (params.value / 100).toFixed(2); }, 
+                            color: '#1D4ED8', fontSize: 20, fontWeight: '900', distance: 6,padding:-12
+                        }
+                    }],
+                    itemStyle: { color: '#1D4ED8' },
+                    areaStyle: { color: 'rgba(29, 78, 216, 0.3)' }, 
+                    lineStyle: { color: '#1D4ED8', width: 2 },
+                    symbol: 'circle', symbolSize: 8,
+                    emphasis: { itemStyle: { shadowBlur: 8, shadowColor: '#1D4ED8' }, lineStyle: { width: 3 } }
+                }]
+            });
+
+            const colorPalette = [
+                { main: '#1D4ED8', bg: 'rgba(29, 78, 216, 0.95)', area: 'rgba(29, 78, 216, 0.35)', line: 'rgba(29, 78, 216, 0.5)' }, 
+                { main: '#047857', bg: 'rgba(4, 120, 87, 0.95)',  area: 'rgba(4, 120, 87, 0.35)',  line: 'rgba(4, 120, 87, 0.5)' }, 
+                { main: '#B45309', bg: 'rgba(180, 83, 9, 0.95)',  area: 'rgba(180, 83, 9, 0.35)',  line: 'rgba(180, 83, 9, 0.5)' }, 
+                { main: '#BE185D', bg: 'rgba(190, 24, 93, 0.95)', area: 'rgba(190, 24, 93, 0.35)', line: 'rgba(190, 24, 93, 0.5)' }, 
+                { main: '#6D28D9', bg: 'rgba(109, 40, 217, 0.95)', area: 'rgba(109, 40, 217, 0.35)', line: 'rgba(109, 40, 217, 0.5)' }, 
+                { main: '#B91C1C', bg: 'rgba(185, 28, 28, 0.95)',  area: 'rgba(185, 28, 28, 0.35)',  line: 'rgba(185, 28, 28, 0.5)' }  
+            ];
+
+            function getNextAvailableColor() {
+                const usedIndexes = Object.values(activeL2Charts).map(item => item.colorIndex);
+                for (let i = 0; i < colorPalette.length; i++) {
+                    if (!usedIndexes.includes(i)) return { index: i, scheme: colorPalette[i] };
+                }
+                const fallbackIndex = Object.keys(activeL2Charts).length % colorPalette.length;
+                return { index: fallbackIndex, scheme: colorPalette[fallbackIndex] };
+            }
+
+            function closeL2Chart(l1Name) {
+                if (activeL2Charts[l1Name]) {
+                    const { container, chartInstance } = activeL2Charts[l1Name];
+                    container.classList.remove('active');
+                    hideL3Tooltip();
+                    delete activeL2Charts[l1Name]; 
+                    updateMainRadarLabels(); 
+                    setTimeout(() => {
+                        chartInstance.dispose();
+                        container.remove();
+                    }, 650); 
+                }
+            }
+
+            function triggerPopup(l1Name, originalEvent) {
+                if (!l1Name || !dataTree[l1Name]) return;
+                if (activeL2Charts[l1Name]) return;
+
+                const { index: colorIndex, scheme: colorScheme } = getNextAvailableColor();
+                const container = document.createElement('div');
+                container.className = 'l2-floating-container';
+                
+                let popX = originalEvent.clientX;
+                let popY = originalEvent.clientY;
+                const halfW = 240; 
+                if (popX < halfW) popX = halfW + 16;
+                if (popX > window.innerWidth - halfW) popX = window.innerWidth - halfW - 16;
+                if (popY < halfW) popY = halfW + 16;
+                if (popY > window.innerHeight - halfW) popY = window.innerHeight - halfW - 16;
+
+                container.style.left = popX + 'px';
+                container.style.top = popY + 'px';
+
+                const closeBtn = document.createElement('div');
+                closeBtn.className = 'l2-close-btn';
+                closeBtn.innerHTML = '×';
+                closeBtn.onclick = function(evt) {
+                    evt.stopPropagation(); 
+                    closeL2Chart(l1Name);
+                };
+                container.appendChild(closeBtn);
+
+                const chartDiv = document.createElement('div');
+                chartDiv.className = 'l2-chart-floating';
+                container.appendChild(chartDiv);
+                
+                document.body.appendChild(container);
+
+                const chartInstance = echarts.init(chartDiv);
+                activeL2Charts[l1Name] = { container, chartInstance, colorIndex };
+                
+                updateMainRadarLabels(); 
+
+                setTimeout(() => {
+                    container.classList.add('active'); 
+                    bindL3Tooltip(chartInstance, l1Name, container);
+                    renderLevel2Chart(chartInstance, l1Name, colorScheme);
+                }, 30);
+            }
+
+            charts.mainRadar.getZr().on('click', function(e) {
+                const zr = charts.mainRadar.getZr();
+                const w = zr.getWidth();
+                const h = zr.getHeight();
+                const cx = w / 2;
+                const cy = h / 2;
+                const dx = e.offsetX - cx;
+                const dy = e.offsetY - cy;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < 20) return; 
+                
+                let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                if (angle < 0) angle += 360;
+                
+                const targets = [270, 198, 126, 54, 342]; 
+                let minDiff = 360;
+                let closestIndex = -1;
+                
+                for (let i = 0; i < targets.length; i++) {
+                    let diff = Math.abs(angle - targets[i]);
+                    if (diff > 180) diff = 360 - diff;
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIndex = i;
+                    }
+                }
+                
+                if (closestIndex !== -1) {
+                    const l1Name = l1Indicators[closestIndex].name;
+                    triggerPopup(l1Name, e.event); 
+                }
+            });
+
+            let activeDragCtx = null;
+            document.addEventListener('mousedown', function(e) {
+                const container = e.target.closest('.l2-floating-container');
+                if (container && !e.target.closest('.l2-close-btn')) {
+                    activeDragCtx = { container: container, startX: e.clientX, startY: e.clientY, initialX: container.offsetLeft, initialY: container.offsetTop };
+                    container.style.cursor = 'grabbing'; 
+                    container.style.transition = 'none'; 
+                    document.querySelectorAll('.l2-floating-container').forEach(el => el.style.zIndex = 1000); 
+                    container.style.zIndex = 1005;
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (activeDragCtx) {
+                    const dx = e.clientX - activeDragCtx.startX; const dy = e.clientY - activeDragCtx.startY;
+                    activeDragCtx.container.style.left = (activeDragCtx.initialX + dx) + 'px'; 
+                    activeDragCtx.container.style.top = (activeDragCtx.initialY + dy) + 'px';
+                    hideL3Tooltip(); 
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (activeDragCtx) {
+                    activeDragCtx.container.style.cursor = 'grab';
+                    activeDragCtx.container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    activeDragCtx = null;
+                }
+            });
+
+            function renderLevel2Chart(chartInstance, l1Name, colorScheme) {
+                const subData = dataTree[l1Name].sub;
+                const l2Indicators = Object.keys(subData).map(k => ({ name: k, max: 100 }));
+                const l2Values = Object.values(subData).map(v => v.value);
+
+                chartInstance.setOption({
+                    title: {
+                        text: l1Name, left: 'center', top: 'center',
+                        textStyle: { color: colorScheme.main, fontSize: 22, fontWeight: '900', textShadowColor: 'rgba(255, 255, 255, 0.9)', textShadowBlur: 6 }
+                    },
+                    radar: {
+                        indicator: l2Indicators, triggerEvent: true, radius: '40%', center: ['50%', '50%'], nameGap: 14,
+                        axisName: { 
+                            color: '#fff', backgroundColor: colorScheme.bg, borderRadius: 4, padding: [6, 8], 
+                            fontSize: 20, fontWeight: '700', cursor: 'pointer', lineHeight: 18,
+                            formatter: function (value) {
+                                if (value.length > 5) return value.substring(0, 4) + '\n' + value.substring(4);
+                                return value;
+                            }
+                        },
+                        splitArea: { show: true, areaStyle: { color: ['rgba(203, 213, 225, 0.4)', 'rgba(226, 232, 240, 0.4)'] } }, 
+                        splitLine: { lineStyle: { color: colorScheme.line, width: 1.5 } }, 
+                        axisLine: { lineStyle: { color: colorScheme.line, width: 1.5 } }
+                    },
+                    series: [{
+                        type: 'radar',
+                        data: [{ 
+                            value: l2Values,
+                            label: {
+                                show: true,
+                                formatter: function(params) { return (params.value / 100).toFixed(2); }, 
+                                color: colorScheme.main, fontSize: 20, fontWeight: '900', distance: 5,padding:-10
+                            }
+                        }],
+                        itemStyle: { color: colorScheme.main }, areaStyle: { color: colorScheme.area }, lineStyle: { width: 2 }, symbolSize: 6, symbol: 'circle'
+                    }]
+                });
+            }
+
+            function bindL3Tooltip(l2ChartInstance, contextL1Name, container) {
+                l2ChartInstance.on('mouseover', function (params) { 
+                    if(params.name && params.componentType === 'radar') showL3Tooltip(contextL1Name, params.name, params.event.event, container); 
+                });
+                l2ChartInstance.on('mouseout', function () { hideL3Tooltip(); });
+                l2ChartInstance.on('mousemove', function(params) { 
+                    if(params.name && params.componentType === 'radar') updateL3TooltipPos(params.event.event, container); 
+                });
+                
+                l2ChartInstance.on('click', function(params) {
+                    if(params.name && params.componentType === 'radar') {
+                        showL3Tooltip(contextL1Name, params.name, params.event.event, container);
+                        setTimeout(() => hideL3Tooltip(), 3000);
+                    }
+                });
+            }
+
+            function showL3Tooltip(l1Key, l2Name, e, container) {
+                const l3DataArray = dataTree[l1Key].sub[l2Name] ? dataTree[l1Key].sub[l2Name].l3 : null;
+                if(!l3DataArray) return;
+                let htmlStr = `<div class="tooltip-title">${l2Name}</div>`;
+                l3DataArray.forEach(item => { htmlStr += `<div class="tooltip-row"><span class="row-label">${item.n}</span><span class="row-value">${item.v}</span></div>`; });
+                domL3Content.innerHTML = htmlStr;
+                updateL3TooltipPos(e, container); 
+                domL3Tooltip.classList.add('show');
+            }
+
+            function updateL3TooltipPos(e, container) {
+                if (!e) return; 
+                const tooltipWidth = domL3Tooltip.offsetWidth || 150; 
+                const tooltipHeight = domL3Tooltip.offsetHeight || 70;
+                
+                let cX = e.clientX;
+                let cY = e.clientY;
+                if (cX === undefined || cY === undefined) {
+                    const rect = container.getBoundingClientRect();
+                    cX = rect.left + rect.width / 2;
+                    cY = rect.top + rect.height / 2;
+                }
+
+                const l2Rect = container.getBoundingClientRect();
+                const l2CenterX = l2Rect.left + l2Rect.width / 2; 
+                const l2CenterY = l2Rect.top + l2Rect.height / 2;
+                
+                let left = cX > l2CenterX ? cX + 8 : cX - tooltipWidth - 8;
+                let top = cY > l2CenterY ? cY + 8 : cY - tooltipHeight - 8;
+                
+                left = Math.max(8, Math.min(left, window.innerWidth - tooltipWidth - 8)); 
+                top = Math.max(8, Math.min(top, window.innerHeight - tooltipHeight - 8));
+                
+                domL3Tooltip.style.left = left + 'px'; 
+                domL3Tooltip.style.top = top + 'px';
+            }
+
+            function hideL3Tooltip() { domL3Tooltip.classList.remove('show'); }
+
+            setTimeout(() => { Object.values(charts).forEach(c => c.resize()); }, 100);
+            window.addEventListener('resize', () => {
+                Object.values(charts).forEach(c => c.resize());
+                Object.values(activeL2Charts).forEach(item => item.chartInstance.resize());
+            });
+
         });
     </script>
 </body>
