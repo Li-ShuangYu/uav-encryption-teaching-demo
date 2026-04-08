@@ -55,7 +55,7 @@
         .level-2-title {
             writing-mode: vertical-rl; text-align: center;
             color: #444; 
-            font-size: 12px; 
+            font-size: 14px; 
             font-weight: 900; 
             border-left: 3px solid #1890ff; padding-left: 4px;
             margin-right: -2px; z-index: 10; height: fit-content;
@@ -82,7 +82,7 @@
         }
         
         .summary-item { 
-            display: flex; flex-direction: row; align-items: flex-start; gap: 8px; 
+            display: flex; flex-direction: column; align-items: flex-start; gap: 4px; 
         }
         
         .tag {
@@ -92,10 +92,7 @@
             margin-bottom: 0;
             display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; line-height: 1.4;
         }
-        .tag::before {
-            content: ''; display: inline-block; width: 5px; height: 5px;
-            background: #1890ff; border-radius: 50%; margin-right: 5px; transform: translateY(-1px);
-        }
+
         
         .summary-item p { 
             margin: 0; text-align: justify; flex: 1; line-height: 1.4; letter-spacing: 0.5px;
@@ -113,10 +110,11 @@
                 <div class="charts-wrapper" id="row1-charts"></div>
             </div>
             <div class="right-panel">
-                <div class="assessment-header">评估与对策</div>
                 <div class="summary-content">
-                    <div class="summary-item"><span class="tag">优势特征</span><p>课堂互动与学习兴趣浓厚。</p></div>
-                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>课前预习与自主拓展较弱。</p></div>
+                    <div class="summary-item"><span class="tag">优势特征</span>
+                    <p>课堂互动与学习兴趣浓厚。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span>
+                    <p>课前预习与自主拓展较弱。</p></div>
                 </div>
             </div>
         </div>
@@ -127,10 +125,11 @@
                 <div class="charts-wrapper" id="row2-charts"></div>
             </div>
             <div class="right-panel">
-                <div class="assessment-header">评估与对策</div>
                 <div class="summary-content">
-                    <div class="summary-item"><span class="tag">优势特征</span><p>学科基础扎实，及格率高。</p></div>
-                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>高难度题型攻坚能力分化。</p></div>
+                    <div class="summary-item"><span class="tag">优势特征</span>
+                    <p>学科基础扎实，及格率高。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span>
+                    <p>高难度题型攻坚能力分化。</p></div>
                 </div>
             </div>
         </div>
@@ -141,10 +140,11 @@
                 <div class="charts-wrapper" id="row3-charts"></div>
             </div>
             <div class="right-panel">
-                <div class="assessment-header">评估与对策</div>
                 <div class="summary-content">
-                    <div class="summary-item"><span class="tag">优势特征</span><p>思维敏捷，信息处理极快。</p></div>
-                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>缺乏深度反思与批判质疑。</p></div>
+                    <div class="summary-item"><span class="tag">优势特征</span>
+                    <p>思维敏捷，信息处理极快。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span>
+                    <p>缺乏深度反思与批判质疑。</p></div>
                 </div>
             </div>
         </div>
@@ -155,10 +155,11 @@
                 <div class="charts-wrapper" id="row4-charts"></div>
             </div>
             <div class="right-panel">
-                <div class="assessment-header">评估与对策</div>
                 <div class="summary-content">
-                    <div class="summary-item"><span class="tag">优势特征</span><p>基础规范遵从度整体较好。</p></div>
-                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>遇压易波动，抗压分化大。</p></div>
+                    <div class="summary-item"><span class="tag">优势特征</span>
+                    <p>基础规范遵从度整体较好。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span>
+                    <p>遇压易波动，抗压分化大。</p></div>
                 </div>
             </div>
         </div>
@@ -169,10 +170,11 @@
                 <div class="charts-wrapper" id="row5-charts"></div>
             </div>
             <div class="right-panel">
-                <div class="assessment-header">评估与对策</div>
                 <div class="summary-content">
-                    <div class="summary-item"><span class="tag">优势特征</span><p>团队协作与互助表现良好。</p></div>
-                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span><p>拔尖引领与自我超越不足。</p></div>
+                    <div class="summary-item"><span class="tag">优势特征</span>
+                    <p>团队协作与互助表现良好。</p></div>
+                    <div class="summary-item"><span class="tag" style="color:#d9363e;">薄弱环节</span>
+                    <p>拔尖引领与自我超越不足。</p></div>
                 </div>
             </div>
         </div>
@@ -293,25 +295,25 @@
             allCharts.push(createPieChart(r1Doms[2], [{value:50, name:'60-75分'}, {value:32, name:'75-85分'}, {value:16, name:'85-100分'}]));
 
             // --- 行2：AI素养 ---
-            const r2Doms = createModule('row2-charts', ['知识掌握', '题型攻坚素养', '学科关键能力'], 3);
+            const r2Doms = createModule('row2-charts', ['知识掌握', '题型攻坚', '学科能力'], 3);
             allCharts.push(createRadarChart(r2Doms[0], radarBands, [15, 38, 45]));
             allCharts.push(createLineChart(r2Doms[1], bands, [20, 35, 43], '#52c41a'));
             allCharts.push(createRadarChart(r2Doms[2], radarBands, [18, 36, 44]));
 
             // --- 行3：科学思维 ---
-            const r3Doms = createModule('row3-charts', ['思维敏捷与响应', '批判质疑与发散', '自我认知与反思'], 3);
+            const r3Doms = createModule('row3-charts', ['思维敏捷', '批判发散', '自我认知'], 3);
             allCharts.push(createBarChart(r3Doms[0], bands, [10, 35, 53], '#faad14'));
             allCharts.push(createBarChart(r3Doms[1], bands, [15, 33, 50], '#722ed1'));
             allCharts.push(createBarChart(r3Doms[2], bands, [12, 38, 48], '#eb2f96'));
 
             // --- 行4：调控能力 ---
-            const r4Doms = createModule('row4-charts', ['时序统筹&规范自律', '测评决策与应对', '绩效稳定与抗压'], 3);
+            const r4Doms = createModule('row4-charts', ['时间规划', '决策应对', '绩效抗压'], 3);
             allCharts.push(createBarChart(r4Doms[0], bands, [25, 40, 33]));
             allCharts.push(createBarChart(r4Doms[1], bands, [28, 45, 25], '#13c2c2'));
             allCharts.push(createBarChart(r4Doms[2], bands, [30, 38, 30], '#faad14'));
 
             // --- 行5：社会协同 ---
-            const r5Doms = createModule('row5-charts', ['个性潜能图谱', '发展增值态势', '团队协同与责任'], 3);
+            const r5Doms = createModule('row5-charts', ['个性潜能', '发展增值', '团队协同'], 3);
             allCharts.push(createBarChart(r5Doms[0], bands, [15, 42, 41], '#1890ff'));
             allCharts.push(createBarChart(r5Doms[1], bands, [20, 48, 30], '#52c41a'));
             allCharts.push(createPieChart(r5Doms[2], [{value:12, name:'60-75分'}, {value:40, name:'75-85分'}, {value:46, name:'85-100分'}]));
