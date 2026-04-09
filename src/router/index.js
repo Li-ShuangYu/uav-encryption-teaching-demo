@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '../components/Layout.vue'
 import StudentLayout from '../components/StudentLayout.vue'
 import MdzxDebugLayout from '../components/MdzxDebugLayout.vue'
-import MdzxLayout from '../components/mdzxLayout.vue'
+import MdzxLayout from '../components/MdzxLayout.vue'
 
 const routes = [
   // ================= 初始页面 =================
