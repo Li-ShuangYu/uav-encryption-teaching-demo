@@ -1,5 +1,130 @@
-# Vue 3 + Vite
+# 无人机加密教学演示系统
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 项目概述
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+无人机加密教学演示系统是一个基于Vue 3和Vite构建的前端应用，旨在为教育场景提供加密技术学习和实践的平台。系统包含教师端和学生端两大模块，支持任务发布、需求分析、方案设计、AI评估等功能，同时提供学生能力画像、数字档案等个性化学习分析工具。
+
+## 技术栈
+
+- **前端框架**：Vue 3
+- **构建工具**：Vite
+- **UI框架**：Element Plus
+- **图表库**：ECharts
+- **路由管理**：Vue Router
+- **样式方案**：Tailwind CSS、Sass
+- **数据处理**：xlsx (Excel文件处理)
+
+## 项目结构
+
+```
+uav-encryption-teaching-demo/
+├── public/                 # 公共静态资源
+│   ├── images/            # 图片资源
+│   ├── 学情诊断可视化报告.html   # 学情诊断报告
+│   └── 学生能力画像.html        # 学生能力画像
+├── src/                    # 源代码目录
+│   ├── assets/             # 静态资源
+│   │   ├── audio/          # 音频文件
+│   │   ├── image/          # 图片文件
+│   │   └── vue.svg         # Vue图标
+│   ├── components/         # 组件
+│   │   ├── Layout.vue      # 教师端布局
+│   │   ├── StudentLayout.vue # 学生端布局
+│   │   ├── MdzxLayout.vue  # 密盾智学布局
+│   │   └── MdzxDebugLayout.vue # 调试布局
+│   ├── router/             # 路由配置
+│   │   └── index.js        # 路由定义
+│   ├── views/              # 页面视图
+│   │   ├── teacher/        # 教师端页面
+│   │   ├── student/        # 学生端页面
+│   │   ├── InitialPage.vue # 初始页面
+│   │   ├── AdminPage.vue   # 管理员页面
+│   │   └── Matrix3x3.vue   # 3x3矩阵管理
+│   ├── App.vue             # 应用入口组件
+│   ├── main.js             # 应用入口文件
+│   └── style.css           # 全局样式
+├── .gitignore              # Git忽略文件
+├── package.json            # 项目配置和依赖
+├── vite.config.js          # Vite配置
+├── tailwind.config.js      # Tailwind CSS配置
+└── README.md               # 项目说明
+```
+
+## 主要功能模块
+
+### 1. 教师端模块
+
+- **任务发布**：发布加密技术相关任务
+- **需求汇总**：汇总和分析学生需求
+- **需求分屏**：多维度展示需求数据
+- **任务分屏**：展示4组学生任务分配
+- **方案分屏**：展示4组学生方案设计
+- **AI评估**：利用AI对学生方案进行评估
+- **仿真推演**：模拟加密方案的运行效果
+- **方案详情**：查看学生方案详细信息
+- **综合方案评估**：对学生方案进行综合评分
+- **分组推荐**：基于学生能力推荐分组
+
+### 2. 学生端模块
+
+- **任务接收**：接收教师发布的任务
+- **任务选择**：选择适合自己的任务
+- **任务详情**：查看任务详细信息
+- **方案上传**：上传自己的加密方案设计
+- **方案详情**：查看组间方案评分
+- **评分结果**：查看方案总分和评价
+- **AI智能助手**：提供代码生成、部署、调试功能
+- **学生能力画像**：展示学生的能力评估
+- **学生数字档案**：记录学生学习数据
+- **学生全息档案**：3D展示学生学习情况
+
+### 3. 其他功能
+
+- **管理员控制台**：系统管理功能
+- **3x3矩阵管理**：管理系统矩阵数据
+- **智能体详情**：查看AI智能体信息
+
+## 构建与运行
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 开发服务器
+
+```bash
+npm run dev
+```
+
+### 生产构建
+
+```bash
+npm run build
+```
+
+### 预览构建结果
+
+```bash
+npm run preview
+```
+
+## 项目特点
+
+1. **现代化技术栈**：使用Vue 3、Vite等现代前端技术
+2. **响应式设计**：适配不同设备屏幕
+3. **丰富的图表展示**：使用ECharts实现数据可视化
+4. **AI辅助功能**：集成AI智能助手
+5. **个性化学习分析**：提供学生能力画像和数字档案
+6. **完整的教学流程**：从任务发布到方案评估的全流程支持
+
+## 注意事项
+
+- 项目使用Element Plus作为UI框架，需要确保依赖安装正确
+- 构建时需要注意文件路径的大小写问题，特别是在Linux环境下
+- 部分功能需要后端API支持，实际部署时需要配置相应的后端服务
+
+## 许可证
+
+本项目为教学演示系统，仅供学习和研究使用。
