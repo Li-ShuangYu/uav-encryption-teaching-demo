@@ -3,7 +3,8 @@
     <header class="top-header">
       <div class="back-btn" @click="$router.back()">← 返回列表</div>
       <div class="agent-info">
-        <span class="agent-icon">{{ currentAgent.icon || '🤖' }}</span>
+        <!-- <img src="../assets/image/mdzx.png" alt="密盾智学" class="logo"> -->
+        <h2>密盾智学 - </h2>
         <h2>{{ currentAgent.name || '智能体详情' }}</h2>
       </div>
     </header>
@@ -251,6 +252,7 @@ onMounted(() => {
 .meta-item .value { font-size: 13px; font-weight: bold; color: #303133; }
 .text-teacher { color: #174ea6 !important; }
 .text-student { color: #0d652d !important; }
+.logo { height: 4vh; width: auto; object-fit: contain; }
 
 /* 右侧对话面板现在会自动变窄，因为左侧变宽了 */
 .right-panel { flex: 1; background: #fff; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
