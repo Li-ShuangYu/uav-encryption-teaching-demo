@@ -183,6 +183,12 @@ const routes = [
         name: 'StudentHolographicArchive',
         component: () => import('../views/student/StudentHolographicArchive.vue'),
         meta: { title: '学生全息数字档案' }
+      },
+      {
+        path: 'class-competency/:classId',
+        name: 'ClassCompetencyProfile',
+        component: () => import('../views/ClassCompetencyProfile.vue'),
+        meta: { title: '班级能力画像' }
       }
     ]
   },
