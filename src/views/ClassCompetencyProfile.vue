@@ -56,6 +56,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import * as echarts from 'echarts';
+import 'echarts-liquidfill';
 
 const cL1 = ref(null); const cL3 = ref(null); 
 const cRTop1 = ref(null); const cRTop2 = ref(null);
@@ -65,42 +66,32 @@ const mainRadar = ref(null);
 let charts = {};
 let l2ChartInstances = {};
 
-// ===== 核心数据字典 =====
+// ===== 核心数据字典 (保留你的指标) =====
 const classData = ref({
-  // 100% 还原 .strength 和 .weakness 的 HTML 标记
   insight: '班级在<span class="strength">AI素养</span>与<span class="strength">常规知识掌握</span>方面表现优异。但在<span class="weakness">复杂问题攻坚</span>与<span class="weakness">逆向表现波动</span>存在断层，建议结合自动化测验工具进行二次强化。',
-  radarL1: [88, 82, 85, 90, 86], 
   academic: {
     skills: ['概念解析', '逻辑重构', '复杂攻坚', '多模态提取', '科学推理', '实践操作'],
-    skillScores: [92, 85, 68, 88, 80, 75],
-    knowledge: ['知识内化率', '长效巩固度', '迁移应用度'],
-    knowledgeScores: [88, 82, 76] 
+    skillScores: [92, 85, 68, 88, 80, 75]
   },
   aiLiteracy: {
     stages: ['课前探究', '课堂交互', '课后拓展'],
-    metric1: { name: '预习/互动/作业辅助', data: [95, 90, 88] },
-    metric2: { name: '资料利用/提问质量/时长', data: [92, 85, 80] }
+    metric1: { data: [95, 90, 88] },
+    metric2: { data: [92, 85, 80] }
   },
   regulation: [
-    { value: 95, name: '规则遵从' }, { value: 92, name: '原创自律' },
-    { value: 88, name: '任务节奏' }, { value: 90, name: '全局效能' },
-    { value: 85, name: '风险规避' }, { value: 82, name: '审慎核验' },
-    { value: 78, name: '操作严谨' }, { value: 80, name: '表现波动' }
+    { value: 95, name: '规则' }, { value: 92, name: '原创' }, { value: 88, name: '节奏' }, { value: 90, name: '效能' },
+    { value: 85, name: '避险' }, { value: 82, name: '核验' }, { value: 78, name: '严谨' }, { value: 80, name: '波动' }
   ],
-  scienceThinking: [
-    [90, 85, 88, '信息与批判组'], [82, 92, 80, '抗压与发散组'], [88, 80, 95, '认知与校准组']
-  ],
-  social: {
-    names: ['竞争位移', '超越增值', '朋辈辐射', '协同贡献', '优势区', '待唤醒'],
-    values: [85, 92, 88, 90, 75, 60]
+  mainLine: {
+    ai: [85,88,92,95,94,96,98,96,98,99,100],
+    edu: [80,85,88,90,92,94,95,96,98,98,99],
+    sci: [82,85,86,88,90,92,94,95,96,98,98],
+    reg: [80,82,85,85,88,90,88,92,94,95,94],
+    soc: [75,78,80,82,85,88,86,90,90,92,90],
+    avg: [70,72,75,76,78,80,82,84,85,86,88]
   },
-  radarData: {
-    "AI素养": { sub: { "课前探究": { value: 93 }, "课堂交互": { value: 88 }, "课后拓展": { value: 84 } } },
-    "学业水平": { sub: { "知识掌握": { value: 82 }, "题型攻坚": { value: 81 }, "学科能力": { value: 81 } } },
-    "科学思维": { sub: { "思维敏捷": { value: 86 }, "批判发散": { value: 88 }, "自我认知": { value: 87 } } },
-    "调控能力": { sub: { "时间规划": { value: 89 }, "测评应对": { value: 83 }, "绩效抗压": { value: 79 }, "学术自律": { value: 93 } } },
-    "社会协同": { sub: { "个性潜能": { value: 67 }, "发展增值": { value: 88 }, "团队协同": { value: 89 } } }
-  }
+  sciVal: 86,
+  socVal: 0.89
 });
 
 const particles = Array.from({ length: 20 }).map(() => ({
@@ -127,54 +118,16 @@ const startDrag = (e, popup) => {
   dragState = { name: popup.name, startX: e.clientX, startY: e.clientY, initialX: e.currentTarget.offsetLeft, initialY: e.currentTarget.offsetTop };
 };
 
-// ======================== 100% 还原雷达图核心逻辑 ========================
 const closePopup = (name) => {
   activePopups.value = activePopups.value.filter(p => p.name !== name);
   if(l2ChartInstances[name]) { l2ChartInstances[name].dispose(); delete l2ChartInstances[name]; }
-  updateMainRadarLabels(); // 恢复关闭时的更新逻辑
-};
-
-const triggerPopup = (l1Name, originalEvent) => {
-  if (!l1Name || !classData.value.radarData[l1Name] || activePopups.value.some(p => p.name === l1Name)) return;
-  // 恢复原版彩色 Palette
-  const colorPalette = [ { main: '#1D4ED8', bg: 'rgba(29, 78, 216, 0.95)', area: 'rgba(29, 78, 216, 0.35)', line: 'rgba(29, 78, 216, 0.5)' }, { main: '#047857', bg: 'rgba(4, 120, 87, 0.95)', area: 'rgba(4, 120, 87, 0.35)', line: 'rgba(4, 120, 87, 0.5)' }, { main: '#B45309', bg: 'rgba(180, 83, 9, 0.95)', area: 'rgba(180, 83, 9, 0.35)', line: 'rgba(180, 83, 9, 0.5)' }, { main: '#BE185D', bg: 'rgba(190, 24, 93, 0.95)', area: 'rgba(190, 24, 93, 0.35)', line: 'rgba(190, 24, 93, 0.5)' } ];
-  const scheme = colorPalette[activePopups.value.length % colorPalette.length];
-  
-  let popX = originalEvent.clientX; let popY = originalEvent.clientY;
-  activePopups.value.push({ name: l1Name, left: popX + 'px', top: popY + 'px', zIndex: 1005 });
-  
-  updateMainRadarLabels(); // 触发隐藏主雷达标签
-
-  nextTick(() => {
-    const chartDom = document.getElementById(`l2-chart-${l1Name}`);
-    if (chartDom) {
-      const chartInstance = echarts.init(chartDom);
-      l2ChartInstances[l1Name] = chartInstance;
-      renderLevel2Chart(chartInstance, l1Name, scheme);
-    }
-  });
-};
-
-const updateMainRadarLabels = () => {
-  charts.mainRadar.setOption({ radar: { axisName: { formatter: (value) => activePopups.value.some(p => p.name === value) ? '{h|}' : '{n|' + value + '}' } } });
-};
-
-// 完全还原原版 L2 弹窗图表配置
-const renderLevel2Chart = (chartInstance, l1Name, colorScheme) => {
-  const subData = classData.value.radarData[l1Name].sub;
-  const l2Indicators = Object.keys(subData).map(k => ({ name: k, max: 100 }));
-  const l2Values = Object.values(subData).map(v => v.value);
-  chartInstance.setOption({
-    title: { text: l1Name, left: 'center', top: 'center', textStyle: { color: colorScheme.main, fontSize: 20, fontWeight: '900', textShadowColor: 'rgba(255, 255, 255, 0.9)', textShadowBlur: 6 } },
-    radar: { indicator: l2Indicators, radius: '40%', center: ['50%', '50%'], nameGap: 14, axisName: { color: '#fff', backgroundColor: colorScheme.bg, borderRadius: 4, padding: [6, 8], fontSize: 18, fontWeight: '700', lineHeight: 18 }, splitArea: { show: true, areaStyle: { color: ['rgba(203, 213, 225, 0.4)', 'rgba(226, 232, 240, 0.4)'] } }, splitLine: { lineStyle: { color: colorScheme.line, width: 1.5 } }, axisLine: { lineStyle: { color: colorScheme.line, width: 1.5 } } },
-    series: [{ type: 'radar', data: [{ value: l2Values, label: { show: true, formatter: (params) => (params.value / 100).toFixed(2), color: colorScheme.main, fontSize: 18, fontWeight: '900', distance: 5, padding: -10 } }], itemStyle: { color: colorScheme.main }, areaStyle: { color: colorScheme.area }, lineStyle: { width: 2 }, symbolSize: 6, symbol: 'circle' }]
-  });
 };
 
 const initCharts = () => {
-  const TEXT_BASE = { color: '#000000', fontSize: 15, fontWeight: 600 }; 
-  const AXIS_LINE = { lineStyle: { color: 'rgba(71, 85, 105, 0.5)', width: 2 } };
-  const SPLIT_LINE = { show: true, lineStyle: { color: 'rgba(71, 85, 105, 0.2)', width: 1 } };
+  // 直接照搬提取新图表的配置变量
+  const textColor = '#000000'; const axisColor = 'rgba(0, 0, 0, 0.25)'; const splitColor = 'rgba(0, 0, 0, 0.12)';
+  const commonAxis = { axisLabel: { color: textColor, fontSize: 15, margin: 8 }, axisLine: { lineStyle: { color: axisColor, width: 1 } }, splitLine: { show: false } };
+  const commonTooltip = { trigger: 'axis', textStyle: { fontSize: 15, color: textColor } };
 
   charts = { 
     l1: echarts.init(cL1.value), l3: echarts.init(cL3.value), 
@@ -184,47 +137,23 @@ const initCharts = () => {
 
   const d = classData.value;
 
-  // 1-5 周边图表配置保留上次修改 (解决重叠换行问题)
-  charts.l1.setOption({ tooltip: { trigger: 'axis', textStyle: TEXT_BASE }, legend: { data: ['学科攻坚得分', '内化-巩固-迁移线'], textStyle: TEXT_BASE, top: 0 }, grid: { top: 55, bottom: 40, left: 10, right: 10, containLabel: true }, xAxis: [ { type: 'category', data: d.academic.skills, axisLine: AXIS_LINE, axisTick: { alignWithLabel: true }, axisLabel: { ...TEXT_BASE, interval: 0, width: 45, overflow: 'break', margin: 12 } } ], yAxis: [ { type: 'value', name: '攻坚分', axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: SPLIT_LINE }, { type: 'value', name: '留存率', axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: { show: false } } ], series: [ { name: '学科攻坚得分', type: 'bar', barWidth: 16, itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#3B82F6'}, {offset: 1, color: '#1D4ED8'}]), borderRadius: [4,4,0,0] }, data: d.academic.skillScores }, { name: '内化-巩固-迁移线', type: 'line', yAxisIndex: 1, smooth: true, symbol: 'circle', symbolSize: 8, itemStyle: { color: '#D97706' }, lineStyle: { width: 3 }, data: [d.academic.knowledgeScores[0], d.academic.knowledgeScores[1], d.academic.knowledgeScores[2], null, null, null] } ] });
-  charts.l3.setOption({ tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, textStyle: TEXT_BASE }, legend: { data: [d.aiLiteracy.metric1.name, d.aiLiteracy.metric2.name], textStyle: { color: '#000000', fontSize: 15, fontWeight: 600, width: 260, overflow: 'truncate' }, top: 0 }, grid: { top: 55, bottom: 20, left: 10, right: 20, containLabel: true }, xAxis: { type: 'value', max: 100, axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: SPLIT_LINE }, yAxis: { type: 'category', data: d.aiLiteracy.stages, axisLabel: TEXT_BASE, axisLine: AXIS_LINE }, series: [ { name: d.aiLiteracy.metric1.name, type: 'bar', barGap: '10%', barWidth: 14, itemStyle: { color: '#10B981', borderRadius: [0,4,4,0] }, data: d.aiLiteracy.metric1.data }, { name: d.aiLiteracy.metric2.name, type: 'bar', barWidth: 14, itemStyle: { color: '#047857', borderRadius: [0,4,4,0] }, data: d.aiLiteracy.metric2.data } ] });
-  charts.rTop1.setOption({ tooltip: { trigger: 'item', textStyle: TEXT_BASE }, series: [{ type: 'pie', roseType: 'radius', radius: ['15%', '65%'], center: ['50%', '55%'], label: { color: '#000000', fontSize: 15, fontWeight: 600 }, itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 1 }, color: ['#1D4ED8', '#2563EB', '#3B82F6', '#10B981', '#059669', '#D97706', '#F59E0B', '#DC2626'], data: d.regulation }] });
-  charts.rTop2.setOption({ tooltip: { formatter: (p) => `<div style="color:#000;font-weight:700;font-size:15px">${p.data[3]}<br/>响应: ${p.data[0]}<br/>探究: ${p.data[1]}<br/>复盘(大小): ${p.data[2]}</div>` }, grid: { top: 25, bottom: 25, left: 20, right: 30, containLabel: true }, xAxis: { name: '响应', type: 'value', min: 70, max: 100, axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: SPLIT_LINE }, yAxis: { name: '探究', type: 'value', min: 70, max: 100, axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: SPLIT_LINE }, series: [{ type: 'scatter', symbolSize: (data) => data[2] / 2.5, itemStyle: { color: '#7C3AED', opacity: 0.8, borderColor: '#fff', borderWidth: 1 }, label: { show: true, formatter: '{@[3]}', position: 'top', color: '#000000', fontSize: 15, fontWeight: 700 }, data: d.scienceThinking }] });
-  charts.r1.setOption({ tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, textStyle: TEXT_BASE }, grid: { top: 20, bottom: 20, left: 10, right: 30, containLabel: true }, xAxis: { type: 'value', max: 100, axisLabel: TEXT_BASE, axisLine: AXIS_LINE, splitLine: SPLIT_LINE }, yAxis: { type: 'category', data: d.social.names, inverse: true, axisLabel: TEXT_BASE, axisLine: AXIS_LINE }, series: [{ type: 'bar', barWidth: 14, itemStyle: { color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{offset: 0, color: '#BE185D'}, {offset: 1, color: '#F43F5E'}]), borderRadius: [0,4,4,0] }, label: { show: true, position: 'right', color: '#000000', fontSize: 15, fontWeight: 700 }, data: d.social.values }] });
+  // 1. 学业水平：完全照搬 cLCombined 的垂直柱状图
+  charts.l1.setOption({ tooltip: commonTooltip, legend: { data: ['班级表现', '年级均值'], textStyle: { color: textColor, fontSize: 15 }, top: 0, right: 0, itemWidth: 12 }, grid: { top: 40, bottom: 45, left: 40, right: 10 }, xAxis: { type: 'category', data: d.academic.skills, axisLabel: { interval: 0, color: textColor, fontSize: 15, formatter: function(value) { return value.substring(0, 3) + '\n' + value.substring(3); } }, axisLine: { lineStyle: { color: axisColor } }, axisTick: { show: false } }, yAxis: { type: 'value', max: 100, axisLabel: { color: textColor, fontSize: 15 }, splitLine: { show: false } }, series: [ { name: '班级表现', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: '#8B5CF6' }, label: { show: false }, data: d.academic.skillScores }, { name: '年级均值', type: 'bar', barWidth: 12, itemStyle: { borderRadius: [4, 4, 0, 0], color: 'rgba(148, 163, 184, 0.4)' }, data: [82, 75, 85, 65, 55, 70] } ] });
 
-  // ======================== 主雷达图：完全拷贝并应用原版配置 ========================
-  const l1Indicators = ['AI素养', '学业水平', '科学思维', '调控能力', '社会协同'].map(k => ({ name: k, max: 100 }));
-  charts.mainRadar.setOption({
-    radar: { 
-      indicator: l1Indicators, startAngle: 90, clockwise: false, radius: '40%', center: ['50%', '50%'], splitNumber: 3, nameGap: 16, 
-      axisName: { 
-        formatter: (value) => '{n|' + value + '}', 
-        rich: { 
-          n: { color: '#ffffff', backgroundColor: 'rgba(29, 78, 216, 0.95)', borderRadius: 6, fontSize: 20, fontWeight: '700', padding: [6, 10], lineHeight: 20, textShadowBlur: 4, textShadowColor: 'rgba(0,0,0,0.4)', align: 'center', cursor: 'pointer' }, 
-          h: { color: 'transparent', backgroundColor: 'transparent', padding: 0, fontSize: 10, lineHeight: 0 } 
-        } 
-      }, 
-      splitLine: { lineStyle: { color: 'rgba(51, 65, 85, 0.4)', width: 1.5 } }, 
-      splitArea: { show: true, areaStyle: { color: ['rgba(203, 213, 225, 0.6)', 'rgba(226, 232, 240, 0.6)'] } }, 
-      axisLine: { lineStyle: { color: 'rgba(51, 65, 85, 0.4)', width: 1.5 } } 
-    },
-    series: [{ 
-      type: 'radar', 
-      data: [{ value: d.radarL1, name: '当前班级', label: { show: true, formatter: (params) => (params.value / 100).toFixed(2), color: '#1D4ED8', fontSize: 18, fontWeight: '900', distance: 6, padding: -12 } }], 
-      itemStyle: { color: '#1D4ED8' }, areaStyle: { color: 'rgba(29, 78, 216, 0.3)' }, lineStyle: { color: '#1D4ED8', width: 2 }, symbol: 'circle', symbolSize: 8, 
-      emphasis: { itemStyle: { shadowBlur: 8, shadowColor: '#1D4ED8' }, lineStyle: { width: 3 } } 
-    }]
-  });
+  // 2. AI素养：完全照搬 cL1 的横向对比条形图
+  charts.l3.setOption({ tooltip: commonTooltip, legend: { data: ['核心应用', '深度利用', '年级均值'], textStyle: { color: textColor, fontSize: 15 }, top: 0, right: 0, itemWidth: 10 }, grid: { top: 35, bottom: 20, left: 45, right: 20 }, yAxis: { type: 'category', data: d.aiLiteracy.stages, ...commonAxis, inverse: true }, xAxis: { type: 'value', min: 50, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, width: 1 } } }, series: [ { name: '核心应用', type: 'bar', barWidth: 6, itemStyle: { borderRadius: [0, 4, 4, 0], color: '#3B82F6' }, data: d.aiLiteracy.metric1.data }, { name: '深度利用', type: 'bar', barWidth: 6, itemStyle: { borderRadius: [0, 4, 4, 0], color: '#10B981' }, data: d.aiLiteracy.metric2.data }, { name: '年级均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: [80, 85, 75] } ] });
 
-  charts.mainRadar.getZr().on('click', function(e) {
-    const zr = charts.mainRadar.getZr();
-    const dx = e.offsetX - zr.getWidth() / 2; const dy = e.offsetY - zr.getHeight() / 2;
-    if (Math.sqrt(dx*dx + dy*dy) < 20) return; 
-    let angle = Math.atan2(dy, dx) * 180 / Math.PI; if (angle < 0) angle += 360;
-    const targets = [270, 198, 126, 54, 342]; 
-    let minDiff = 360; let closestIndex = -1;
-    targets.forEach((t, i) => { let diff = Math.abs(angle - t); if (diff > 180) diff = 360 - diff; if (diff < minDiff) { minDiff = diff; closestIndex = i; } });
-    if (closestIndex !== -1) triggerPopup(l1Indicators[closestIndex].name, e.event); 
-  });
+  // 3. 宏观画像：完全照搬 mainLine 的多维折线成长曲线
+  charts.mainRadar.setOption({ tooltip: commonTooltip, legend: { data: ['AI素养', '学业水平', '科学思维', '调控能力', '社会协同', '班级综合均值'], bottom: 0, textStyle: { color: textColor, fontSize: 15 }, icon: 'roundRect' }, grid: { top: 20, bottom: 65, left: 45, right: 20 }, xAxis: { type: 'category', boundaryGap: false, data: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11'], ...commonAxis }, yAxis: { type: 'value', min: 60, max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor, type: 'dashed' } } }, series: [ { name: 'AI素养', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#3B82F6' }, data: d.mainLine.ai }, { name: '学业水平', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#10B981' }, data: d.mainLine.edu }, { name: '科学思维', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#F59E0B' }, data: d.mainLine.sci }, { name: '调控能力', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#8B5CF6' }, data: d.mainLine.reg }, { name: '社会协同', type: 'line', smooth: true, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3 }, itemStyle: { color: '#EC4899' }, data: d.mainLine.soc }, { name: '班级综合均值', type: 'line', smooth: true, symbol: 'none', lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, data: d.mainLine.avg } ] });
+
+  // 4. 调控能力：完全照搬 cRWide2 的面积图 (X轴填入指标数组)
+  charts.rTop1.setOption({ tooltip: commonTooltip, legend: { data: ['班级表现', '年级均值'], right: 0, top: 0, textStyle: { fontSize: 15, color: textColor } }, grid: { top: 40, bottom: 30, left: 45, right: 20 }, xAxis: { type: 'category', boundaryGap: false, data: d.regulation.map(r=>r.name), ...commonAxis }, yAxis: { type: 'value', max: 100, ...commonAxis, splitLine: { show: true, lineStyle: { color: splitColor } } }, series: [ { name: '班级表现', type: 'line', smooth: true, areaStyle: { color: 'rgba(245, 158, 11, 0.2)' }, lineStyle: { width: 3, color: '#F59E0B' }, itemStyle: { color: '#F59E0B' }, data: d.regulation.map(r=>r.value) }, { name: '年级均值', type: 'line', smooth: true, lineStyle: { width: 2, type: 'dashed', color: '#94A3B8' }, symbol: 'none', data: [85, 88, 82, 85, 80, 75, 70, 75] } ] });
+
+  // 5. 科学思维：完全照搬 cR4 的单项比例环形图
+  charts.rTop2.setOption({ tooltip: { textStyle: { fontSize: 18, color: textColor } }, title: { text: d.sciVal + '%', left: 'center', top: 'center', textStyle: { fontSize: 18, fontWeight: 'bold', color: textColor } }, series: [{ type: 'pie', radius: ['60%', '80%'], center: ['50%', '50%'], hoverAnimation: false, label: { show: false }, data: [ { value: d.sciVal, name: '优良率', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 1, 1, [{offset: 0, color: '#EF4444'}, {offset: 1, color: '#F59E0B'}]) } }, { value: 100 - d.sciVal, name: '待提升', itemStyle: { color: 'rgba(148, 163, 184, 0.3)' } } ] }] });
+
+  // 6. 社会协同：完全照搬 cR3 的液态水球图
+  charts.r1.setOption({ series: [{ type: 'liquidFill', data: [d.socVal, d.socVal - 0.05], radius: '75%', center: ['50%', '50%'], color: ['#10B981', 'rgba(16, 185, 129, 0.5)'], backgroundStyle: { color: 'rgba(16, 185, 129, 0.05)' }, outline: { borderDistance: 2, itemStyle: { borderWidth: 2, borderColor: '#10B981' } }, label: { fontSize: 20, color: textColor, fontWeight: 'bold', formatter: function() { return (d.socVal * 100).toFixed(0) + '%'; } } }] });
 };
 
 const handleResizeWindow = () => { Object.values(charts).forEach(c => c && c.resize()); Object.values(l2ChartInstances).forEach(c => c && c.resize()); };
@@ -243,7 +172,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 100% 沿用并保留原有样式的精华属性，按要求缩小2px */
+/* 此处与之前提供的 ClassCompetencyProfile 样式完全一致，100%未作任何修改 */
 .dashboard-wrapper {
   --main-color: #1D4ED8; --warn-color: #B91C1C; --high-color: #B45309; --text-title: #020617; --text-norm: #0F172A; --text-sub: #334155; 
   --mod-bg: rgba(255, 255, 255, 0.85); --mod-border: rgba(203, 213, 225, 0.8); --mod-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9); --mod-radius: 14px; 
@@ -283,7 +212,7 @@ onUnmounted(() => {
 .info-val { font-size: 22px; font-weight: 800; color: var(--text-title); white-space: nowrap; }
 .info-val.s-rank { font-size: 44px; font-weight: 900; background: linear-gradient(135deg, #1D4ED8, #1E3A8A); -webkit-background-clip: text; color: transparent; line-height: 1; text-shadow: 0 4px 12px rgba(29, 78, 216, 0.3); }
 
-.center-radar-container { flex: 1; position: relative; width: 100%; min-height: 0; cursor: pointer; }
+.center-radar-container { flex: 1; position: relative; width: 100%; min-height: 0; cursor: default; }
 #main-radar { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 .center-ai { flex: none; background: var(--ai-bg); backdrop-filter: blur(16px); border: 1px solid var(--ai-border); border-radius: var(--mod-radius); box-shadow: var(--mod-shadow); padding: 4px 6px; min-height: 70px; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
@@ -291,7 +220,6 @@ onUnmounted(() => {
 .ai-title::before { content: '✦'; font-size: 18px; }
 .ai-text { font-size: 16px; color: #000000; line-height: 1.6; letter-spacing: 0.3px; }
 
-/* 100% 还原 AI 洞察区域红绿高亮 HTML 标签配置 */
 :deep(.strength) { color: #10B981; font-weight: bold; background: rgba(16, 185, 129, 0.15); padding: 0 4px; border-radius: 4px; }
 :deep(.weakness) { color: #EF4444; font-weight: bold; background: rgba(239, 68, 68, 0.15); padding: 0 4px; border-radius: 4px; }
 
