@@ -88,6 +88,7 @@
               :key="page.path"
               @click="navigateTo(page.path)" 
               class="group/item flex items-center p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-all duration-300 text-left"
+              :class="{ 'highlight-btn': page.highlight }"
             >
               <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-4 bg-[#0f1114] group-hover/item:scale-110 transition-transform">
                 <svg class="w-5 h-5" :class="currentThemeText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,6 +164,9 @@ const studentPages = [
 
 
 const otherPages = [
+  { name: '班级能力画像', path: '/student-archive/class-competency/class1', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', highlight: true },
+
+  { name: '学生能力画像', path: '/student-archive/competrncy/101', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', highlight: true },
 
   { name: '学情分析分组页', path: '/teacher/task-publish', icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
 
@@ -201,6 +205,7 @@ const otherPages = [
   { name: '学生画像第一版', path: '/学生画像第一版.html', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
 
   { name: '学生能力画像', path: '/学生能力画像.html', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { name: '学生能力画像2', path: '/student-archive/competrncy/101', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
 
   { name: '数字档案第一版', path: '/数字档案第一版.html', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
 
@@ -271,5 +276,40 @@ const goBack = () => router.push('/')
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+/* 高亮按钮呼吸动画 */
+.highlight-btn {
+  position: relative;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15)) !important;
+  animation: breathe-glow 2s ease-in-out infinite;
+}
+
+.highlight-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3), rgba(59, 130, 246, 0.3));
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+@keyframes breathe-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3), 0 0 10px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.2);
+  }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 </style>

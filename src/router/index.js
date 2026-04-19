@@ -189,6 +189,18 @@ const routes = [
         name: 'ClassCompetencyProfile',
         component: () => import('../views/ClassCompetencyProfile.vue'),
         meta: { title: '班级能力画像' }
+      },
+      {
+        path: 'competrncy/:studentId',
+        name: 'StudentCompetrncyProfile',
+        component: () => import('../views/StudentCompetrncyProfile.vue'),
+        meta: { title: '学生能力画像' }
+      },
+      {
+        path: 'profile-dashboard',
+        name: 'ProfileDashboard',
+        component: () => import('../views/student/StudentProfileDashboard.vue'),
+        meta: { title: '学生对比画像' }
       }
     ]
   },
@@ -205,12 +217,6 @@ const routes = [
     name: 'AdminPage',
     component: () => import('../views/AdminPage.vue'),
     meta: { title: '管理员控制台' }
-  },
-  {
-    path: '/profile-dashboard',
-    name: 'ProfileDashboard',
-    component: () => import('../views/student/StudentProfileDashboard.vue'),
-    meta: { title: '个人中心' }
   },
   {
     path: '/matrix-3x3',

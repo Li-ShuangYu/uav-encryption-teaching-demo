@@ -8,10 +8,12 @@ const route = useRoute()
 // ================= 数据定义 =================
 const navItems = [
   { name: "学生能力画像", path: '/student-archive/competency/101', active: true },
+   { name: "学生对比画像", path: '/student-archive/profile-dashboard', dropdown: false },
   { name: "学生数字档案", path: '/student-archive/digital/101', dropdown: false },
   { name: "学生全息档案", path: '/student-archive/holographic/101', dropdown: false },
   { name: "班级能力画像", path: '/student-archive/class-competency/class1', dropdown: false },
-  { name: "学生对比画像", path: '/profile-dashboard', dropdown: false },
+
+   { name: "学生能力画像", path: '/student-archive/competrncy/101', dropdown: false },
 ]
 
 // 导航点击

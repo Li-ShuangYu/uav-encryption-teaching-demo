@@ -7,26 +7,6 @@ import { Document, UserFilled, Odometer, Medal, CaretTop, CaretBottom } from '@e
 const router = useRouter();
 const route = useRoute();
 
-// ================= 导航配置 =================
-const navItems = [
-  { name: "学生能力画像", path: '/student-archive/competency/101' },
-  { name: "学生数字档案", path: '/student-archive/digital/101' },
-  { name: "学生全息档案", path: '/student-archive/holographic/101' },
-  { name: "学生对比画像", path: '/profile-dashboard' },
-];
-
-// 导航点击
-const handleNavClick = (item: any) => {
-  if (item.path) {
-    router.push(item.path);
-  }
-};
-
-// 跳转到教师学生分组页面
-const goToTeacherStudentGroup = () => {
-  router.push('/teacher/student-group');
-};
-
 // ================= Mock 数据库 =================
 const mockDatabase: Record<string, any> = {
   "101": { // 林浩轩
@@ -267,27 +247,6 @@ window.addEventListener("resize", () => {
 
 <template>
   <div class="mdzx-layout">
-    <!-- 顶部导航 -->
-    <header class="top-header">
-      <div class="header-left">
-              <img src="../../assets/image/mdzx.png" alt="密盾智学" class="logo">
-        <span class="sys-title" @click="goToTeacherStudentGroup">密盾智学 / 学员画像</span>
-      </div>
-      <div class="header-right">
-        <div class="nav-links">
-          <div 
-            v-for="(item, index) in navItems" 
-            :key="index" 
-            class="nav-item" 
-            :class="{ active: route.path === item.path }"
-            @click="handleNavClick(item)"
-          >
-            {{ item.name }}
-          </div>
-        </div>
-      </div>
-    </header>
-    
     <!-- 页面内容 -->
     <main class="content">
       <div class="layout-wrapper">
