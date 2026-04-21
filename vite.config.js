@@ -4,7 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
-  base: '/resource/llmops/',
+  base: '/edu/case-teaching/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')

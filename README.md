@@ -128,3 +128,7 @@ npm run preview
 ## 许可证
 
 本项目为教学演示系统，仅供学习和研究使用。
+
+
+另一个页面查看：
+http://localhost:5173/edu/case-teaching/#/showcase/detail

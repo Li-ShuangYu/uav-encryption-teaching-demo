@@ -16,6 +16,12 @@ const routes = [
     component: () => import('../views/InitialPage.vue'),
     meta: { title: '初始页面' }
   },
+  {
+    path: '/showcase/detail',
+    name: 'AchievementDetail',
+    component: () => import('../views/showcase/AchievementDetail/AchievementDetail.vue'),
+    meta: { title: '成果展示详情' }
+  },
   // ================= 分组推荐页面 =================
   {
     path: '/group-recommendation',
