@@ -235,6 +235,18 @@ const routes = [
     name: 'AgentDetail',
     component: () => import('../views/AgentDetail.vue'),
     meta: { title: '智能体详情' }
+  },
+  {
+    path: '/student-diagnostic-report-demo',
+    name: 'StudentDiagnosticReport',
+    component: () => import('../views/StudentDiagnosticReport.vue'),
+    meta: { title: '学情诊断可视化报告demo' }
+  },
+  {
+    path: '/teacher-diagnostic-report',
+    name: 'TeacherDiagnosticReport',
+    component: () => import('../views/TeacherDiagnosticReport.vue'),
+    meta: { title: '教师学情诊断报告' }
   }
 ]
 
