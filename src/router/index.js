@@ -247,6 +247,18 @@ const routes = [
     name: 'TeacherDiagnosticReport',
     component: () => import('../views/TeacherDiagnosticReport.vue'),
     meta: { title: '教师学情诊断报告' }
+  },
+  {
+    path: '/showcase/course-knowledge-graph',
+    name: 'CourseKnowledgeGraph',
+    component: () => import('../views/showcase/course-knowledge/course-knowledge-graph.vue'),
+    meta: { title: '课程知识图谱' }
+  },
+  {
+    path: '/showcase/course-knowledge',
+    name: 'CourseKnowledge',
+    component: () => import('../views/showcase/course-knowledge/course-knowledge.vue'),
+    meta: { title: '课程知识' }
   }
 ]
 
