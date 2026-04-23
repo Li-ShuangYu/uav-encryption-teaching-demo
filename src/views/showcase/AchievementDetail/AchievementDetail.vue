@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <header class="header">
-      <h1>案例教学新模式探索与实践</h1>
-      <p>案例教学新模式探索与实践</p>
+      <h1>依托军事装备学一级学科</h1>
+      <h1>培养创新型密码工程人才</h1>
     </header>
 
     <section class="carousel-section">
@@ -11,17 +11,11 @@
         <button class="carousel-btn btn-prev" @click="moveCarousel('prev')">&#10094;</button>
 
         <div class="carousel-track" id="carouselTrack">
-          <div class="carousel-item" :class="{ active: currentIndex === 0, prev: currentIndex === 2, next: currentIndex === 1 }" @click="handleItemClick(0)">
-            <img v-if="img1Url" :src="img1Url" alt="展示图1" @error="handleImgError($event)">
-            <div v-else class="img-placeholder">展示图1</div>
-          </div>
-          <div class="carousel-item" :class="{ active: currentIndex === 1, prev: currentIndex === 0, next: currentIndex === 2 }" @click="handleItemClick(1)">
-            <img v-if="img2Url" :src="img2Url" alt="展示图2" @error="handleImgError($event)">
-            <div v-else class="img-placeholder">展示图2</div>
-          </div>
-          <div class="carousel-item" :class="{ active: currentIndex === 2, prev: currentIndex === 1, next: currentIndex === 0 }" @click="handleItemClick(2)">
-            <img v-if="img3Url" :src="img3Url" alt="展示图3" @error="handleImgError($event)">
-            <div v-else class="img-placeholder">展示图3</div>
+          <div v-for="(url, index) in imgUrls" :key="index" class="carousel-item" 
+               :class="getItemClass(index)" 
+               @click="handleItemClick(index)">
+            <img v-if="url" :src="url" :alt="'展示图' + (index + 1)" @error="handleImgError($event)">
+            <div v-else class="img-placeholder">展示图{{ index + 1 }}</div>
           </div>
         </div>
 
@@ -60,25 +54,37 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import img1 from './assets/imgs/img1.jpg'
-import img2 from './assets/imgs/img2.jpg'
-import img3 from './assets/imgs/img3.jpg'
-import pdf1 from './assets/pdfs/成果演示.pdf'
-import pdf2 from './assets/pdfs/成果介绍.pdf'
-import pdf3 from './assets/pdfs/成果总结.pdf'
-import pdf4 from './assets/pdfs/成果应用.pdf'
-import pdf5 from './assets/pdfs/媒体报道.pdf'
+import img1 from './assets/imgs/图片1.png'
+import img2 from './assets/imgs/图片2.png'
+import img3 from './assets/imgs/图片3.png'
+import img4 from './assets/imgs/图片4.png'
+import img5 from './assets/imgs/图片5.png'
+import img6 from './assets/imgs/图片6.png'
+import img7 from './assets/imgs/图片7.png'
+import img8 from './assets/imgs/图片8.png'
+import pdf1 from './assets/pdfs/0成果简介.pdf'
+import pdf2 from './assets/pdfs/1解决的主要问题.pdf'
+import pdf3 from './assets/pdfs/2成果主要做法.pdf'
+import pdf4 from './assets/pdfs/3成果创新点.pdf'
+import pdf5 from './assets/pdfs/4成果效益及推广应用.pdf'
 
-const img1Url = new URL(img1, import.meta.url).href
-const img2Url = new URL(img2, import.meta.url).href
-const img3Url = new URL(img3, import.meta.url).href
+const imgUrls = ref([
+  new URL(img1, import.meta.url).href,
+  new URL(img2, import.meta.url).href,
+  new URL(img3, import.meta.url).href,
+  new URL(img4, import.meta.url).href,
+  new URL(img5, import.meta.url).href,
+  new URL(img6, import.meta.url).href,
+  new URL(img7, import.meta.url).href,
+  new URL(img8, import.meta.url).href
+])
 
 const pdfData = [
-  { name: '成果演示', url: new URL(pdf1, import.meta.url).href },
-  { name: '成果介绍', url: new URL(pdf2, import.meta.url).href },
-  { name: '成果总结', url: new URL(pdf3, import.meta.url).href },
-  { name: '成果应用', url: new URL(pdf4, import.meta.url).href },
-  { name: '媒体报道', url: new URL(pdf5, import.meta.url).href }
+  { name: '成果简介', url: new URL(pdf1, import.meta.url).href },
+  { name: '解决的主要问题', url: new URL(pdf2, import.meta.url).href },
+  { name: '成果主要做法', url: new URL(pdf3, import.meta.url).href },
+  { name: '成果创新点', url: new URL(pdf4, import.meta.url).href },
+  { name: '成果效益及推广应用', url: new URL(pdf5, import.meta.url).href } // 占位
 ]
 
 const activeFileIndex = ref(0)
@@ -87,8 +93,35 @@ const currentFileName = ref('')
 const currentIndex = ref(0)
 let autoPlayTimer = null
 
+// 核心逻辑：动态计算当前卡片在轮播中的位置类名
+function getItemClass(index) {
+  const total = imgUrls.value.length
+  if (total === 0) return 'hidden'
+  
+  const curr = currentIndex.value
+  if (index === curr) return 'active'
+
+  const next1 = (curr + 1) % total
+  const prev1 = (curr - 1 + total) % total
+  if (index === next1) return 'next-1'
+  if (index === prev1) return 'prev-1'
+
+  // 当图片总数大于等于5张时，才显示前后第二张
+  if (total >= 5) {
+    const next2 = (curr + 2) % total
+    const prev2 = (curr - 2 + total) % total
+    if (index === next2) return 'next-2'
+    if (index === prev2) return 'prev-2'
+  }
+
+  // 其他所有未命中的卡片必须被隐藏，防止重叠
+  return 'hidden'
+}
+
 function moveCarousel(direction) {
-  const total = 3
+  const total = imgUrls.value.length
+  if (total === 0) return
+
   if (direction === 'next') {
     currentIndex.value = (currentIndex.value + 1) % total
   } else {
@@ -98,10 +131,11 @@ function moveCarousel(direction) {
 }
 
 function handleItemClick(index) {
-  if (index === (currentIndex.value - 1 + 3) % 3) {
-    moveCarousel('prev')
-  } else if (index === (currentIndex.value + 1) % 3) {
-    moveCarousel('next')
+  const cls = getItemClass(index)
+  // 如果点击的是非居中激活的图片，则直接跳转至该图片
+  if (cls !== 'active' && cls !== 'hidden') {
+    currentIndex.value = index
+    resetAutoPlay()
   }
 }
 
@@ -260,7 +294,6 @@ onUnmounted(() => {
   overflow: hidden;
   transition: all 0.5s ease-in-out;
   box-shadow: none;
-  cursor: pointer;
   background: transparent;
   border: none;
 }
@@ -284,6 +317,7 @@ onUnmounted(() => {
   font-size: 18px;
 }
 
+/* 轮播图分级样式控制：左右各展示2张，共5张可见 */
 :deep(.carousel-item.active) {
   transform: translateX(-50%) scale(1);
   left: 50%;
@@ -292,24 +326,42 @@ onUnmounted(() => {
   cursor: default;
 }
 
-:deep(.carousel-item.prev) {
+:deep(.carousel-item.prev-1) {
   transform: translateX(-50%) scale(0.85);
-  left: 25%;
+  left: 30%;
   z-index: 2;
-  opacity: 0.6;
+  opacity: 0.8;
+  cursor: pointer;
 }
 
-:deep(.carousel-item.next) {
+:deep(.carousel-item.next-1) {
   transform: translateX(-50%) scale(0.85);
-  left: 75%;
+  left: 70%;
   z-index: 2;
-  opacity: 0.6;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+:deep(.carousel-item.prev-2) {
+  transform: translateX(-50%) scale(0.7);
+  left: 15%;
+  z-index: 1;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+:deep(.carousel-item.next-2) {
+  transform: translateX(-50%) scale(0.7);
+  left: 85%;
+  z-index: 1;
+  opacity: 0.5;
+  cursor: pointer;
 }
 
 :deep(.carousel-item.hidden) {
   transform: translateX(-50%) scale(0.5);
   left: 50%;
-  z-index: 1;
+  z-index: 0;
   opacity: 0;
   pointer-events: none;
 }

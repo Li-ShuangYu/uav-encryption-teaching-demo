@@ -17,7 +17,7 @@ const routes = [
     meta: { title: '初始页面' }
   },
   {
-    path: '/showcase/detail',
+    path: '/detail',
     name: 'AchievementDetail',
     component: () => import('../views/showcase/AchievementDetail/AchievementDetail.vue'),
     meta: { title: '成果展示详情' }
@@ -235,6 +235,18 @@ const routes = [
     name: 'AgentDetail',
     component: () => import('../views/AgentDetail.vue'),
     meta: { title: '智能体详情' }
+  },
+  {
+    path: '/showcase/course-knowledge-graph',
+    name: 'CourseKnowledgeGraph',
+    component: () => import('../views/showcase/course-knowledge/course-knowledge-graph.vue'),
+    meta: { title: '课程知识图谱' }
+  },
+  {
+    path: '/showcase/course-knowledge',
+    name: 'CourseKnowledge',
+    component: () => import('../views/showcase/course-knowledge/course-knowledge.vue'),
+    meta: { title: '课程知识' }
   }
 ]
 
