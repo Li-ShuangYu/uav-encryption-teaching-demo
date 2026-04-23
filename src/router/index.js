@@ -259,6 +259,24 @@ const routes = [
     name: 'CourseKnowledge',
     component: () => import('../views/showcase/course-knowledge/course-knowledge.vue'),
     meta: { title: '课程知识' }
+  },
+  {
+    path: '/student-cabin',
+    name: 'StudentCabin',
+    component: () => import('../views/StudentCabin.vue'),
+    meta: { title: '学生舱' }
+  },
+  {
+    path: '/teacher-builder',
+    name: 'TeacherBuilder',
+    component: () => import('../views/TeacherBuilder.vue'),
+    meta: { title: '教师构建器' }
+  },
+  {
+    path: '/teacher-live-monitor',
+    name: 'TeacherLiveMonitor',
+    component: () => import('../views/TeacherLiveMonitor.vue'),
+    meta: { title: '教师实时监控' }
   }
 ]
 
