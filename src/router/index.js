@@ -237,16 +237,16 @@ const routes = [
     meta: { title: '智能体详情' }
   },
   {
-    path: '/showcase/course-knowledge-graph',
-    name: 'CourseKnowledgeGraph',
-    component: () => import('../views/showcase/course-knowledge/course-knowledge-graph.vue'),
-    meta: { title: '课程知识图谱' }
+    path: '/student-diagnostic-report-demo',
+    name: 'StudentDiagnosticReport',
+    component: () => import('../views/StudentDiagnosticReport.vue'),
+    meta: { title: '学情诊断可视化报告demo' }
   },
   {
-    path: '/showcase/course-knowledge',
-    name: 'CourseKnowledge',
-    component: () => import('../views/showcase/course-knowledge/course-knowledge.vue'),
-    meta: { title: '课程知识' }
+    path: '/teacher-diagnostic-report',
+    name: 'TeacherDiagnosticReport',
+    component: () => import('../views/TeacherDiagnosticReport.vue'),
+    meta: { title: '教师学情诊断报告' }
   }
 ]
 
