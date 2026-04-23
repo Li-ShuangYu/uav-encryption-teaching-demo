@@ -132,55 +132,21 @@ const treeData = {
   symbol: THEME.cubeRed,
   symbolSize: [110, 126],
   children: [
+    { name: '1.绪论', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '2.密码系统设计方法', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '3.传输加密子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '4.存储加密子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '5.认证控制子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '6.综合管理子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
     {
-      name: '第一章 密码工程基础理论',
+      name: '7.典型密码系统设计',
       symbol: THEME.cubeYellow,
       symbolSize: [90, 104],
       children: [
-        {
-          name: '1.1.1 密码系统基本组成',
-          symbol: THEME.spherePurple,
-          symbolSize: [80, 80],
-          children: [
-            { name: '信源与信宿', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
-            { name: '加密算法空间', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
-            { name: '密钥分发链路', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
-          ]
-        },
-        {
-          name: '1.1.2 密码系统安全要求',
-          symbol: THEME.spherePurple,
-          symbolSize: [80, 80],
-          children: [
-            { name: '机密性标准', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
-            { name: '完整性验证', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
-          ]
-        }
-      ]
-    },
-    {
-      name: '第二章 对称加密技术',
-      symbol: THEME.cubeYellow,
-      symbolSize: [90, 104],
-      children: [
-        {
-          name: '2.1.1 流密码原理',
-          symbol: THEME.spherePurple,
-          symbolSize: [80, 80],
-          children: [
-            { name: 'LFSR序列', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
-            { name: 'RC4算法实现', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
-          ]
-        },
-        {
-          name: '2.1.2 分组密码(AES)',
-          symbol: THEME.spherePurple,
-          symbolSize: [80, 80],
-          children: [
-            { name: 'S盒变换', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
-            { name: '轮密钥加', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
-          ]
-        }
+        { name: '7.1 计算机密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.2 嵌入式密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.3 区块链系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.4 无人机密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
       ]
     }
   ]
@@ -212,8 +178,47 @@ const onDragEnd = () => {
 const generateMockData = (name) => {
   const types = Object.values(RES_TYPES);
   const ais = Object.values(AI_SOURCES);
-  return Array.from({ length: 3 }).map((_, i) => ({
-    title: `${name} - ${i === 0 ? '讲解视频' : i === 1 ? '核心课件' : '配套音频'}`,
+  
+  // 定制化匹配：无人机密码系统
+  if (name.includes('无人机')) {
+    return [
+      {
+        title: '无人机通信链路白盒加密规范',
+        type: RES_TYPES.VIDEO,
+        sources: [AI_SOURCES.DOUBAO, AI_SOURCES.KIMI],
+        // 预留真实视频路径，请在该目录下放置 uav_comm_spec.mp4
+        fileUrl: `${LOGO_BASE}/uav_comm_spec.mp3` 
+      },
+      {
+        title: '轻量级密码算法在无人机上的部署',
+        type: RES_TYPES.PDF, // 强制为 PDF，将使用浏览器自带 PDF 阅读器打开
+        sources: [AI_SOURCES.DEEPSEEK, AI_SOURCES.WENXIN],
+        // 预留真实PDF路径，请在该目录下放置 lightweight_crypto.pdf
+        fileUrl: `${LOGO_BASE}/lightweight_crypto.pdf` 
+      },
+      {
+        title: '抗干扰与双向身份认证体系构建',
+        type: RES_TYPES.VIDEO,
+        sources: [AI_SOURCES.KIMI, AI_SOURCES.DOUBAO],
+        // 预留真实视频路径，请在该目录下放置 auth_system.mp4
+        fileUrl: `${LOGO_BASE}/auth_system.mp4` 
+      }
+    ];
+  } 
+  
+  let resources = [];
+  if (name.includes('区块链')) {
+    resources = ['区块链密码学基础与哈希指针', '智能合约安全漏洞攻防演示', '共识机制(POW/POS)源码导读'];
+  } else if (name.includes('绪论')) {
+    resources = ['密码学发展史与现代密码工程', '国内外商用密码法及合规性解读', '系统级安全威胁模型(STRIDE)建模'];
+  } else if (name.includes('存储加密')) {
+    resources = ['静态数据存储加密体系结构', '透明数据加密(TDE)技术白皮书', '密钥生命周期管理与密文库设计'];
+  } else {
+    resources = [`${name} - 核心架构解析与串讲`, `${name} - 工程设计最佳实践文档`, `${name} - 课后综合实战演练`];
+  }
+
+  return resources.map((title, i) => ({
+    title: title,
     type: types[i % 3],
     sources: [ais[Math.floor(Math.random() * ais.length)], ais[Math.floor(Math.random() * ais.length)]],
     fileUrl: `${ASSETS_BASE}/sample.${types[i % 3].key === 'video' ? 'mp4' : types[i % 3].key === 'audio' ? 'mp3' : 'pdf'}`
@@ -231,11 +236,10 @@ const initChart = () => {
       {
         type: 'tree',
         data: [treeData],
-        // 把上下边距缩小到极致，给节点让出所有垂直空间
-        top: '2%',
-        bottom: '2%',
+        top: '-60%',   
+        bottom: '-60%', 
         left: '10%',
-        right: '10%',
+        right: '25%',
         roam: true,                 
         symbolKeepAspect: true,
         orient: 'LR',               
@@ -268,14 +272,15 @@ const initChart = () => {
 
   chartInstance.value.on('click', (params) => {
     if (params.componentType === 'series') {
-      const wrapper = document.querySelector('.graph-container-wrapper');
-      const rect = graphRef.value.getBoundingClientRect();
       currentResources.value = generateMockData(params.data.name);
+      
+      const popupWidth = 480;
+      const popupHeight = 450; 
       
       popup.value = {
         visible: true,
-        x: params.event.event.clientX - rect.left + wrapper.scrollLeft + 40,
-        y: params.event.event.clientY - rect.top + wrapper.scrollTop + 40,
+        x: window.innerWidth - popupWidth - 30,
+        y: (window.innerHeight - popupHeight) / 2,
         nodeData: params.data
       };
     }
@@ -325,20 +330,19 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100vw;
   height: calc(100vh - 80px); 
-  overflow: auto; /* 重点：外部出滚动条 */
+  overflow: hidden; 
   box-sizing: border-box;
 }
 
-/* 核心！宽度锁死防拉长，高度拉爆防挤压 */
 .graph-container {
-  width: 1100px;
-  height: 1800px; 
-  margin: 0 auto; 
+  width: 100%;
+  height: 100%; 
 }
 
 .resource-popup {
-  position: absolute; width: 480px; background: white;
-  border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+  position: fixed; 
+  width: 480px; background: white;
+  border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.25);
   border: 1px solid #E3F2FD; z-index: 100; overflow: hidden;
 }
 
