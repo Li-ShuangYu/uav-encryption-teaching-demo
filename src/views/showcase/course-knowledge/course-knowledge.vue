@@ -98,9 +98,6 @@ const RES_TYPES = {
   AUDIO: { key: 'audio', label: '音频', class: 'a-icon' }
 };
 
-// ======================
-// 核心修改：立体节点 SVG 生成函数
-// ======================
 const generateCubeSVG = (topColor, leftColor, rightColor, strokeColor) => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 115">
     <polygon points="50,2 98,26 50,50 2,26" fill="${topColor}" stroke="${strokeColor}" stroke-width="2.5" stroke-linejoin="round"/>
@@ -123,80 +120,55 @@ const generateSphereSVG = (lightColor, darkColor, strokeColor) => {
   return `image://data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
-// ======================
-// 核心修改：节点主题配色（根红、一级黄、二级紫、三级蓝）
-// ======================
 const THEME = {
-  cubeRed: generateCubeSVG('#FFEBEE', '#FFCDD2', '#EF9A9A', '#E53935'), // 根节点红色
-  cubeYellow: generateCubeSVG('#FFF8E1', '#FFE082', '#FFCC80', '#FFB74D'), // 一级节点黄色
-  spherePurple: generateSphereSVG('#F3E5F5', '#BA68C8', '#8E24AA'), // 二级节点紫色
-  cubeBlue: generateCubeSVG('#E1F5FE', '#81D4FA', '#4FC3F7', '#29B6F6') // 三级节点蓝色
+  cubeRed: generateCubeSVG('#FFEBEE', '#FFCDD2', '#EF9A9A', '#E53935'),
+  cubeYellow: generateCubeSVG('#FFF8E1', '#FFE082', '#FFCC80', '#FFB74D'),
+  spherePurple: generateSphereSVG('#F3E5F5', '#BA68C8', '#8E24AA'),
+  cubeBlue: generateCubeSVG('#E1F5FE', '#81D4FA', '#4FC3F7', '#29B6F6')
 };
 
-// ======================
-// 核心修改：节点数据（调整三级节点y坐标增大纵向间距，更新节点颜色）
-// ======================
-const graphNodes = [
-  // 根节点：红色立方体
-  { id: '0', name: rootNodeName, symbol: THEME.cubeRed, symbolSize: [70, 80], x: 100, y: 300 },
-  
-  // 一级节点：黄色立方体
-  { id: '1', name: '第一章 密码工程基础理论', symbol: THEME.cubeYellow, symbolSize: [70, 80], x: 350, y: 150 },
-  { id: '2', name: '第二章 对称加密技术', symbol: THEME.cubeYellow, symbolSize: [70, 80], x: 350, y: 450 },
-
-  // 二级节点：紫色球体
-  { id: '1.1.1', name: '1.1.1 密码系统基本组成', symbol: THEME.spherePurple, symbolSize: [55, 55], x: 600, y: 100 },
-  { id: '1.1.2', name: '1.1.2 密码系统安全要求', symbol: THEME.spherePurple, symbolSize: [55, 55], x: 600, y: 200 },
-
-  { id: '2.1.1', name: '2.1.1 流密码原理', symbol: THEME.spherePurple, symbolSize: [55, 55], x: 600, y: 400 },
-  { id: '2.1.2', name: '2.1.2 分组密码(AES)', symbol: THEME.spherePurple, symbolSize: [55, 55], x: 600, y: 500 },
-
-  // 三级节点：蓝色立方体（增大纵向间距）
-  { id: 'e1-1', name: '信源与信宿', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 20 },
-  { id: 'e1-2', name: '加密算法空间', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 90 },
-  { id: 'e1-3', name: '密钥分发链路', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 160 },
-  { id: 'e2-1', name: '机密性标准', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 230 },
-  { id: 'e2-2', name: '完整性验证', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 300 },
-  { id: 'e3-1', name: 'LFSR序列', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 370 },
-  { id: 'e3-2', name: 'RC4算法实现', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 440 },
-  { id: 'e4-1', name: 'S盒变换', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 510 },
-  { id: 'e4-2', name: '轮密钥加', symbol: THEME.cubeBlue, symbolSize: [60, 69], x: 850, y: 580 }
-];
-
-const graphLinks = [
-  { source: '0', target: '1' }, { source: '0', target: '2' },
-  { source: '1', target: '1.1.1' }, { source: '1', target: '1.1.2' },
-  { source: '2', target: '2.1.1' }, { source: '2', target: '2.1.2' },
-  { source: '1.1.1', target: 'e1-1' }, { source: '1.1.1', target: 'e1-2' }, { source: '1.1.1', target: 'e1-3' },
-  { source: '1.1.2', target: 'e2-1' }, { source: '1.1.2', target: 'e2-2' },
-  { source: '2.1.1', target: 'e3-1' }, { source: '2.1.1', target: 'e3-2' },
-  { source: '2.1.2', target: 'e4-1' }, { source: '2.1.2', target: 'e4-2' }
-];
+const treeData = {
+  name: rootNodeName,
+  symbol: THEME.cubeRed,
+  symbolSize: [110, 126],
+  children: [
+    { name: '1.绪论', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '2.密码系统设计方法', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '3.传输加密子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '4.存储加密子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '5.认证控制子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    { name: '6.综合管理子系统', symbol: THEME.cubeYellow, symbolSize: [90, 104] },
+    {
+      name: '7.典型密码系统设计',
+      symbol: THEME.cubeYellow,
+      symbolSize: [90, 104],
+      children: [
+        { name: '7.1 计算机密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.2 嵌入式密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.3 区块链系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] },
+        { name: '7.4 无人机密码系统', symbol: THEME.cubeBlue, symbolSize: [80, 92] }
+      ]
+    }
+  ]
+};
 
 const popup = ref({ visible: false, x: 0, y: 0, nodeData: null });
 const preview = ref({ visible: false, data: null });
 const currentResources = ref([]);
-
-// 弹窗拖拽逻辑（保留原有）
 const isDragging = ref(false);
 const dragOffset = ref({ x: 0, y: 0 });
 
 const onDragStart = (e) => {
   isDragging.value = true;
-  dragOffset.value = {
-    x: e.clientX - popup.value.x,
-    y: e.clientY - popup.value.y
-  };
+  dragOffset.value = { x: e.clientX - popup.value.x, y: e.clientY - popup.value.y };
   document.addEventListener('mousemove', onDragMove);
   document.addEventListener('mouseup', onDragEnd);
 };
-
 const onDragMove = (e) => {
   if (!isDragging.value) return;
   popup.value.x = e.clientX - dragOffset.value.x;
   popup.value.y = e.clientY - dragOffset.value.y;
 };
-
 const onDragEnd = () => {
   isDragging.value = false;
   document.removeEventListener('mousemove', onDragMove);
@@ -206,8 +178,47 @@ const onDragEnd = () => {
 const generateMockData = (name) => {
   const types = Object.values(RES_TYPES);
   const ais = Object.values(AI_SOURCES);
-  return Array.from({ length: 3 }).map((_, i) => ({
-    title: `${name} - ${i === 0 ? '讲解视频' : i === 1 ? '核心课件' : '配套音频'}`,
+  
+  // 定制化匹配：无人机密码系统
+  if (name.includes('无人机')) {
+    return [
+      {
+        title: '无人机通信链路白盒加密规范',
+        type: RES_TYPES.VIDEO,
+        sources: [AI_SOURCES.DOUBAO, AI_SOURCES.KIMI],
+        // 预留真实视频路径，请在该目录下放置 uav_comm_spec.mp4
+        fileUrl: `${LOGO_BASE}/uav_comm_spec.mp3` 
+      },
+      {
+        title: '轻量级密码算法在无人机上的部署',
+        type: RES_TYPES.PDF, // 强制为 PDF，将使用浏览器自带 PDF 阅读器打开
+        sources: [AI_SOURCES.DEEPSEEK, AI_SOURCES.WENXIN],
+        // 预留真实PDF路径，请在该目录下放置 lightweight_crypto.pdf
+        fileUrl: `${LOGO_BASE}/lightweight_crypto.pdf` 
+      },
+      {
+        title: '抗干扰与双向身份认证体系构建',
+        type: RES_TYPES.VIDEO,
+        sources: [AI_SOURCES.KIMI, AI_SOURCES.DOUBAO],
+        // 预留真实视频路径，请在该目录下放置 auth_system.mp4
+        fileUrl: `${LOGO_BASE}/auth_system.mp4` 
+      }
+    ];
+  } 
+  
+  let resources = [];
+  if (name.includes('区块链')) {
+    resources = ['区块链密码学基础与哈希指针', '智能合约安全漏洞攻防演示', '共识机制(POW/POS)源码导读'];
+  } else if (name.includes('绪论')) {
+    resources = ['密码学发展史与现代密码工程', '国内外商用密码法及合规性解读', '系统级安全威胁模型(STRIDE)建模'];
+  } else if (name.includes('存储加密')) {
+    resources = ['静态数据存储加密体系结构', '透明数据加密(TDE)技术白皮书', '密钥生命周期管理与密文库设计'];
+  } else {
+    resources = [`${name} - 核心架构解析与串讲`, `${name} - 工程设计最佳实践文档`, `${name} - 课后综合实战演练`];
+  }
+
+  return resources.map((title, i) => ({
+    title: title,
     type: types[i % 3],
     sources: [ais[Math.floor(Math.random() * ais.length)], ais[Math.floor(Math.random() * ais.length)]],
     fileUrl: `${ASSETS_BASE}/sample.${types[i % 3].key === 'video' ? 'mp4' : types[i % 3].key === 'audio' ? 'mp3' : 'pdf'}`
@@ -219,54 +230,57 @@ const initChart = () => {
   chartInstance.value = echarts.init(graphRef.value);
 
   chartInstance.value.setOption({
-    backgroundColor: 'transparent', // 图谱背景透明
-    animationDurationUpdate: 1000, // 动画时长
-    animationEasingUpdate: 'cubicInOut', // 动画曲线
-    series: [{
-      type: 'graph',
-      layout: 'none',
-      roam: true,
-      draggable: true, // 节点可拖动
-      data: graphNodes,
-      links: graphLinks,
-      // 节点标签样式
-      label: {
-        show: true,
-        position: 'bottom',    // 文字在节点底部
-        distance: 8,           // 文字距离节点
-        color: '#1A3B5C',      // 文字颜色
-        fontWeight: '500',     // 文字粗细
-        fontSize: 13,          // 文字大小
-        fontFamily: 'sans-serif',
-        textBorderColor: 'rgba(255,255,255,0.9)', // 文字白色描边
-        textBorderWidth: 3     // 描边宽度
-      },
-      // 连线样式
-      lineStyle: {
-        color: '#81D4FA',    // 连线淡蓝色
-        width: 6,            // 连线粗度（管道效果）
-        curveness: 0,        // 直线（无弧度）
-        opacity: 0.9,        // 透明度
-        join: 'round',       // 连接点圆角
-        cap: 'round'         // 端点圆角
-      },
-      edgeSymbol: ['none', 'none'], // 无箭头
-      emphasis: { 
-        focus: 'none', 
-        itemStyle: { shadowBlur: 15, shadowColor: 'rgba(0,0,0,0.3)' },
-        lineStyle: { width: 8, opacity: 1 }
+    backgroundColor: 'transparent',
+    tooltip: { trigger: 'item', triggerOn: 'mousemove' },
+    series: [
+      {
+        type: 'tree',
+        data: [treeData],
+        top: '-60%',   
+        bottom: '-60%', 
+        left: '10%',
+        right: '25%',
+        roam: true,                 
+        symbolKeepAspect: true,
+        orient: 'LR',               
+        edgeShape: 'curve',         
+        initialTreeDepth: -1,       
+        expandAndCollapse: false,   
+        label: {
+          position: 'bottom',
+          verticalAlign: 'middle',
+          align: 'center',
+          distance: 12,             
+          fontSize: 16,             
+          fontWeight: '600',
+          color: '#1A3B5C',
+          textBorderColor: 'rgba(255,255,255,0.95)',
+          textBorderWidth: 4
+        },
+        lineStyle: {
+          color: '#81D4FA',
+          width: 6,
+          curveness: 0.5            
+        },
+        emphasis: {
+          focus: 'descendant',
+          lineStyle: { width: 10, color: '#03A9F4' }
+        }
       }
-    }]
+    ]
   });
 
   chartInstance.value.on('click', (params) => {
-    if (params.dataType === 'node') {
-      const rect = graphRef.value.getBoundingClientRect();
+    if (params.componentType === 'series') {
       currentResources.value = generateMockData(params.data.name);
+      
+      const popupWidth = 480;
+      const popupHeight = 450; 
+      
       popup.value = {
         visible: true,
-        x: params.event.event.clientX - rect.left + 20,
-        y: params.event.event.clientY - rect.top + 20,
+        x: window.innerWidth - popupWidth - 30,
+        y: (window.innerHeight - popupHeight) / 2,
         nodeData: params.data
       };
     }
@@ -290,7 +304,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* 核心修改：页面背景渐变方向+字体 */
 .knowledge-graph-page {
   position: relative;
   width: 100vw;
@@ -302,64 +315,69 @@ onBeforeUnmount(() => {
 }
 
 .page-header {
-  position: absolute; top: 0; width: 100%; height: 60px;
+  position: absolute; top: 0; width: 100%; height: 80px;
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 40px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
   border-bottom: 1px solid #D1E3F5; z-index: 10; box-sizing: border-box;
 }
+.logo-area h1 { margin: 0; font-size: 24px; color: #1A3B5C; font-weight: bold; }
+.stats-area { font-size: 16px; display: flex; gap: 20px; }
+.stat-item strong { font-size: 18px; color: #1976D2; }
 
-/* 图谱容器样式（按要求保留） */
 .graph-container-wrapper {
-  width: 100%;
-  height: 100%;
-  padding-top: 60px;
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 80px); 
+  overflow: hidden; 
   box-sizing: border-box;
 }
 
 .graph-container {
   width: 100%;
-  height: 100%;
+  height: 100%; 
 }
 
 .resource-popup {
-  position: absolute; width: 340px; background: white;
-  border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  position: fixed; 
+  width: 480px; background: white;
+  border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.25);
   border: 1px solid #E3F2FD; z-index: 100; overflow: hidden;
 }
 
 .popup-header { 
-  padding: 12px 16px; 
+  padding: 16px 20px; 
   background: #F8FBFF; 
   border-bottom: 1px solid #E3F2FD; 
   display: flex; justify-content: space-between; align-items: center; 
   cursor: grab;
   user-select: none;
 }
-.popup-header:active {
-  cursor: grabbing;
-}
-.popup-header h3 { margin: 0; font-size: 14px; color: #1A3B5C; pointer-events: none; }
+.popup-header:active { cursor: grabbing; }
+.popup-header h3 { margin: 0; font-size: 18px; font-weight: 600; color: #1A3B5C; pointer-events: none; }
 
-.resource-list { padding: 10px; max-height: 400px; overflow-y: auto; }
+.resource-list { padding: 16px; max-height: 450px; overflow-y: auto; }
 .resource-item {
-  padding: 12px; border: 1px solid #F0F4F8; border-radius: 6px; margin-bottom: 8px;
+  padding: 16px; border: 1px solid #F0F4F8; border-radius: 8px; margin-bottom: 12px;
   cursor: pointer; transition: 0.2s;
 }
 .resource-item:hover { background: #F0F9FF; border-color: #A3D3FF; }
-.res-info { display: flex; align-items: center; margin-bottom: 10px; }
-.res-title { font-size: 13px; color: #333; font-weight: 500; }
 
-.ai-sources { display: flex; flex-wrap: wrap; gap: 8px; }
+.res-info { display: flex; align-items: center; margin-bottom: 12px; }
+.res-title { font-size: 16px; color: #333; font-weight: 600; }
+
+.ai-sources { display: flex; flex-wrap: wrap; gap: 12px; }
 .ai-source-tag {
   display: flex; align-items: center; background: #F4F8FB;
-  padding: 2px 8px 2px 4px; border-radius: 4px; border: 1px solid #E1E9F0;
+  padding: 4px 10px 4px 6px; border-radius: 6px; border: 1px solid #E1E9F0;
 }
 .ai-logo-box {
-  width: 20px; height: 20px; margin-right: 6px;
+  width: 26px; height: 26px; margin-right: 8px;
   display: flex; justify-content: center; align-items: center;
 }
 .ai-img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.ai-name-text { font-size: 11px; color: #666; white-space: nowrap; }
+.ai-name-text { font-size: 14px; color: #555; white-space: nowrap; font-weight: 500; }
 
 .preview-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -367,23 +385,23 @@ onBeforeUnmount(() => {
   display: flex; justify-content: center; align-items: center;
 }
 
-.modal-video { width: 60vw; aspect-ratio: 16/9; background: black; border-radius: 8px; overflow: hidden; }
+.modal-video { width: 65vw; aspect-ratio: 16/9; background: black; border-radius: 12px; overflow: hidden; }
 .fill-media { width: 100%; height: 100%; }
 
-.modal-audio { width: 320px; padding: 25px; background: white; border-radius: 12px; text-align: center; }
-.audio-info { margin-bottom: 15px; font-weight: bold; color: #1A3B5C; }
+.modal-audio { width: 360px; padding: 30px; background: white; border-radius: 16px; text-align: center; }
+.audio-info { margin-bottom: 20px; font-weight: bold; font-size: 18px; color: #1A3B5C; }
 
-.modal-standard { width: 85%; height: 85%; background: white; border-radius: 8px; display: flex; flex-direction: column; }
-.modal-head { padding: 15px 20px; border-bottom: 1px solid #EEE; display: flex; justify-content: space-between; font-weight: bold; }
+.modal-standard { width: 85%; height: 85%; background: white; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; }
+.modal-head { padding: 20px 25px; border-bottom: 1px solid #EEE; display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; }
 .pdf-viewer { flex: 1; width: 100%; }
 
-.close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #999; line-height: 1; }
+.close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: #999; line-height: 1; }
 .close-btn:hover { color: #F44336; }
 
-.v-icon::before { content: '🎬'; margin-right: 5px; }
-.p-icon::before { content: '📄'; margin-right: 5px; }
-.a-icon::before { content: '🎧'; margin-right: 5px; }
+.v-icon::before { content: '🎬'; margin-right: 8px; font-size: 18px; }
+.p-icon::before { content: '📄'; margin-right: 8px; font-size: 18px; }
+.a-icon::before { content: '🎧'; margin-right: 8px; font-size: 18px; }
 
-.resource-list::-webkit-scrollbar { width: 4px; }
-.resource-list::-webkit-scrollbar-thumb { background: #D1E3F5; border-radius: 10px; }
+.resource-list::-webkit-scrollbar { width: 6px; }
+.resource-list::-webkit-scrollbar-thumb { background: #B3D4F0; border-radius: 10px; }
 </style>

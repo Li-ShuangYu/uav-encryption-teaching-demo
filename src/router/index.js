@@ -277,6 +277,12 @@ const routes = [
     name: 'TeacherLiveMonitor',
     component: () => import('../views/TeacherLiveMonitor.vue'),
     meta: { title: '教师实时监控' }
+  },
+  {
+    path: '/teacher-diagnostic-report',
+    name: 'TeacherDiagnosticReport',
+    component: () => import('../views/TeacherDiagnosticReport.vue'),
+    meta: { title: '教师诊断报告' }
   }
 ]
 
