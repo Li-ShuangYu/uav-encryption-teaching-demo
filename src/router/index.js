@@ -258,7 +258,7 @@ const routes = [
     path: '/showcase/course-knowledge',
     name: 'CourseKnowledge',
     component: () => import('../views/showcase/course-knowledge/course-knowledge.vue'),
-    meta: { title: '课程知识' }
+    meta: { title: '密码系统设计 - 知识图谱' }
   },
   {
     path: '/teacher-diagnostic-report',

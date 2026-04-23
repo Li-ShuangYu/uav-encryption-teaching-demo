@@ -187,21 +187,21 @@ const generateMockData = (name) => {
         type: RES_TYPES.VIDEO,
         sources: [AI_SOURCES.DOUBAO, AI_SOURCES.KIMI],
         // 预留真实视频路径，请在该目录下放置 uav_comm_spec.mp4
-        fileUrl: `${LOGO_BASE}/uav_comm_spec.mp3` 
+        fileUrl: `${ASSETS_BASE}/auth_system.mp4` 
       },
       {
         title: '轻量级密码算法在无人机上的部署',
         type: RES_TYPES.PDF, // 强制为 PDF，将使用浏览器自带 PDF 阅读器打开
         sources: [AI_SOURCES.DEEPSEEK, AI_SOURCES.WENXIN],
         // 预留真实PDF路径，请在该目录下放置 lightweight_crypto.pdf
-        fileUrl: `${LOGO_BASE}/lightweight_crypto.pdf` 
+        fileUrl: `${ASSETS_BASE}/lightweight_crypto.pdf` 
       },
       {
         title: '抗干扰与双向身份认证体系构建',
-        type: RES_TYPES.VIDEO,
+        type: RES_TYPES.AUDIO,
         sources: [AI_SOURCES.KIMI, AI_SOURCES.DOUBAO],
         // 预留真实视频路径，请在该目录下放置 auth_system.mp4
-        fileUrl: `${LOGO_BASE}/auth_system.mp4` 
+        fileUrl: `${ASSETS_BASE}/uav_comm_spec.mp3` 
       }
     ];
   } 
