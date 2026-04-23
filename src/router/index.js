@@ -261,6 +261,24 @@ const routes = [
     meta: { title: '密码系统设计 - 知识图谱' }
   },
   {
+    path: '/student-cabin',
+    name: 'StudentCabin',
+    component: () => import('../views/StudentCabin.vue'),
+    meta: { title: '学生舱' }
+  },
+  {
+    path: '/teacher-builder',
+    name: 'TeacherBuilder',
+    component: () => import('../views/TeacherBuilder.vue'),
+    meta: { title: '教师构建器' }
+  },
+  {
+    path: '/teacher-live-monitor',
+    name: 'TeacherLiveMonitor',
+    component: () => import('../views/TeacherLiveMonitor.vue'),
+    meta: { title: '教师实时监控' }
+  },
+  {
     path: '/teacher-diagnostic-report',
     name: 'TeacherDiagnosticReport',
     component: () => import('../views/TeacherDiagnosticReport.vue'),
