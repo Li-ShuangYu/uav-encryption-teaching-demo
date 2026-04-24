@@ -6,7 +6,7 @@
         <h1>{{ rootNodeName }} - 知识图谱</h1>
       </div>
       <div class="stats-area">
-        <span class="stat-item">总节点数: <strong>385</strong></span>
+        <span class="stat-item">总节点数: <strong>225</strong></span>
         <span class="stat-item">关联资源: <strong>850+</strong></span>
       </div>
     </header>
