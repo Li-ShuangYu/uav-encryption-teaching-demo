@@ -8,10 +8,10 @@ const routes = [
   // ================= 主页 =================
   {
     path: '/',
-    redirect: '/homepage'
+    redirect: '/detail'
   },
   {
-    path: '/homepage',
+    path: '/detail',
     name: 'HomePage',
     component: () => import('../views/HomePage.vue'),
     meta: { title: '首页' }
@@ -23,7 +23,7 @@ const routes = [
     meta: { title: '初始页面' }
   },
   {
-    path: '/detail',
+    path: '/achievement-detail',
     name: 'AchievementDetail',
     component: () => import('../views/showcase/AchievementDetail/AchievementDetail.vue'),
     meta: { title: '成果展示详情' }
@@ -297,7 +297,7 @@ const routes = [
     meta: { title: '教师首页' }
   },
   {
-    path: '/showcase/achievement-detail',
+    path: '/achievement-detail',
     name: 'AchievementDetail',
     component: () => import('../views/showcase/AchievementDetail/AchievementDetail.vue'),
     meta: { title: '教学成果展示' }

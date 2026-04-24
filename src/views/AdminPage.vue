@@ -4,7 +4,8 @@
       <div class="header-left">
         <div class="logo">
           <div class="logo-img-placeholder">
-            <span class="img-fallback-text">ADMIN</span>
+            <img src="@/assets/image/mdzx.png" alt="Logo" onerror="this.style.display='none'" />
+            <span class="img-fallback-text">LOGO</span>
           </div>
           <span class="brand-title">密盾智学 · 管理员控制台</span>
         </div>
@@ -94,6 +95,8 @@
                 v-for="page in group.pages" 
                 :key="page.path"
                 :class="{ 'card-highlight': page.highlight }"
+                @click="navigateTo(page.path)"
+                style="cursor: pointer;"
               >
                 <div class="card-body">
                   <div class="card-icon" :class="'icon-' + activeCategory">
@@ -108,9 +111,8 @@
                 </div>
                 <div class="card-footer">
                   <button 
-                    class="btn btn-primary" 
-                    :class="'btn-' + activeCategory"
-                    @click="navigateTo(page.path)">
+                    class="btn btn-primary btn-always-blue"
+                    @click.stop="navigateTo(page.path)">
                     进入页面 →
                   </button>
                 </div>
@@ -203,14 +205,14 @@ const otherDataGroups = [
       { name: '系统导航首页', desc: '原始框架的主路由导航入口', path: '/initial' },
       { name: '学生舱主控面板', desc: '学生端仪表盘组件测试环境', path: '/student-cabin' },
       { name: '教师教学构建器', desc: '用于编排课程流的沙盒编辑器', path: '/teacher-builder' },
-      { name: '教学成果数字展厅', desc: '外部展示用的优秀案例聚合落地页', path: '/showcase/achievement-detail' },
+      { name: '教学成果数字展厅', desc: '外部展示用的优秀案例聚合落地页', path: '/achievement-detail' },
       { name: '3x3矩阵 (HTML)', desc: '静态原型：底层的Agent状态机交互矩阵', path: '/10_3x3矩阵.html' },
       { name: '4x5矩阵 (HTML)', desc: '静态原型：扩展规模的状态流转图', path: '/8_4x5矩阵.html' },
       { name: '暗黑风画像 (HTML)', desc: '静态原型：科技风神秘教育数据画像面板', path: '/暗黑科技风神秘教育数据画像.html' },
       { name: '密码分层架构 (HTML)', desc: '静态演示：密码系统设计的业务分层剖析', path: '/密码系统设计分层.html' },
       { name: '数字档案首版 (HTML)', desc: '静态原型：全息数字档案V1迭代版本', path: '/数字档案第一版.html' },
       { name: '图片播放组件 (HTML)', desc: '独立媒体播放与轮播测试沙盒', path: '/图片播放.html' },
-      { name: '教学成果展示', desc: '展示密码工程教学成果的详细内容', path: '/showcase/achievement-detail' }
+      { name: '教学成果展示', desc: '展示密码工程教学成果的详细内容', path: '/achievement-detail' }
     ]
   }
 ]
@@ -286,8 +288,9 @@ body {
 }
 .header-left, .header-right { display: flex; align-items: center; }
 .logo { display: flex; align-items: center; gap: 12px; }
-.logo-img-placeholder { width: 32px; height: 32px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
-.img-fallback-text { font-size: 8px; color: white; font-weight: bold; }
+.logo-img-placeholder { width: 32px; height: 32px; background: linear-gradient(135deg, #1a73e8, #4fa3ff); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+.logo-img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+.img-fallback-text { font-size: 8px; color: white; font-weight: bold; position: absolute; }
 .brand-title { font-size: 20px; font-weight: 700; color: #0f172a; }
 .header-right { gap: 24px; }
 .nav-flat-group { display: flex; align-items: center; gap: 8px; background-color: #f8fafc; padding: 4px 6px; border-radius: 8px; border: 1px solid #e2e8f0; }
@@ -358,11 +361,15 @@ body {
   color: #64748b;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-block;
+  text-align: center;
+  line-height: 1.5;
+  min-width: 120px;
 }
 .tab-btn:hover { background: #f1f5f9; color: #1e293b; }
-.tab-btn.active { background: #1a73e8; color: #ffffff; box-shadow: 0 4px 12px rgba(26,115,232,0.25); }
-.tab-btn.teacher-tab.active { background: var(--teacher-green); box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
-.tab-btn.other-tab.active { background: var(--other-purple); box-shadow: 0 4px 12px rgba(124,58,237,0.25); }
+.tab-btn.active { background: #1a73e8 !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(26,115,232,0.25); }
+.tab-btn.teacher-tab.active { background: #059669 !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
+.tab-btn.other-tab.active { background: #7c3aed !important; color: #ffffff !important; box-shadow: 0 4px 12px rgba(124,58,237,0.25); }
 
 /* --- 主体区域与卡片布局 --- */
 .main-content {
@@ -465,6 +472,9 @@ body {
 
 .btn-other { color: var(--other-purple); background: #f5f3ff; }
 .btn-other:hover { background: var(--other-purple); color: #fff; }
+
+.btn-always-blue { color: #ffffff !important; background: var(--primary-blue) !important; }
+.btn-always-blue:hover { background: var(--primary-hover) !important; box-shadow: 0 4px 12px rgba(26,115,232,0.3); }
 
 /* 动画过渡 */
 .fade-slide-enter-active,

@@ -182,6 +182,41 @@
           </div>
         </div>
 
+        <div class="card">
+          <div class="card-body">
+            <div class="card-icon achievement-icon">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M12 15l-2 5-1.5-3-4 2 2.5-4-3-1 4-1.5L12 6l1.5 2.5 4 1.5-3 1 2.5 4-4-2-1.5 3-2-5z"></path>
+                <circle cx="12" cy="8" r="3"></circle>
+              </svg>
+            </div>
+            <div class="card-info">
+              <h3>成果展示</h3>
+              <p>展示无人机密码系统工程教学成果，呈现课程建设理念与实践成效。</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" @click="navigateToAchievement">查看成果</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="card-icon profile-icon">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="card-info">
+              <h3>学情多维画像</h3>
+              <p>基于全量数据的班级学习状态多维诊断，全景呈现学生能力分布与薄弱环节。</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" @click="navigateToClassProfile">查看画像</button>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -299,6 +334,14 @@ const navigateToRobotDebug = () => {
   // 设置demo_state为1，并跳转
   localStorage.setItem('demo_state', '1')
   router.push('/student-debug/robot-debug')
+};
+
+const navigateToAchievement = () => {
+  router.push('/achievement-detail');
+};
+
+const navigateToClassProfile = () => {
+  router.push('/student-archive/class-competency/class1');
 };
 </script>
 
@@ -712,6 +755,18 @@ body {
   background-color: #f3e8ff;
   color: #9333ea;
   box-shadow: inset 0 0 0 1px rgba(147,51,234,0.1);
+}
+
+.achievement-icon {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245,158,11,0.2);
+}
+
+.profile-icon {
+  background-color: #dcfce7;
+  color: #16a34a;
+  box-shadow: inset 0 0 0 1px rgba(22,163,74,0.1);
 }
 
 .card-info {
