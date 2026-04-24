@@ -67,6 +67,7 @@ import pdf2 from './assets/pdfs/1解决的主要问题.pdf'
 import pdf3 from './assets/pdfs/2成果主要做法.pdf'
 import pdf4 from './assets/pdfs/3成果创新点.pdf'
 import pdf5 from './assets/pdfs/4成果效益及推广应用.pdf'
+import pdf6 from './assets/pdfs/5佐证材料.pdf'
 
 const imgUrls = ref([
   new URL(img1, import.meta.url).href,
@@ -84,7 +85,8 @@ const pdfData = [
   { name: '解决的主要问题', url: new URL(pdf2, import.meta.url).href },
   { name: '成果主要做法', url: new URL(pdf3, import.meta.url).href },
   { name: '成果创新点', url: new URL(pdf4, import.meta.url).href },
-  { name: '成果效益及推广应用', url: new URL(pdf5, import.meta.url).href } // 占位
+  { name: '成果效益及推广应用', url: new URL(pdf5, import.meta.url).href },
+  { name: '佐证材料', url: new URL(pdf6, import.meta.url).href }
 ]
 
 const activeFileIndex = ref(0)

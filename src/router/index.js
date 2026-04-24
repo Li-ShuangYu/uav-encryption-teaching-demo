@@ -5,10 +5,16 @@ import MdzxDebugLayout from '../components/MdzxDebugLayout.vue'
 import MdzxLayout from '../components/MdzxLayout.vue'
 
 const routes = [
-  // ================= 初始页面 =================
+  // ================= 主页 =================
   {
     path: '/',
-    redirect: '/initial'
+    redirect: '/homepage'
+  },
+  {
+    path: '/homepage',
+    name: 'HomePage',
+    component: () => import('../views/HomePage.vue'),
+    meta: { title: '首页' }
   },
   {
     path: '/initial',
@@ -289,6 +295,12 @@ const routes = [
     name: 'TeacherHome',
     component: () => import('../views/showcase/TeacherHome.vue'),
     meta: { title: '教师首页' }
+  },
+  {
+    path: '/showcase/achievement-detail',
+    name: 'AchievementDetail',
+    component: () => import('../views/showcase/AchievementDetail/AchievementDetail.vue'),
+    meta: { title: '教学成果展示' }
   }
 ]
 

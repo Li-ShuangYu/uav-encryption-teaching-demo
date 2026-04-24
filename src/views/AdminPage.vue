@@ -1,145 +1,126 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-[#0f1114] text-[#d1d5db] font-sans p-8 selection:bg-blue-500/30">
-    <div class="flex justify-between items-center mb-10">
-      <button 
-        @click="goBack" 
-        class="px-6 py-2.5 bg-transparent border border-[#2d353e] rounded-full text-white text-[14px] font-bold hover:bg-white/5 hover:border-white/40 transition-all duration-300"
-      >
-        返回系统首页
-      </button>
-      <div class="text-center">
-        <h1 class="text-[42px] font-bold text-white mb-3 tracking-wide">无人机密码系统设计实战</h1>
-        <p class="text-gray-400 text-[18px]">管理员控制台 · 模块化导航</p>
-      </div>
-      <div class="w-32"></div>
-    </div>
-    
-    <div class="max-w-7xl mx-auto w-full flex flex-col items-center">
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-12">
-        <div 
-          @click="activeCategory = 'student'"
-          class="group relative h-72 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden border"
-          :class="activeCategory === 'student' ? 'bg-[#1a1f26] border-blue-500 shadow-[0_0_30px_rgba(59,130,246,0.2)] scale-[1.02]' : 'bg-[#161a1f] border-[#2d353e] hover:border-blue-500/50'"
-        >
-          <div class="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 rounded-full mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-               :class="activeCategory === 'student' ? 'bg-blue-500/20' : 'bg-[#1c2127]'">
-            <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-            </svg>
+  <div class="dashboard-container">
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-img-placeholder">
+            <span class="img-fallback-text">ADMIN</span>
           </div>
-          <h2 class="text-[26px] font-bold text-white mb-2">学生端页面</h2>
-          <div v-if="activeCategory === 'student'" class="absolute bottom-0 w-full h-1 bg-blue-500"></div>
-        </div>
-
-        <div 
-          @click="activeCategory = 'teacher'"
-          class="group relative h-72 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden border"
-          :class="activeCategory === 'teacher' ? 'bg-[#1a1f26] border-green-500 shadow-[0_0_30px_rgba(34,197,94,0.2)] scale-[1.02]' : 'bg-[#161a1f] border-[#2d353e] hover:border-green-500/50'"
-        >
-          <div class="absolute inset-0 bg-gradient-to-b from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 rounded-full mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-               :class="activeCategory === 'teacher' ? 'bg-green-500/20' : 'bg-[#1c2127]'">
-            <svg class="w-12 h-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-          </div>
-          <h2 class="text-[26px] font-bold text-white mb-2">教师端页面</h2>
-          <div v-if="activeCategory === 'teacher'" class="absolute bottom-0 w-full h-1 bg-green-500"></div>
-        </div>
-
-        <div 
-          @click="activeCategory = 'other'"
-          class="group relative h-72 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all duration-500 overflow-hidden border"
-          :class="activeCategory === 'other' ? 'bg-[#1a1f26] border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.2)] scale-[1.02]' : 'bg-[#161a1f] border-[#2d353e] hover:border-purple-500/50'"
-        >
-          <div class="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="w-24 h-24 rounded-full mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-               :class="activeCategory === 'other' ? 'bg-purple-500/20' : 'bg-[#1c2127]'">
-            <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-          </div>
-          <h2 class="text-[26px] font-bold text-white mb-2">系统管理与其他</h2>
-          <div v-if="activeCategory === 'other'" class="absolute bottom-0 w-full h-1 bg-purple-500"></div>
+          <span class="brand-title">密盾智学 · 管理员控制台</span>
         </div>
       </div>
 
-      <transition name="fade-slide" mode="out-in">
-        <div :key="activeCategory" class="w-full bg-[#161a1f]/60 backdrop-blur-xl border border-white/5 rounded-3xl p-10 min-h-[400px] shadow-2xl relative overflow-hidden">
-          <div class="absolute -top-24 -right-24 w-64 h-64 blur-[120px] rounded-full opacity-20" :class="currentGlowColor"></div>
-          
-          <div class="flex items-end justify-between mb-8 border-b border-white/10 pb-6">
-            <div>
-              <h3 class="text-[24px] font-bold text-white flex items-center">
-                <span class="w-2 h-8 mr-3 rounded-full" :class="currentThemeBg"></span>
-                {{ categoryTitle }}
-              </h3>
-              <p class="text-gray-500 mt-1 text-[15px]">共找到 {{ activeCategory === 'other' ? flattenedOtherPages.length : currentPages.length }} 个相关页面</p>
+      <div class="header-right">
+        <div class="nav-flat-group">
+          <div class="nav-group-title">快捷导航:</div>
+          <div class="nav-item" @click="goBack">返回系统首页</div>
+        </div>
+        <div class="divider"></div>
+        <div class="user-actions-flat">
+          <div class="user-profile">
+            <div class="avatar-wrapper">
+              <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="avatar" alt="avatar" />
             </div>
-            <div class="hidden sm:block text-xs font-mono text-gray-600">SYSTEM_MODULE_V2.0</div>
+            <span class="user-name">System Admin</span>
           </div>
+        </div>
+      </div>
+    </header>
 
-          <div v-if="activeCategory !== 'other'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <button 
-              v-for="page in currentPages" 
-              :key="page.path"
-              @click="navigateTo(page.path)" 
-              class="group/item flex items-center p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-all duration-300 text-left"
-              :class="{ 'highlight-btn': page.highlight }"
-            >
-              <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-4 bg-[#0f1114] group-hover/item:scale-110 transition-transform">
-                <svg class="w-5 h-5" :class="currentThemeText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="page.icon"></path>
-                </svg>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="text-[15px] font-semibold text-gray-200 group-hover/item:text-white truncate transition-colors">{{ page.name }}</h4>
-                <span class="text-[11px] text-gray-600 uppercase tracking-tighter group-hover/item:text-gray-400">Navigate to</span>
-              </div>
-              <svg class="w-4 h-4 text-gray-700 group-hover/item:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
+    <section class="banner-premium">
+      <div class="banner-bg-graphics"></div>
+      <div class="banner-content">
+        <div class="text-area">
+          <h1 class="main-title">无人机密码系统设计<span class="dot">·</span>实战控制台</h1>
+          <p class="sub-title">模块化导航大屏，全局掌控学生、教师与系统底层测试数据</p>
+          <div class="data-badges">
+            <span class="badge">全场景路由覆盖</span>
+            <span class="badge">共 {{ totalPagesCount }} 个页面节点</span>
           </div>
+        </div>
+        
+        <div class="graphic-area">
+          <svg class="ai-illustration" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="line-grad-admin" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#8ab4f8;stop-opacity:0.8" />
+                <stop offset="100%" style="stop-color:#1a73e8;stop-opacity:0.2" />
+              </linearGradient>
+            </defs>
+            <path d="M100 120 L200 60 L300 120 L200 180 Z" stroke="url(#line-grad-admin)" stroke-width="2" fill="none" />
+            <circle cx="200" cy="120" r="40" stroke="#1a73e8" stroke-width="1" fill="rgba(26,115,232,0.1)" />
+            <circle cx="100" cy="120" r="8" fill="#1a73e8" />
+            <circle cx="300" cy="120" r="8" fill="#1a73e8" />
+            <circle cx="200" cy="60" r="8" fill="#1a73e8" />
+            <circle cx="200" cy="180" r="8" fill="#1a73e8" />
+            <path d="M160 120 A40 40 0 1 1 240 120" stroke="#1a73e8" stroke-width="2" fill="none" stroke-dasharray="5 10">
+              <animateTransform attributeName="transform" type="rotate" from="0 200 120" to="360 200 120" dur="10s" repeatCount="indefinite" />
+            </path>
+          </svg>
+        </div>
+      </div>
+    </section>
 
-          <div v-else class="flex flex-col gap-10">
-            <div v-for="(group, index) in groupedOtherPages" :key="index">
-              <h4 class="text-[18px] font-bold text-gray-300 mb-4 flex items-center">
-                <span class="w-1.5 h-5 bg-purple-500/80 mr-3 rounded-full"></span>
-                {{ group.title }}
-              </h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <button 
-                  v-for="page in group.pages" 
-                  :key="page.path"
-                  @click="navigateTo(page.path)" 
-                  class="group/item flex items-center p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-all duration-300 text-left"
-                  :class="{ 'highlight-btn': page.highlight }"
-                >
-                  <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-4 bg-[#0f1114] group-hover/item:scale-110 transition-transform">
-                    <svg class="w-5 h-5" :class="currentThemeText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="page.icon"></path>
+    <div class="tabs-container">
+      <div class="tabs-wrapper">
+        <button 
+          @click="activeCategory = 'student'"
+          class="tab-btn" :class="{ 'active': activeCategory === 'student' }">
+          🎓 学生端节点 ({{ studentPagesCount }})
+        </button>
+        <button 
+          @click="activeCategory = 'teacher'"
+          class="tab-btn teacher-tab" :class="{ 'active': activeCategory === 'teacher' }">
+          👨‍🏫 教师端节点 ({{ teacherPagesCount }})
+        </button>
+        <button 
+          @click="activeCategory = 'other'"
+          class="tab-btn other-tab" :class="{ 'active': activeCategory === 'other' }">
+          ⚙️ 系统数据与测试 ({{ otherPagesCount }})
+        </button>
+      </div>
+    </div>
+
+    <main class="main-content">
+      <transition name="fade-slide" mode="out-in">
+        <div :key="activeCategory" class="content-wrapper">
+          
+          <div v-for="(group, index) in currentDataGroups" :key="index" class="section-wrapper">
+            <h2 class="group-header" :class="activeCategory">{{ group.groupName }}</h2>
+            
+            <div class="card-grid">
+              <div 
+                class="card" 
+                v-for="page in group.pages" 
+                :key="page.path"
+                :class="{ 'card-highlight': page.highlight }"
+              >
+                <div class="card-body">
+                  <div class="card-icon" :class="'icon-' + activeCategory">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                      <path stroke-linecap="round" stroke-linejoin="round" :d="page.icon || 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'"></path>
                     </svg>
                   </div>
-                  <div class="flex-1 min-w-0">
-                    <h4 class="text-[15px] font-semibold text-gray-200 group-hover/item:text-white truncate transition-colors">{{ page.name }}</h4>
-                    <span class="text-[11px] text-gray-600 uppercase tracking-tighter group-hover/item:text-gray-400">Navigate to</span>
+                  <div class="card-info">
+                    <h3>{{ page.name }}</h3>
+                    <p>{{ page.desc }}</p>
                   </div>
-                  <svg class="w-4 h-4 text-gray-700 group-hover/item:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </button>
+                </div>
+                <div class="card-footer">
+                  <button 
+                    class="btn btn-primary" 
+                    :class="'btn-' + activeCategory"
+                    @click="navigateTo(page.path)">
+                    进入页面 →
+                  </button>
+                </div>
               </div>
             </div>
+            
           </div>
-
         </div>
       </transition>
-
-    </div>
+    </main>
   </div>
 </template>
 
@@ -148,115 +129,110 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
-// 当前激活的类别：'student' | 'teacher' | 'other'
 const activeCategory = ref('student')
 
-// 学生和老师页面保持不变
-const teacherPages = [
-  { name: '需求汇总页', path: '/teacher/demand-summary', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-  { name: '4组学生任务展示页', path: '/teacher/task-split', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
-  { name: '4组学生方案展示页', path: '/teacher/scheme-split', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
-  { name: '4组学生方案AI评估展示页', path: '/teacher/ai-evaluate', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-  { name: '学生方案打分页', path: '/teacher/scheme-detail', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-  { name: '学生方案总分页', path: '/teacher/group-score-overview', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' }
-]
+// --- 细化分组与数据增强 ---
+// 我为每个页面补充了desc属性，并在大类下进行了二级分组(groupName)，让界面更具逻辑性
 
-const studentPages = [
-  { name: '需求提交页', path: '/student/task-receive', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12' },
-  { name: '任务接收与任务选择页', path: '/student/task-select', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
-  { name: '任务详情页', path: '/student/task-split', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
-  { name: '方案上传页', path: '/student/scheme-upload', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
-  { name: '组间方案评分页', path: '/student/scheme-detail', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-  { name: '方案总分页', path: '/student/my-score-result', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
-  { name: 'AI智能助手', path: '/student-debug/robot-debug', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
-  { name: '代码部署', path: '/student-debug/deploy', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' },
-  { name: '机器人调试', path: '/student-debug/debug', icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' }
-]
-
-// 将其他页面按要求划分为三大类，并去除重复的路径项
-const groupedOtherPages = [
+const studentDataGroups = [
   {
-    title: '📊 学生/班级画像页面',
+    groupName: '任务流转与协作',
     pages: [
-      { name: '学情诊断报告', path: '/student-diagnostic-report-demo', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', highlight: true },
-      { name: '教师学情诊断', path: '/teacher-diagnostic-report', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', highlight: true },
-      { name: '班级能力画像', path: '/student-archive/class-competency/class1', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-      { name: '学生能力画像', path: '/student-archive/competrncy/101', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-      { name: '分组推荐', path: '/group-recommendation', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-      { name: '学生课后情况', path: '/teacher/student-group', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' }
+      { name: '需求提交页', desc: '学生端发起系统设计需求与规划书的入口', path: '/student/task-receive', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12' },
+      { name: '任务接收与选择', desc: '浏览导师下发任务，完成内部认领与分工', path: '/student/task-select', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+      { name: '任务详情页', desc: '查看具体任务指标、要求与拆解步骤全景', path: '/student/task-split', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
+      { name: '方案上传页', desc: '上传密码系统设计方案、报告及相关附件', path: '/student/scheme-upload', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
     ]
   },
   {
-    title: '🤖 智能体类页面',
+    groupName: '评分与AI辅助联调',
     pages: [
-            { name: '3x3矩阵管理', path: '/matrix-3x3', icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3' },
-
-      { name: '课程知识图谱', path: '/showcase/course-knowledge-graph', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-      { name: '课程知识', path: '/showcase/course-knowledge', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-      ]
-  },
-  {
-    title: '🛠️ 测试页面 (含静态Demo与基础页面)',
-    pages: [
-      { name: '3x3矩阵html', path: '/10_3x3矩阵.html', icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3' },
-      { name: '仿真推演', path: '/teacher/simulation', icon: 'M9.75 17L9 20l-1 1h8l-1 1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
-      { name: '学情分析分组页', path: '/teacher/task-publish', icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
-      { name: '4x5矩阵', path: '/8_4x5矩阵.html', icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3' },
-      { name: '图片播放', path: '/图片播放.html', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
-      { name: '需求分屏', path: '/teacher/demand-split', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1 1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1 1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1 1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-      { name: '首页', path: '/initial', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
-      { name: '学生画像第一版', path: '/学生画像第一版.html', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-      { name: '学生画像', path: '/profile-dashboard', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-      { name: '学生全息数字档案', path: '/学生全息数字档案.html', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-      { name: '学生数字档案', path: '/学生数字档案.html', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-      { name: '数字档案第一版', path: '/数字档案第一版.html', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-      { name: '暗黑科技风教育数据画像', path: '/暗黑科技风神秘教育数据画像.html', icon: 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z' },
-      { name: '学生首页', path: '/student-home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001 1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-      { name: '学生舱', path: '/student-cabin', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
-      { name: '教师构建器', path: '/teacher-builder', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-      { name: '教师实时监控', path: '/teacher-live-monitor', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-      { name: '教师首页', path: '/showcase/teacher-home', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
-      { name: '密码系统设计分层', path: '/密码系统设计分层.html', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' }
+      { name: '组间方案评分页', desc: '参与小组间互评，对其他组方案进行多维打分', path: '/student/scheme-detail', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      { name: '方案总分页', desc: '查看本组最终得分雷达图、教师评语与AI建议', path: '/student/my-score-result', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
+      { name: 'AI智能助手', desc: '调用专属Agent辅导完成代码纠错与设计排障', path: '/student-debug/robot-debug', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+      { name: '代码部署', desc: '编译、打包并一键部署至无人机测试环境', path: '/student-debug/deploy', icon: 'M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' },
+      { name: '机器人调试', desc: '硬件状态回传与底层机器人联调控制台', path: '/student-debug/debug', icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' }
     ]
   }
 ]
 
-// 为了在 header 中计算"其他"分类的总数量
-const flattenedOtherPages = computed(() => groupedOtherPages.flatMap(group => group.pages))
+const teacherDataGroups = [
+  {
+    groupName: '需求统筹与任务监控',
+    pages: [
+      { name: '需求汇总页', desc: '全局概览并审核所有学生团队提交的系统需求', path: '/teacher/demand-summary', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+      { name: '分组任务进度展示', path: '/teacher/task-split', desc: '实时追踪四大分组的任务拆解与执行状态大屏', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2' },
+      { name: '分组方案全局展示', path: '/teacher/scheme-split', desc: '矩阵化展示所有小组提交的最终密码系统方案', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },
+    ]
+  },
+  {
+    groupName: 'AI评估与多维成绩打分',
+    pages: [
+      { name: '方案AI评估工作台', path: '/teacher/ai-evaluate', desc: '一键调用大模型生成评估报告与深度优化建议', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z' },
+      { name: '细颗粒度打分面板', path: '/teacher/scheme-detail', desc: '教师介入对安全性、性能等多个维度进行人工批阅', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      { name: '班级成绩总览大屏', path: '/teacher/group-score-overview', desc: '汇总全班总评、生生互评、AI评分的最终数据报表', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2' }
+    ]
+  }
+]
 
-// 逻辑处理
-const currentPages = computed(() => {
-  if (activeCategory.value === 'teacher') return teacherPages
-  if (activeCategory.value === 'student') return studentPages
-  // 如果当前是 other，模板会单独通过 groupedOtherPages 渲染，这里返回空数组或扁平化数组均可
-  return [] 
+const otherDataGroups = [
+  {
+    groupName: '📊 学生/班级全息画像',
+    pages: [
+      { name: '学情诊断报告Demo', desc: '基于全量数据的班级学习状态多维诊断书', path: '/student-diagnostic-report-demo', highlight: true },
+      { name: '教师版学情诊断', desc: '教师专用的深度学习短板与异常提醒监控', path: '/teacher-diagnostic-report', highlight: true },
+      { name: '班级能力画像', desc: '一班级综合能力雷达图与趋势追踪展示', path: '/student-archive/class-competency/class1' },
+      { name: '个体能力画像', desc: '针对单个学生的学习轨迹与知识点掌握追踪', path: '/student-archive/competrncy/101' },
+      { name: '智能分组推荐', desc: '基于能力互补算法的AI自适应组队建议', path: '/group-recommendation' },
+      { name: '学生课后活跃监控', desc: '统计课后作业完成度与平台交互情况', path: '/teacher/student-group' }
+    ]
+  },
+  {
+    groupName: '🤖 智能体与知识图谱',
+    pages: [
+      { name: '3x3 智能矩阵管理', desc: '管理底层的Agent状态机交互矩阵 (Vue版)', path: '/matrix-3x3' },
+      { name: '课程全域知识图谱', desc: '3D可视化展现密码系统的知识节点依赖关系', path: '/showcase/course-knowledge-graph' },
+      { name: '课程核心知识库', desc: 'RAG向量库引用的底层核心切片文件管理', path: '/showcase/course-knowledge' },
+    ]
+  },
+  {
+    groupName: '🛠️ 原型、测试与底层静态页',
+    pages: [
+      { name: '学情分析分组页', desc: '功能测试页：教师端发布任务的页面备份', path: '/teacher/task-publish' },
+      { name: '需求分屏对比', desc: '功能测试页：分屏审阅需求代码', path: '/teacher/demand-split' },
+      { name: '系统导航首页', desc: '原始框架的主路由导航入口', path: '/initial' },
+      { name: '学生舱主控面板', desc: '学生端仪表盘组件测试环境', path: '/student-cabin' },
+      { name: '教师教学构建器', desc: '用于编排课程流的沙盒编辑器', path: '/teacher-builder' },
+      { name: '教学成果数字展厅', desc: '外部展示用的优秀案例聚合落地页', path: '/showcase/achievement-detail' },
+      { name: '3x3矩阵 (HTML)', desc: '静态原型：底层的Agent状态机交互矩阵', path: '/10_3x3矩阵.html' },
+      { name: '4x5矩阵 (HTML)', desc: '静态原型：扩展规模的状态流转图', path: '/8_4x5矩阵.html' },
+      { name: '暗黑风画像 (HTML)', desc: '静态原型：科技风神秘教育数据画像面板', path: '/暗黑科技风神秘教育数据画像.html' },
+      { name: '密码分层架构 (HTML)', desc: '静态演示：密码系统设计的业务分层剖析', path: '/密码系统设计分层.html' },
+      { name: '数字档案首版 (HTML)', desc: '静态原型：全息数字档案V1迭代版本', path: '/数字档案第一版.html' },
+      { name: '图片播放组件 (HTML)', desc: '独立媒体播放与轮播测试沙盒', path: '/图片播放.html' },
+      { name: '教学成果展示', desc: '展示密码工程教学成果的详细内容', path: '/showcase/achievement-detail' }
+    ]
+  }
+]
+
+// --- 计数器计算 ---
+const countPages = (groups) => groups.reduce((acc, curr) => acc + curr.pages.length, 0)
+const studentPagesCount = computed(() => countPages(studentDataGroups))
+const teacherPagesCount = computed(() => countPages(teacherDataGroups))
+const otherPagesCount = computed(() => countPages(otherDataGroups))
+const totalPagesCount = computed(() => studentPagesCount.value + teacherPagesCount.value + otherPagesCount.value)
+
+// 动态获取当前选中的分组数据
+const currentDataGroups = computed(() => {
+  if (activeCategory.value === 'student') return studentDataGroups
+  if (activeCategory.value === 'teacher') return teacherDataGroups
+  return otherDataGroups
 })
 
-const categoryTitle = computed(() => {
-  const map = { student: '学生工作站', teacher: '教授控制台', other: '系统管理员' }
-  return map[activeCategory.value]
-})
-
-// 动态样式计算
-const currentThemeBg = computed(() => {
-  const map = { student: 'bg-blue-500', teacher: 'bg-green-500', other: 'bg-purple-500' }
-  return map[activeCategory.value]
-})
-
-const currentThemeText = computed(() => {
-  const map = { student: 'text-blue-400', teacher: 'text-green-400', other: 'text-purple-400' }
-  return map[activeCategory.value]
-})
-
-const currentGlowColor = computed(() => {
-  const map = { student: 'bg-blue-600', teacher: 'bg-green-600', other: 'bg-purple-600' }
-  return map[activeCategory.value]
-})
-
+// --- 路由与操作 ---
 const navigateTo = (path) => {
   if (path.endsWith('.html')) {
-    // 在本地开发环境中直接使用相对路径
+    // 静态 HTML 直接新窗口打开
     const fullPath = path.startsWith('/') ? path : '/' + path
     window.open(fullPath, '_blank')
   } else {
@@ -268,57 +244,236 @@ const goBack = () => router.push('/')
 </script>
 
 <style scoped>
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-/* 隐藏滚动条 */
-::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
+/* 继承的基础变量，为了区分板块，加入了一些衍生色彩 */
+:root {
+  --primary-blue: #1a73e8;
+  --primary-hover: #1557b0;
+  --teacher-green: #059669;
+  --teacher-green-hover: #047857;
+  --other-purple: #7c3aed;
+  --other-purple-hover: #6d28d9;
+  --bg-color: #f8fafc;
+  --text-main: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
 }
 
-/* 高亮按钮呼吸动画 */
-.highlight-btn {
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.dashboard-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f7fb;
+  overflow: hidden;
+}
+
+/* --- Header 样式完全沿用 --- */
+.header {
+  height: 64px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   position: relative;
-  border: 1px solid rgba(59, 130, 246, 0.5) !important;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15)) !important;
-  animation: breathe-glow 2s ease-in-out infinite;
+  z-index: 100;
+  flex-shrink: 0;
 }
+.header-left, .header-right { display: flex; align-items: center; }
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-img-placeholder { width: 32px; height: 32px; background: #1e293b; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
+.img-fallback-text { font-size: 8px; color: white; font-weight: bold; }
+.brand-title { font-size: 20px; font-weight: 700; color: #0f172a; }
+.header-right { gap: 24px; }
+.nav-flat-group { display: flex; align-items: center; gap: 8px; background-color: #f8fafc; padding: 4px 6px; border-radius: 8px; border: 1px solid #e2e8f0; }
+.nav-group-title { font-size: 13px; color: #94a3b8; margin: 0 4px 0 8px; font-weight: 500; }
+.nav-item { font-size: 13px; color: #475569; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+.nav-item:hover { background-color: #e2e8f0; color: #0f172a; }
+.divider { width: 1px; height: 24px; background-color: #e2e8f0; }
+.user-actions-flat { display: flex; align-items: center; gap: 16px; }
+.user-profile { display: flex; align-items: center; gap: 8px; }
+.avatar-wrapper { width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; padding: 2px; border: 1px solid #cbd5e1; }
+.avatar { width: 100%; height: 100%; border-radius: 50%; }
+.user-name { font-size: 14px; font-weight: 600; color: #1e293b; }
 
-.highlight-btn::before {
+/* --- Banner 区域调整 --- */
+.banner-premium {
+  height: 180px; /* 较首页稍微收窄高度 */
+  background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #f1f5f9 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.banner-bg-graphics {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    linear-gradient(rgba(26, 115, 232, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 115, 232, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+}
+.banner-content {
+  position: relative; z-index: 1; width: 100%; max-width: 1400px; padding: 0 40px; display: flex; align-items: center; justify-content: space-between;
+}
+.main-title { font-size: 36px; color: #0f172a; font-weight: 900; letter-spacing: 1px; margin: 0 0 10px 0; }
+.main-title .dot { color: #1a73e8; margin: 0 8px; }
+.sub-title { font-size: 15px; color: #475569; font-weight: 500; margin: 0 0 20px 0; }
+.data-badges { display: flex; gap: 12px; }
+.badge { background: #fff; color: #1a73e8; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+.graphic-area { width: 300px; height: 180px; display: flex; align-items: center; justify-content: center; }
+
+/* --- 顶级分类 Tabs 导航 --- */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 0 0;
+  background-color: transparent;
+  flex-shrink: 0;
+}
+.tabs-wrapper {
+  display: inline-flex;
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 40px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+  gap: 8px;
+}
+.tab-btn {
+  border: none;
+  background: transparent;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tab-btn:hover { background: #f1f5f9; color: #1e293b; }
+.tab-btn.active { background: #1a73e8; color: #ffffff; box-shadow: 0 4px 12px rgba(26,115,232,0.25); }
+.tab-btn.teacher-tab.active { background: var(--teacher-green); box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
+.tab-btn.other-tab.active { background: var(--other-purple); box-shadow: 0 4px 12px rgba(124,58,237,0.25); }
+
+/* --- 主体区域与卡片布局 --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 24px 40px 60px 40px;
+  overflow-y: auto;
+}
+.content-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.section-wrapper { width: 100%; }
+
+.group-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.group-header::before {
   content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 14px;
-  background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.3), rgba(59, 130, 246, 0.3));
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-  z-index: -1;
-  opacity: 0.6;
+  display: block;
+  width: 5px;
+  height: 18px;
+  border-radius: 3px;
+}
+.group-header.student::before { background: var(--primary-blue); }
+.group-header.teacher::before { background: var(--teacher-green); }
+.group-header.other::before { background: var(--other-purple); }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
-@keyframes breathe-glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3), 0 0 10px rgba(59, 130, 246, 0.1);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(59, 130, 246, 0.2);
-  }
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #eef2f6;
+  padding: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* 高亮展示效果（沿用您原先设定的特别关注卡片） */
+.card-highlight {
+  background: linear-gradient(145deg, #fcfdff 0%, #ffffff 100%);
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
 }
+.card-highlight:hover { border-color: #60a5fa; }
+
+.card-body {
+  display: flex;
+  gap: 16px;
+}
+.card-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.icon-student { background-color: #eff6ff; color: var(--primary-blue); border: 1px solid #dbeafe; }
+.icon-teacher { background-color: #ecfdf5; color: var(--teacher-green); border: 1px solid #d1fae5; }
+.icon-other { background-color: #f5f3ff; color: var(--other-purple); border: 1px solid #ede9fe; }
+
+.card-info h3 { margin: 0 0 6px 0; font-size: 15px; color: #1e293b; font-weight: 700; }
+.card-info p { margin: 0; font-size: 12.5px; color: #64748b; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.card-footer { margin-top: 16px; display: flex; justify-content: flex-end; }
+.btn { border: none; padding: 6px 16px; border-radius: 16px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; background: transparent;}
+
+/* 根据类别设定按钮样式 */
+.btn-student { color: var(--primary-blue); background: #eff6ff; }
+.btn-student:hover { background: var(--primary-blue); color: #fff; }
+
+.btn-teacher { color: var(--teacher-green); background: #ecfdf5; }
+.btn-teacher:hover { background: var(--teacher-green); color: #fff; }
+
+.btn-other { color: var(--other-purple); background: #f5f3ff; }
+.btn-other:hover { background: var(--other-purple); color: #fff; }
+
+/* 动画过渡 */
+.fade-slide-enter-active,
+.fade-slide-leave-active { transition: all 0.3s ease; }
+.fade-slide-enter-from { opacity: 0; transform: translateY(10px); }
+.fade-slide-leave-to { opacity: 0; transform: translateY(-10px); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 </style>
