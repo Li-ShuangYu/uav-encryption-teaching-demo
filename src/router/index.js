@@ -283,6 +283,12 @@ const routes = [
     name: 'TeacherDiagnosticReport',
     component: () => import('../views/TeacherDiagnosticReport.vue'),
     meta: { title: '教师诊断报告' }
+  },
+  {
+    path: '/showcase/teacher-home',
+    name: 'TeacherHome',
+    component: () => import('../views/showcase/TeacherHome.vue'),
+    meta: { title: '教师首页' }
   }
 ]
 
