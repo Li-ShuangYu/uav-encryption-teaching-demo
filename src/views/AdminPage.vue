@@ -205,14 +205,14 @@ const otherDataGroups = [
       { name: '系统导航首页', desc: '原始框架的主路由导航入口', path: '/initial' },
       { name: '学生舱主控面板', desc: '学生端仪表盘组件测试环境', path: '/student-cabin' },
       { name: '教师教学构建器', desc: '用于编排课程流的沙盒编辑器', path: '/teacher-builder' },
-      { name: '教学成果数字展厅', desc: '外部展示用的优秀案例聚合落地页', path: '/achievement-detail' },
+      { name: '教学成果数字展厅', desc: '外部展示用的优秀案例聚合落地页', path: '/detail' },
       { name: '3x3矩阵 (HTML)', desc: '静态原型：底层的Agent状态机交互矩阵', path: '/10_3x3矩阵.html' },
       { name: '4x5矩阵 (HTML)', desc: '静态原型：扩展规模的状态流转图', path: '/8_4x5矩阵.html' },
       { name: '暗黑风画像 (HTML)', desc: '静态原型：科技风神秘教育数据画像面板', path: '/暗黑科技风神秘教育数据画像.html' },
       { name: '密码分层架构 (HTML)', desc: '静态演示：密码系统设计的业务分层剖析', path: '/密码系统设计分层.html' },
       { name: '数字档案首版 (HTML)', desc: '静态原型：全息数字档案V1迭代版本', path: '/数字档案第一版.html' },
       { name: '图片播放组件 (HTML)', desc: '独立媒体播放与轮播测试沙盒', path: '/图片播放.html' },
-      { name: '教学成果展示', desc: '展示密码工程教学成果的详细内容', path: '/achievement-detail' }
+      { name: '教学成果展示', desc: '展示密码工程教学成果的详细内容', path: '/detail' }
     ]
   }
 ]

@@ -337,7 +337,7 @@ const navigateToRobotDebug = () => {
 };
 
 const navigateToAchievement = () => {
-  router.push('/achievement-detail');
+  router.push('/detail');
 };
 
 const navigateToClassProfile = () => {
